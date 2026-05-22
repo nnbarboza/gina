@@ -1,0 +1,26 @@
+{
+  "name": "Mi diario - Gina",
+  "short_name": "Mi diario",
+  "description": "El diario de Gina",
+  "start_url": "/gina/",
+  "scope": "/gina/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F7F1E8",
+  "theme_color": "#F7F1E8",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/gina/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/gina/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

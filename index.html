@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Mi diario" />
+<meta name="theme-color" content="#F7F1E8" />
+<link rel="manifest" href="/gina/manifest.json" />
+<link rel="apple-touch-icon" href="/gina/img/icon-192.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Nunito:wght@400;600;700&family=Patrick+Hand&display=swap" rel="stylesheet" />
+<title>Mi diario · Gina</title>
+<style>
+/* ============================================================
+   GINA v0.1 — Diseño tipo scrapbook / cuaderno ilustrado
+   Paleta y tipografía siguiendo el design system de Nico.
+   ============================================================ */
+
+:root {
+  /* Base */
+  --bg: #F7F1E8;
+  --card: #FFFDF9;
+  --border: #E8DDCF;
+  --shadow: 0 4px 12px rgba(214,196,170,0.18);
+  --shadow-lg: 0 8px 20px rgba(214,196,170,0.25);
+
+  /* Texto */
+  --text: #4A3F35;
+  --text-soft: #6B5D4F;
+  --text-mute: #A8927A;
+
+  /* Principales */
+  --amarillo: #F6C445;
+  --amarillo-soft: #FFE9A8;
+  --coral: #F28C8C;
+  --mint: #BEE5B0;
+  --lavanda: #C8B6E2;
+  --azul-nube: #A9D6E5;
+  --peach: #FFD3B6;
+
+  /* Emociones */
+  --e-contenta: #FFD95A;
+  --e-tranquila: #BFE3C0;
+  --e-emocionada: #FFB3D1;
+  --e-triste: #AFCBFF;
+  --e-frustrada: #FF9B73;
+  --e-orgullosa: #D6C2FF;
+  --e-nerviosa: #E8D5B5;
+  --e-sensible: #E8D9FF;
+
+  /* Tipografías */
+  --font-display: 'Baloo 2', system-ui, sans-serif;
+  --font-ui: 'Nunito', system-ui, sans-serif;
+  --font-hand: 'Patrick Hand', 'Bradley Hand', cursive;
+
+  /* Radios */
+  --r-card: 24px;
+  --r-input: 16px;
+  --r-pill: 999px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea, select { font-family: inherit; color: inherit; }
+textarea { resize: none; }
+
+/* ============================================================
+   LAYOUT PRINCIPAL — 3 columnas en iPad horizontal
+   ============================================================ */
+
+.app {
+  display: grid;
+  grid-template-columns: 220px 1fr 320px;
+  gap: 16px;
+  padding: 16px;
+  min-height: 100vh;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* Tablet vertical / móvil → 1 columna, sidebar arriba como tabs */
+@media (max-width: 1024px) {
+  .app {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 12px;
+  }
+  .sidebar-left { order: 1; }
+  .main { order: 2; }
+  .sidebar-right { order: 3; }
+}
+
+/* ============================================================
+   SIDEBAR IZQUIERDO
+   ============================================================ */
+
+.sidebar-left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 8px;
+}
+
+.logo {
+  padding: 0 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.logo-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  color: var(--text);
+  position: relative;
+}
+.logo-text::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 8%;
+  width: 60%;
+  height: 3px;
+  background: var(--amarillo);
+  border-radius: 2px;
+}
+.logo svg { flex-shrink: 0; }
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 20px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--text-soft);
+  background: transparent;
+  text-align: left;
+  width: 100%;
+  transition: background 0.2s, transform 0.15s;
+}
+.nav-item:hover { background: rgba(246,196,69,0.12); }
+.nav-item:active { transform: scale(0.97); }
+.nav-item.active {
+  background: var(--amarillo);
+  color: var(--text);
+}
+.nav-item .nav-icon {
+  width: 32px; height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Rincón de Gina (foto/dibujo) */
+.rincon {
+  margin-top: auto;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.rincon img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--r-card);
+}
+.rincon-placeholder {
+  width: 100%;
+  height: 160px;
+  background: var(--card);
+  border: 1.5px dashed var(--border);
+  border-radius: var(--r-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-mute);
+  font-family: var(--font-hand);
+  font-size: 16px;
+  text-align: center;
+  padding: 16px;
+}
+
+/* ============================================================
+   MAIN — Sección "Hoy"
+   ============================================================ */
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Encabezado */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 8px 8px 0;
+}
+.header-greet h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 32px;
+  color: var(--text);
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.header-greet h1 .sol {
+  display: inline-block;
+  vertical-align: -4px;
+  margin-left: 6px;
+}
+.header-greet p {
+  font-family: var(--font-hand);
+  font-size: 19px;
+  color: var(--text-mute);
+}
+
+/* Sticker washi tape con la fecha */
+.fecha-sticker {
+  position: relative;
+  background: #E8D9FF;
+  border-radius: var(--r-input);
+  padding: 10px 18px 10px 14px;
+  font-family: var(--font-hand);
+  font-size: 16px;
+  color: #553A7A;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--shadow);
+  transform: rotate(-1.5deg);
+}
+.fecha-sticker::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 50px;
+  height: 18px;
+  background: rgba(246,196,69,0.75);
+  transform: translateX(-50%) rotate(-4deg);
+  border-radius: 2px;
+}
+.fecha-sticker svg { width: 18px; height: 18px; flex-shrink: 0; }
+.fecha-sticker .fecha-texto { display: flex; flex-direction: column; line-height: 1.15; }
+.fecha-sticker .fecha-dia { font-size: 12px; opacity: 0.75; }
+
+/* Tarjeta genérica */
+.card {
+  background: var(--card);
+  border-radius: var(--r-card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  position: relative;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Tarjeta tilteada (variantes para sensación scrapbook) */
+.tilt-left { transform: rotate(-0.4deg); }
+.tilt-right { transform: rotate(0.4deg); }
+
+/* ============================================================
+   FRASE DEL DÍA
+   ============================================================ */
+
+.frase {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 16px;
+  align-items: center;
+  background: linear-gradient(135deg, #F3E8FF 0%, #FFEEF5 100%);
+  border: 1px solid #E5D5F0;
+}
+.frase-imagen {
+  width: 96px;
+  height: 96px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--amarillo-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-3deg);
+  box-shadow: var(--shadow);
+}
+.frase-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.frase-contenido h3 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-soft);
+  margin-bottom: 4px;
+}
+.frase-texto {
+  font-family: var(--font-hand);
+  font-size: 21px;
+  line-height: 1.3;
+  color: var(--text);
+}
+.frase-bio {
+  font-size: 12px;
+  color: var(--text-soft);
+  margin-top: 6px;
+  font-style: italic;
+}
+
+/* ============================================================
+   EMOCIONES
+   ============================================================ */
+
+.emociones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 14px;
+}
+
+.emocion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 4px;
+  border-radius: 18px;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+.emocion:hover { transform: translateY(-2px); }
+.emocion:active { transform: scale(0.95); }
+.emocion.selected {
+  background: var(--amarillo-soft);
+  transform: scale(1.05);
+  box-shadow: var(--shadow);
+}
+
+.emocion-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  background: var(--card);
+  overflow: hidden;
+}
+.emocion-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.emocion-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-soft);
+  text-align: center;
+}
+.emocion.selected .emocion-label { color: var(--text); }
+
+/* ============================================================
+   ACTIVIDAD + ALGO BUENO + APRENDÍ
+   ============================================================ */
+
+.row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 700px) {
+  .row-2 { grid-template-columns: 1fr; }
+}
+
+.actividad select,
+.input-base {
+  width: 100%;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-input);
+  padding: 12px 14px;
+  font-size: 15px;
+  color: var(--text);
+  transition: border-color 0.2s;
+  font-family: var(--font-ui);
+}
+.actividad select:focus,
+.input-base:focus {
+  outline: none;
+  border-color: var(--amarillo);
+}
+.actividad textarea,
+textarea.input-base {
+  min-height: 80px;
+  resize: vertical;
+  font-family: var(--font-hand);
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+.actividad-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-soft);
+  margin: 12px 0 6px;
+}
+
+/* Algo bueno — 3 inputs numerados */
+.algo-bueno-list { display: flex; flex-direction: column; gap: 10px; }
+.algo-bueno-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.algo-bueno-num {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--amarillo);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.algo-bueno-item input {
+  flex: 1;
+  background: var(--bg);
+  border: none;
+  border-bottom: 1.5px dashed var(--border);
+  border-radius: 0;
+  padding: 8px 4px;
+  font-family: var(--font-hand);
+  font-size: 17px;
+}
+.algo-bueno-item input:focus {
+  outline: none;
+  border-bottom-color: var(--amarillo);
+}
+
+/* ============================================================
+   MOMENTO DIFÍCIL
+   ============================================================ */
+
+.dificil-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 1.5px dashed var(--border);
+  border-radius: var(--r-card);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.dificil-toggle:hover { background: #FFFDF6; }
+.dificil-toggle.active {
+  background: #FFF3E0;
+  border-style: solid;
+  border-color: #FFD3B6;
+}
+.dificil-check {
+  width: 22px; height: 22px;
+  border: 2px solid var(--text-soft);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.dificil-toggle.active .dificil-check {
+  background: var(--amarillo);
+  border-color: var(--amarillo);
+}
+.dificil-check svg { width: 14px; height: 14px; display: none; }
+.dificil-toggle.active .dificil-check svg { display: block; }
+.dificil-toggle-label {
+  font-family: var(--font-hand);
+  font-size: 18px;
+  color: var(--text-soft);
+}
+
+.dificil-detalle {
+  display: none;
+  margin-top: 12px;
+  background: rgba(255,243,224,0.4);
+  border: 1px solid #FFD3B6;
+  border-radius: var(--r-card);
+  padding: 16px;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+}
+.dificil-detalle.show { display: grid; }
+@media (max-width: 700px) {
+  .dificil-detalle.show { grid-template-columns: 1fr; }
+}
+.dificil-detalle .field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-soft);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dificil-detalle textarea {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-input);
+  padding: 10px;
+  font-family: var(--font-hand);
+  font-size: 16px;
+  width: 100%;
+  min-height: 60px;
+}
+
+/* ============================================================
+   COSAS QUE HICE
+   ============================================================ */
+
+.cosas-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+@media (max-width: 700px) {
+  .cosas-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.cosa {
+  position: relative;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  padding: 12px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s, background 0.2s;
+}
+.cosa:hover { transform: translateY(-2px); }
+.cosa:active { transform: scale(0.97); }
+.cosa.checked {
+  background: #F3FBED;
+  border-color: var(--mint);
+}
+.cosa-img {
+  width: 56px; height: 56px;
+  margin: 0 auto 8px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  font-size: 28px;
+  overflow: hidden;
+}
+.cosa-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.cosa-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-soft);
+  line-height: 1.2;
+}
+.cosa-check {
+  position: absolute;
+  top: 6px; right: 6px;
+  width: 22px; height: 22px;
+  background: #5BAE3F;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+.cosa.checked .cosa-check { display: flex; }
+.cosa-check svg { width: 14px; height: 14px; }
+
+/* ============================================================
+   SIDEBAR DERECHO
+   ============================================================ */
+
+.sidebar-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Avatar + cumple */
+.perfil-mini {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+}
+.perfil-avatar {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: var(--peach);
+  position: relative;
+  overflow: hidden;
+  border: 3px solid var(--card);
+  box-shadow: var(--shadow);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.perfil-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.perfil-avatar .corona {
+  position: absolute;
+  top: -8px; left: 50%;
+  transform: translateX(-50%);
+  width: 28px; height: 28px;
+}
+.perfil-info { flex: 1; }
+.perfil-cumple {
+  font-family: var(--font-hand);
+  font-size: 14px;
+  color: var(--text-soft);
+}
+.perfil-cumple .dias {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--text);
+  display: block;
+  line-height: 1;
+}
+.perfil-altura {
+  font-family: var(--font-hand);
+  font-size: 13px;
+  color: var(--text-mute);
+  margin-top: 4px;
+}
+
+/* Calendario */
+.calendario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.calendario-titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+}
+.cal-nav { display: flex; gap: 6px; }
+.cal-nav button {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-soft);
+}
+.cal-nav button:hover { background: var(--bg); }
+
+.calendario-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.cal-dow {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-mute);
+  padding-bottom: 6px;
+}
+.cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-soft);
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s;
+}
+.cal-day:hover { background: var(--bg); }
+.cal-day.empty { cursor: default; visibility: hidden; }
+.cal-day.future { color: var(--text-mute); }
+.cal-day.today {
+  background: var(--amarillo);
+  color: var(--text);
+}
+.cal-day.selected {
+  box-shadow: 0 0 0 2px var(--coral);
+}
+.cal-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  margin-top: 1px;
+  background: transparent;
+}
+
+/* Resumen semana */
+.resumen .resumen-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 14px;
+}
+.resumen .resumen-line span:first-child {
+  font-family: var(--font-hand);
+  color: var(--text-soft);
+  font-size: 15px;
+}
+.resumen .resumen-line .resumen-valor {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+}
+
+/* Spotify */
+.spotify-card {
+  padding: 14px;
+}
+.spotify-empty {
+  background: var(--bg);
+  border-radius: var(--r-input);
+  padding: 14px;
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: 14px;
+  color: var(--text-mute);
+}
+
+/* ============================================================
+   ESTADOS DE CARGA Y TOAST
+   ============================================================ */
+
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  z-index: 1000;
+  transition: opacity 0.3s;
+}
+.loading-screen.hide { opacity: 0; pointer-events: none; }
+.loading-screen .loader-text {
+  font-family: var(--font-hand);
+  font-size: 20px;
+  color: var(--text-soft);
+}
+.loading-screen .loader-dots span {
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--coral);
+  border-radius: 50%;
+  margin: 0 3px;
+  animation: bounce 1.2s infinite;
+}
+.loading-screen .loader-dots span:nth-child(2) { animation-delay: 0.15s; background: var(--amarillo); }
+.loading-screen .loader-dots span:nth-child(3) { animation-delay: 0.3s; background: var(--mint); }
+@keyframes bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-12px); }
+}
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--text);
+  color: var(--card);
+  padding: 12px 20px;
+  border-radius: var(--r-pill);
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 999;
+  pointer-events: none;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.toast.success { background: #2D5232; }
+
+/* Versión chiquita en una esquina */
+.version-tag {
+  position: fixed;
+  bottom: 8px; right: 8px;
+  font-size: 10px;
+  color: var(--text-mute);
+  font-family: var(--font-hand);
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Placeholder de imagen cuando no se encuentra el archivo */
+.img-fallback {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--text-soft);
+  background: var(--peach);
+}
+
+/* Doodles decorativos */
+.doodle {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Espacios genéricos para próximas secciones */
+.placeholder-seccion {
+  background: var(--card);
+  border: 1.5px dashed var(--border);
+  border-radius: var(--r-card);
+  padding: 60px 20px;
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: 20px;
+  color: var(--text-mute);
+}
+
+/* iOS safe areas */
+@supports (padding: max(0px)) {
+  .app {
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+    padding-top: max(16px, env(safe-area-inset-top));
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Loading inicial -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loader-dots">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="loader-text">abriendo el diario...</div>
+</div>
+
+<div class="app" id="app" style="visibility: hidden;">
+
+  <!-- ============================================================
+       SIDEBAR IZQUIERDO
+       ============================================================ -->
+  <aside class="sidebar-left">
+    <div class="logo">
+      <span class="logo-text">Mi diario</span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F28C8C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+    </div>
+
+    <nav class="nav" id="nav">
+      <button class="nav-item active" data-section="hoy">
+        <span class="nav-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4.5"/>
+            <path d="M12 2v2.5M12 19.5V22M4.22 4.22l1.77 1.77M18.01 18.01l1.77 1.77M2 12h2.5M19.5 12H22M4.22 19.78l1.77-1.77M18.01 5.99l1.77-1.77" stroke="#F6C445" stroke-width="2" fill="none"/>
+          </svg>
+        </span>
+        Hoy
+      </button>
+      <button class="nav-item" data-section="yo-soy">
+        <span class="nav-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#BEE5B0" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 4 C13 8, 16 9, 18 9 C16 11, 15 14, 15 17 L9 17 C9 14, 8 11, 6 9 C8 9, 11 8, 12 4 Z"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </span>
+        Yo soy
+      </button>
+      <button class="nav-item" data-section="charlar">
+        <span class="nav-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#C8B6E2" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 5 C4 4, 5 3, 6 3 L18 3 C19 3, 20 4, 20 5 L20 14 C20 15, 19 16, 18 16 L11 16 L7 20 L7 16 L6 16 C5 16, 4 15, 4 14 Z"/>
+          </svg>
+        </span>
+        Charlar
+      </button>
+      <button class="nav-item" data-section="retos">
+        <span class="nav-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3 L14.5 9 L21 9.5 L16 14 L17.5 20.5 L12 17 L6.5 20.5 L8 14 L3 9.5 L9.5 9 Z"/>
+          </svg>
+        </span>
+        Retos
+      </button>
+      <button class="nav-item" data-section="biblioteca">
+        <span class="nav-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#A9D6E5" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4 L11 4 L11 20 L4 20 Z M11 4 L11 20 M11 4 L19 5 L18 18 L11 20"/>
+          </svg>
+        </span>
+        Biblioteca
+      </button>
+      <button class="nav-item" data-section="capsula">
+        <span class="nav-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#F28C8C" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 3 L17 3 L17 8 C17 10, 15 11, 13 12 C15 13, 17 14, 17 16 L17 21 L7 21 L7 16 C7 14, 9 13, 11 12 C9 11, 7 10, 7 8 Z"/>
+          </svg>
+        </span>
+        Cápsula
+      </button>
+    </nav>
+
+    <div class="rincon" id="rincon">
+      <!-- Se inyecta dinámicamente; si no encuentra rincon-gina.webp, deja un placeholder bonito -->
+    </div>
+  </aside>
+
+  <!-- ============================================================
+       MAIN — sección Hoy (por defecto)
+       ============================================================ -->
+  <main class="main" id="main">
+
+    <div class="header">
+      <div class="header-greet">
+        <h1>¡Hola Georgin! <span class="sol">☀️</span></h1>
+        <p>¿Cómo está tu pequeño universo hoy?</p>
+      </div>
+      <div class="fecha-sticker" id="fechaSticker">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#553A7A" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <div class="fecha-texto">
+          <span class="fecha-larga" id="fechaLarga">—</span>
+          <span class="fecha-dia" id="fechaDia">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="seccionContenido">
+      <!-- Aquí va el contenido de la sección activa. Por defecto carga "Hoy". -->
+    </div>
+
+  </main>
+
+  <!-- ============================================================
+       SIDEBAR DERECHO
+       ============================================================ -->
+  <aside class="sidebar-right">
+
+    <div class="card perfil-mini">
+      <div class="perfil-avatar" id="perfilAvatar">
+        <svg class="corona" viewBox="0 0 32 32" fill="#F28C8C"><path d="M4 20 L8 10 L12 16 L16 8 L20 16 L24 10 L28 20 Z"/></svg>
+        <span style="font-family: var(--font-display); font-weight:700; font-size: 28px; color: white;">G</span>
+      </div>
+      <div class="perfil-info">
+        <div class="perfil-cumple">
+          <span class="dias" id="diasCumple">—</span>
+          días para tu cumple 🎂
+        </div>
+        <div class="perfil-altura" id="perfilAltura">altura: — cm</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="calendario-header">
+        <span class="calendario-titulo" id="calTitulo">—</span>
+        <div class="cal-nav">
+          <button id="calPrev" aria-label="Mes anterior">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button id="calNext" aria-label="Mes siguiente">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="calendario-grid" id="calendarioGrid"></div>
+    </div>
+
+    <div class="card resumen">
+      <div class="card-title">📊 Esta semana</div>
+      <div class="resumen-line">
+        <span>páginas escritas</span>
+        <span class="resumen-valor" id="resumenPaginas">0 / 7</span>
+      </div>
+      <div class="resumen-line">
+        <span>emoción favorita</span>
+        <span class="resumen-valor" id="resumenEmocion">—</span>
+      </div>
+    </div>
+
+    <div class="card spotify-card">
+      <div class="card-title">🎵 Canción del día</div>
+      <div class="spotify-empty">
+        Próximamente. Por ahora pegá un link de Spotify en el Sheet.
+      </div>
+    </div>
+
+  </aside>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="version-tag">v0.1.0</div>
+
+<script>
+/* ============================================================
+   GINA — Frontend v0.1
+   Vanilla JS. Sin frameworks. Sin build.
+   ============================================================ */
+
+// === CONFIG ===
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwnuMgU-Ooa0qsq_MgDAo4FOBGHH5WiVhgSEFtQ1LPbXUfouaHw9jJbYLEE39btsJQD/exec';
+const VERSION = 'v0.1.0';
+
+// === ESTADO GLOBAL ===
+const state = {
+  bootstrap: null,           // datos cargados al inicio
+  fechaActual: null,         // YYYY-MM-DD que está editando
+  diaActual: null,           // datos del día actual
+  diasCalendario: [],        // todos los días para pintar el calendario
+  calendarioMes: null,       // mes que se está mostrando (objeto Date)
+  seccionActiva: 'hoy',
+  guardandoTimer: null,
+  saving: false,
+};
+
+// === HELPERS ===
+
+function $(sel) { return document.querySelector(sel); }
+function $$(sel) { return document.querySelectorAll(sel); }
+
+function fmtFecha(d) {
+  // YYYY-MM-DD en hora local
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const DIAS_CORTOS = ['L','M','X','J','V','S','D'];
+
+function fechaLarga(d) {
+  return `${d.getDate()} de ${MESES[d.getMonth()]} de ${d.getFullYear()}`;
+}
+function fechaDiaSemana(d) {
+  return DIAS[d.getDay()];
+}
+
+function toast(msg, type) {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function slug(s) {
+  return String(s || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+// === FETCH BACKEND ===
+// Usamos GET con parámetros (CORS-friendly en iOS) — patrón heredado de BROmendations
+async function api(action, params = {}) {
+  const url = new URL(BACKEND_URL);
+  url.searchParams.set('action', action);
+  Object.entries(params).forEach(([k, v]) => {
+    url.searchParams.set(k, typeof v === 'object' ? JSON.stringify(v) : String(v));
+  });
+  const res = await fetch(url.toString(), { method: 'GET' });
+  const json = await res.json();
+  if (!json.ok) throw new Error(json.error || 'Error desconocido');
+  return json.data;
+}
+
+// === FALLBACK DE IMÁGENES ===
+// Listener global: si una imagen no carga, le ponemos un círculo con la inicial
+document.addEventListener('error', function(e) {
+  const img = e.target;
+  if (img.tagName !== 'IMG') return;
+  if (img.dataset.fallback === 'done') return;
+  img.dataset.fallback = 'done';
+  const parent = img.parentElement;
+  const initial = (img.dataset.initial || img.alt || '?').slice(0, 1).toUpperCase();
+  const bg = img.dataset.bg || '#FFD3B6';
+  parent.innerHTML = `<div class="img-fallback" style="background: ${bg};">${initial}</div>`;
+}, true);
+
+// === SECCIÓN HOY ===
+
+function pintarSeccionHoy() {
+  const html = `
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+
+      <!-- FRASE -->
+      <div class="card frase tilt-left" id="fraseCard">
+        <div class="frase-imagen" id="fraseImagen">
+          <div class="img-fallback">?</div>
+        </div>
+        <div class="frase-contenido">
+          <h3>Alguien dijo una vez…</h3>
+          <div class="frase-texto" id="fraseTexto">—</div>
+          <div class="frase-bio" id="fraseBio"></div>
+        </div>
+      </div>
+
+      <!-- EMOCIONES -->
+      <div class="card">
+        <div class="card-title">Hoy me sentí…</div>
+        <div class="emociones-grid" id="emocionesGrid"></div>
+      </div>
+
+      <!-- ACTIVIDAD + ALGO BUENO + APRENDÍ -->
+      <div class="row-2">
+        <div class="card actividad tilt-right">
+          <div class="card-title">🎫 Actividad del día</div>
+          <select id="actividadSelect">
+            <option value="">Elige una actividad</option>
+          </select>
+          <div class="actividad-label">¿Qué pasó?</div>
+          <textarea id="actividadDetalle" placeholder="Cuéntame los detalles..."></textarea>
+        </div>
+
+        <div class="card tilt-left">
+          <div class="card-title">⭐ Algo bueno de hoy</div>
+          <div class="algo-bueno-list">
+            <div class="algo-bueno-item"><span class="algo-bueno-num">1</span><input id="algoBueno1" placeholder="Escribe algo bueno..." /></div>
+            <div class="algo-bueno-item"><span class="algo-bueno-num">2</span><input id="algoBueno2" placeholder="Escribe algo bueno..." /></div>
+            <div class="algo-bueno-item"><span class="algo-bueno-num">3</span><input id="algoBueno3" placeholder="Escribe algo bueno..." /></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALGO QUE APRENDÍ -->
+      <div class="card tilt-right">
+        <div class="card-title">🌱 Algo que aprendí hoy</div>
+        <textarea id="aprendi" class="input-base" placeholder="Escribe aquí..."></textarea>
+      </div>
+
+      <!-- MOMENTO DIFÍCIL -->
+      <div>
+        <div class="dificil-toggle" id="dificilToggle">
+          <div class="dificil-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#4A3F35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="dificil-toggle-label">¿Hoy hubo un momento difícil? 🌩️</span>
+        </div>
+        <div class="dificil-detalle" id="dificilDetalle">
+          <div>
+            <div class="field-label">🌩️ Qué pasó</div>
+            <textarea id="mdQuePaso" placeholder="Escribe aquí..."></textarea>
+          </div>
+          <div>
+            <div class="field-label">💥 Qué sentí</div>
+            <textarea id="mdQueSenti" placeholder="Escribe aquí..."></textarea>
+          </div>
+          <div>
+            <div class="field-label">🔧 Qué me ayudó</div>
+            <textarea id="mdQueAyudo" placeholder="Escribe aquí..."></textarea>
+          </div>
+          <div>
+            <div class="field-label">❤️ Qué necesito ahora</div>
+            <textarea id="mdQueNecesito" placeholder="Escribe aquí..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- COSAS QUE HICE -->
+      <div class="card">
+        <div class="card-title">✓ Cosas que hice <span id="cosasContador" style="font-family: var(--font-hand); font-weight: normal; color: var(--text-mute); font-size: 14px; margin-left: auto;"></span></div>
+        <div class="cosas-grid" id="cosasGrid"></div>
+      </div>
+
+    </div>
+  `;
+  $('#seccionContenido').innerHTML = html;
+
+  pintarFrase();
+  pintarEmociones();
+  pintarActividades();
+  pintarCosas();
+  conectarInputsHoy();
+}
+
+function pintarFrase() {
+  const frases = (state.bootstrap.frases || []).filter(f => f.frase);
+  if (!frases.length) {
+    $('#fraseTexto').textContent = 'Hoy todavía no hay frase.';
+    return;
+  }
+  // Una frase distinta cada día (índice según día del año)
+  const ahora = new Date();
+  const inicio = new Date(ahora.getFullYear(), 0, 0);
+  const diaAnio = Math.floor((ahora - inicio) / (1000 * 60 * 60 * 24));
+  const f = frases[diaAnio % frases.length];
+
+  $('#fraseTexto').textContent = `"${f.frase}"`;
+  $('#fraseBio').textContent = [f.persona, f.mini_bio].filter(Boolean).join(' · ');
+
+  // Imagen: si la fila tiene 'imagen', uso esa; si no, comodín
+  const cont = $('#fraseImagen');
+  const archivo = f.imagen || `comodin-${(diaAnio % 3) + 1}.webp`;
+  cont.innerHTML = `<img src="img/frases/${archivo}" alt="${f.persona || 'frase'}" data-initial="${(f.persona || '?')[0]}" data-bg="#E8D9FF" />`;
+}
+
+const EMOCIONES = [
+  { slug: 'contenta', label: 'contenta', color: 'var(--e-contenta)' },
+  { slug: 'contentisima', label: 'contentísima', color: 'var(--e-contenta)' },
+  { slug: 'triste', label: 'triste', color: 'var(--e-triste)' },
+  { slug: 'tranquila', label: 'tranquila', color: 'var(--e-tranquila)' },
+  { slug: 'emocionada', label: 'emocionada', color: 'var(--e-emocionada)' },
+  { slug: 'sensible', label: 'sensible', color: 'var(--e-sensible)' },
+  { slug: 'cansada', label: 'cansada', color: 'var(--e-nerviosa)' },
+  { slug: 'frustrada', label: 'frustrada', color: 'var(--e-frustrada)' },
+  { slug: 'orgullosa', label: 'orgullosa', color: 'var(--e-orgullosa)' },
+  { slug: 'confundida', label: 'confundida', color: 'var(--e-orgullosa)' },
+  { slug: 'enfadada', label: 'enfadada', color: 'var(--e-frustrada)' },
+  { slug: 'sola', label: 'sola', color: 'var(--e-triste)' },
+  { slug: 'nerviosa', label: 'nerviosa', color: 'var(--e-nerviosa)' },
+  { slug: 'vergonzosa', label: 'vergonzosa', color: 'var(--e-emocionada)' },
+  { slug: 'enferma', label: 'enferma', color: 'var(--e-tranquila)' },
+  { slug: 'otro', label: 'otro', color: 'var(--bg)' },
+];
+
+function pintarEmociones() {
+  const grid = $('#emocionesGrid');
+  grid.innerHTML = EMOCIONES.map(e => `
+    <div class="emocion" data-slug="${e.slug}">
+      <div class="emocion-img" style="background: ${e.color};">
+        <img src="img/emociones/${e.slug}.webp" alt="${e.label}" data-initial="${e.label[0]}" data-bg="${e.color}" />
+      </div>
+      <div class="emocion-label">${e.label}</div>
+    </div>
+  `).join('');
+
+  grid.addEventListener('click', e => {
+    const el = e.target.closest('.emocion');
+    if (!el) return;
+    $$('.emocion').forEach(x => x.classList.remove('selected'));
+    el.classList.add('selected');
+    state.diaActual.emocion = el.dataset.slug;
+    pintarCalendario(); // refresca el puntito del día en el cal
+    guardarDebounced();
+  });
+}
+
+function pintarActividades() {
+  // Por ahora no hay catálogo de actividades en el Sheet — categorías hardcodeadas
+  // (luego podemos meterlas en una pestaña editable)
+  const ACTIVIDADES = ['cine', 'cafecito', 'juntada con amigos', 'viaje / escapada', 'museo', 'parque', 'cole', 'familia', 'otro'];
+  const sel = $('#actividadSelect');
+  sel.innerHTML = '<option value="">Elige una actividad</option>' + ACTIVIDADES.map(a => `<option value="${a}">${a}</option>`).join('');
+}
+
+function pintarCosas() {
+  let checks = (state.bootstrap.checks_cosas_hice || []);
+  // Mostrar 5 al azar (consistentes por día) según el día actual
+  const seed = state.fechaActual ? state.fechaActual.split('-').join('') : Date.now();
+  const arr = [...checks].sort((a, b) => {
+    const ha = hashStr(a.id + seed);
+    const hb = hashStr(b.id + seed);
+    return ha - hb;
+  });
+  const elegidos = arr.slice(0, 5);
+  const grid = $('#cosasGrid');
+  grid.innerHTML = elegidos.map(c => `
+    <div class="cosa" data-id="${c.id}">
+      <div class="cosa-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="cosa-img">
+        <img src="img/cosas/${c.imagen || c.emoji || 'cosa-01.webp'}" alt="${c.texto}" data-initial="${(c.texto || '?')[0]}" data-bg="#FFD3B6" />
+      </div>
+      <div class="cosa-label">${c.texto || ''}</div>
+    </div>
+  `).join('');
+
+  grid.addEventListener('click', e => {
+    const el = e.target.closest('.cosa');
+    if (!el) return;
+    el.classList.toggle('checked');
+    actualizarContadorCosas();
+    guardarDebounced();
+  });
+
+  actualizarContadorCosas();
+}
+
+function actualizarContadorCosas() {
+  const total = $$('#cosasGrid .cosa').length;
+  const checks = $$('#cosasGrid .cosa.checked').length;
+  $('#cosasContador').textContent = `(${checks} de ${total})`;
+}
+
+function hashStr(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h << 5) - h + s.charCodeAt(i) | 0;
+  return Math.abs(h);
+}
+
+function conectarInputsHoy() {
+  // Recuperar valores guardados del día actual
+  const d = state.diaActual || {};
+
+  // Emoción
+  if (d.emocion) {
+    const el = document.querySelector(`.emocion[data-slug="${d.emocion}"]`);
+    if (el) el.classList.add('selected');
+  }
+
+  // Actividad
+  if (d.actividad_categoria) $('#actividadSelect').value = d.actividad_categoria;
+  $('#actividadDetalle').value = d.actividad_detalle || '';
+
+  // Algo bueno
+  $('#algoBueno1').value = d.algo_bueno_1 || '';
+  $('#algoBueno2').value = d.algo_bueno_2 || '';
+  $('#algoBueno3').value = d.algo_bueno_3 || '';
+
+  // Aprendí
+  $('#aprendi').value = d.aprendi || '';
+
+  // Momento difícil
+  if (d.momento_dificil === 'true' || d.momento_dificil === true) {
+    $('#dificilToggle').classList.add('active');
+    $('#dificilDetalle').classList.add('show');
+  }
+  $('#mdQuePaso').value = d.md_que_paso || '';
+  $('#mdQueSenti').value = d.md_que_senti || '';
+  $('#mdQueAyudo').value = d.md_que_ayudo || '';
+  $('#mdQueNecesito').value = d.md_que_necesito || '';
+
+  // Cosas que hice
+  try {
+    const cosas = JSON.parse(d.cosas_hice_json || '[]');
+    if (Array.isArray(cosas)) {
+      cosas.forEach(id => {
+        const el = document.querySelector(`.cosa[data-id="${id}"]`);
+        if (el) el.classList.add('checked');
+      });
+      actualizarContadorCosas();
+    }
+  } catch(_) {}
+
+  // === Listeners para autosave ===
+  const inputs = ['#actividadSelect', '#actividadDetalle', '#algoBueno1', '#algoBueno2', '#algoBueno3', '#aprendi', '#mdQuePaso', '#mdQueSenti', '#mdQueAyudo', '#mdQueNecesito'];
+  inputs.forEach(sel => {
+    const el = $(sel);
+    if (el) el.addEventListener('input', guardarDebounced);
+  });
+
+  $('#dificilToggle').addEventListener('click', () => {
+    const t = $('#dificilToggle');
+    t.classList.toggle('active');
+    $('#dificilDetalle').classList.toggle('show');
+    guardarDebounced();
+  });
+}
+
+// === GUARDADO ===
+
+function recopilarDia() {
+  const cosasChecked = [...$$('#cosasGrid .cosa.checked')].map(el => el.dataset.id);
+  const emocionEl = $('.emocion.selected');
+  return {
+    id: state.diaActual?.id || undefined,
+    fecha: state.fechaActual,
+    emocion: emocionEl ? emocionEl.dataset.slug : (state.diaActual?.emocion || ''),
+    actividad_categoria: $('#actividadSelect')?.value || '',
+    actividad_detalle: $('#actividadDetalle')?.value || '',
+    algo_bueno_1: $('#algoBueno1')?.value || '',
+    algo_bueno_2: $('#algoBueno2')?.value || '',
+    algo_bueno_3: $('#algoBueno3')?.value || '',
+    aprendi: $('#aprendi')?.value || '',
+    momento_dificil: $('#dificilToggle')?.classList.contains('active') ? 'true' : 'false',
+    md_que_paso: $('#mdQuePaso')?.value || '',
+    md_que_senti: $('#mdQueSenti')?.value || '',
+    md_que_ayudo: $('#mdQueAyudo')?.value || '',
+    md_que_necesito: $('#mdQueNecesito')?.value || '',
+    cosas_hice_json: JSON.stringify(cosasChecked),
+  };
+}
+
+function guardarDebounced() {
+  clearTimeout(state.guardandoTimer);
+  state.guardandoTimer = setTimeout(guardar, 1500);
+}
+
+async function guardar() {
+  if (state.saving) return;
+  state.saving = true;
+  try {
+    const payload = recopilarDia();
+    const res = await api('saveDia', { payload });
+    if (res && res.id) {
+      state.diaActual = { ...state.diaActual, ...payload, id: res.id };
+      toast('Guardado ✨', 'success');
+      // Refrescar calendario (puntito del día actual)
+      const idx = state.diasCalendario.findIndex(d => d.fecha === payload.fecha);
+      if (idx >= 0) state.diasCalendario[idx].emocion = payload.emocion;
+      else state.diasCalendario.push({ fecha: payload.fecha, emocion: payload.emocion });
+      pintarCalendario();
+      pintarResumenSemana();
+    }
+  } catch (err) {
+    console.error(err);
+    toast('No se pudo guardar 😢');
+  } finally {
+    state.saving = false;
+  }
+}
+
+// === CALENDARIO ===
+
+function pintarCalendario() {
+  const m = state.calendarioMes;
+  const titulo = `${MESES[m.getMonth()]} ${m.getFullYear()}`;
+  $('#calTitulo').textContent = titulo.charAt(0).toUpperCase() + titulo.slice(1);
+
+  const grid = $('#calendarioGrid');
+  // DOW headers
+  const dowHtml = DIAS_CORTOS.map(d => `<div class="cal-dow">${d}</div>`).join('');
+
+  const primerDia = new Date(m.getFullYear(), m.getMonth(), 1);
+  const diasMes = new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate();
+  // Lunes = 0
+  const offset = (primerDia.getDay() + 6) % 7;
+
+  const hoy = fmtFecha(new Date());
+
+  let cellsHtml = '';
+  for (let i = 0; i < offset; i++) cellsHtml += `<div class="cal-day empty"></div>`;
+
+  for (let d = 1; d <= diasMes; d++) {
+    const fecha = new Date(m.getFullYear(), m.getMonth(), d);
+    const fkey = fmtFecha(fecha);
+    const isToday = fkey === hoy;
+    const isFuture = fecha > new Date();
+    const isSelected = fkey === state.fechaActual;
+    const dia = state.diasCalendario.find(x => x.fecha === fkey);
+    const color = dia && dia.emocion ? colorEmocion(dia.emocion) : 'transparent';
+
+    cellsHtml += `<div class="cal-day ${isToday ? 'today' : ''} ${isFuture ? 'future' : ''} ${isSelected ? 'selected' : ''}" data-fecha="${fkey}">
+      <span>${d}</span>
+      <span class="cal-dot" style="background: ${color}"></span>
+    </div>`;
+  }
+
+  grid.innerHTML = dowHtml + cellsHtml;
+
+  grid.onclick = (e) => {
+    const c = e.target.closest('.cal-day');
+    if (!c || !c.dataset.fecha) return;
+    cargarDia(c.dataset.fecha);
+  };
+}
+
+function colorEmocion(slug) {
+  const e = EMOCIONES.find(x => x.slug === slug);
+  if (!e) return 'var(--text-mute)';
+  return getComputedStyle(document.documentElement).getPropertyValue(e.color.replace('var(', '').replace(')', '').trim()) || e.color;
+}
+
+function pintarResumenSemana() {
+  // Última semana (lunes a hoy)
+  const hoy = new Date();
+  const lunes = new Date(hoy);
+  lunes.setDate(hoy.getDate() - ((hoy.getDay() + 6) % 7));
+  const semana = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(lunes);
+    d.setDate(lunes.getDate() + i);
+    if (d <= hoy) semana.push(fmtFecha(d));
+  }
+  const escritos = state.diasCalendario.filter(d => semana.includes(d.fecha));
+  $('#resumenPaginas').textContent = `${escritos.length} / 7`;
+
+  // Emoción favorita de la semana
+  const counts = {};
+  escritos.forEach(d => {
+    if (d.emocion) counts[d.emocion] = (counts[d.emocion] || 0) + 1;
+  });
+  const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  $('#resumenEmocion').textContent = top ? top[0] : '—';
+}
+
+// === PERFIL ===
+
+function pintarPerfil() {
+  const p = state.bootstrap.perfil || {};
+
+  // Avatar (si hay)
+  const av = $('#perfilAvatar');
+  if (p.avatar_url && p.avatar_url.length > 4) {
+    av.innerHTML = `<svg class="corona" viewBox="0 0 32 32" fill="#F28C8C"><path d="M4 20 L8 10 L12 16 L16 8 L20 16 L24 10 L28 20 Z"/></svg><img src="${p.avatar_url}" alt="Gina" data-initial="G" data-bg="#FFD3B6" />`;
+  }
+
+  // Días hasta cumple
+  if (p.fecha_cumple) {
+    const hoy = new Date();
+    const cumple = new Date(p.fecha_cumple);
+    cumple.setFullYear(hoy.getFullYear());
+    if (cumple < hoy) cumple.setFullYear(hoy.getFullYear() + 1);
+    const dias = Math.ceil((cumple - hoy) / (1000 * 60 * 60 * 24));
+    $('#diasCumple').textContent = dias;
+  } else {
+    $('#diasCumple').textContent = '—';
+  }
+
+  // Altura
+  try {
+    const alturas = JSON.parse(p.alturas_json || '[]');
+    if (alturas.length) {
+      const ult = alturas[alturas.length - 1];
+      $('#perfilAltura').textContent = `altura: ${ult.cm} cm 📏`;
+    } else {
+      $('#perfilAltura').style.display = 'none';
+    }
+  } catch (_) {
+    $('#perfilAltura').style.display = 'none';
+  }
+}
+
+function pintarRincon() {
+  const cont = $('#rincon');
+  cont.innerHTML = `<img src="img/rincon-gina.webp" alt="Rincón de Gina" data-initial="G" data-bg="#FFD3B6" onerror="this.outerHTML='<div class=\\'rincon-placeholder\\'>tu rincón ✨</div>'" style="border-radius: var(--r-card);" />`;
+}
+
+// === SECCIONES OTRAS (placeholders v0.1) ===
+function pintarSeccionPlaceholder(titulo) {
+  $('#seccionContenido').innerHTML = `<div class="placeholder-seccion">🚧 ${titulo} — próximamente</div>`;
+}
+
+// === NAVEGACIÓN ===
+function cambiarSeccion(s) {
+  state.seccionActiva = s;
+  $$('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.section === s));
+  if (s === 'hoy') {
+    pintarSeccionHoy();
+  } else if (s === 'yo-soy') pintarSeccionPlaceholder('Yo soy');
+  else if (s === 'charlar') pintarSeccionPlaceholder('Charlar');
+  else if (s === 'retos') pintarSeccionPlaceholder('Retos');
+  else if (s === 'biblioteca') pintarSeccionPlaceholder('Biblioteca');
+  else if (s === 'capsula') pintarSeccionPlaceholder('Cápsula');
+}
+
+// === CARGA DE UN DÍA ===
+async function cargarDia(fechaStr) {
+  state.fechaActual = fechaStr;
+  const f = new Date(fechaStr + 'T00:00:00');
+  $('#fechaLarga').textContent = fechaLarga(f);
+  $('#fechaDia').textContent = fechaDiaSemana(f);
+
+  try {
+    const d = await api('getDia', { fecha: fechaStr });
+    state.diaActual = d || { fecha: fechaStr };
+  } catch (err) {
+    console.error(err);
+    state.diaActual = { fecha: fechaStr };
+  }
+
+  if (state.seccionActiva === 'hoy') {
+    pintarSeccionHoy();
+  }
+  pintarCalendario();
+}
+
+// === BOOTSTRAP ===
+
+async function bootstrap() {
+  try {
+    state.bootstrap = await api('getBootstrap');
+  } catch (err) {
+    console.error(err);
+    toast('No se pudo conectar 😢');
+    return;
+  }
+
+  // Pintar UI base
+  pintarPerfil();
+  pintarRincon();
+
+  // Calendario al mes actual
+  state.calendarioMes = new Date();
+  try {
+    state.diasCalendario = await api('getCalendario') || [];
+  } catch (_) { state.diasCalendario = []; }
+
+  pintarCalendario();
+  pintarResumenSemana();
+
+  // Cargar hoy
+  await cargarDia(fmtFecha(new Date()));
+
+  // Mostrar app, ocultar loading
+  $('#app').style.visibility = 'visible';
+  setTimeout(() => $('#loadingScreen').classList.add('hide'), 300);
+}
+
+// === EVENTOS ===
+$('#nav').addEventListener('click', e => {
+  const b = e.target.closest('.nav-item');
+  if (!b) return;
+  cambiarSeccion(b.dataset.section);
+});
+
+$('#calPrev').addEventListener('click', () => {
+  state.calendarioMes = new Date(state.calendarioMes.getFullYear(), state.calendarioMes.getMonth() - 1, 1);
+  pintarCalendario();
+});
+$('#calNext').addEventListener('click', () => {
+  state.calendarioMes = new Date(state.calendarioMes.getFullYear(), state.calendarioMes.getMonth() + 1, 1);
+  pintarCalendario();
+});
+
+// === SERVICE WORKER ===
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/gina/sw.js').catch(() => {});
+  });
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    toast('Nueva versión disponible — recargá', 'success');
+  });
+}
+
+// === ARRANCAR ===
+bootstrap();
+</script>
+
+</body>
+</html>
