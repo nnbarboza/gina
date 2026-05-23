@@ -15,27 +15,23 @@
 <title>Mi diario · Gina</title>
 <style>
 /* ============================================================
-   GINA v0.3 — Más aire, calidez, scrapbook real
+   GINA v0.4 — Densidad correcta para iPad 10.2"/10.9" horizontal
    ============================================================ */
 
 :root {
-  /* Base */
   --bg: #F7F1E8;
   --card: #FFFDF9;
   --border: #E8DDCF;
   --border-soft: #F0E6D6;
 
-  /* Sombras suaves cálidas */
   --shadow-s: 0 2px 6px rgba(214,196,170,0.10);
   --shadow:   0 4px 12px rgba(214,196,170,0.12);
   --shadow-l: 0 8px 20px rgba(214,196,170,0.18);
 
-  /* Texto */
   --text: #4A3F35;
   --text-soft: #6B5D4F;
   --text-mute: #A8927A;
 
-  /* Paleta exacta */
   --amarillo: #F6C445;
   --amarillo-soft: #FFE9A8;
   --coral: #F28C8C;
@@ -44,7 +40,6 @@
   --azul-nube: #A9D6E5;
   --peach: #FFD3B6;
 
-  /* Emociones */
   --e-contenta: #FFD95A;
   --e-tranquila: #BFE3C0;
   --e-emocionada: #FFB3D1;
@@ -54,22 +49,13 @@
   --e-nerviosa: #E8D5B5;
   --e-sensible: #E8D9FF;
 
-  /* Tipografías */
   --font-display: 'Baloo 2', system-ui, sans-serif;
   --font-ui: 'Nunito', system-ui, sans-serif;
   --font-hand: 'Patrick Hand', 'Bradley Hand', cursive;
 
-  /* Radios */
-  --r-card: 24px;
-  --r-input: 16px;
+  --r-card: 20px;
+  --r-input: 14px;
   --r-pill: 999px;
-
-  /* Escala de espaciado */
-  --sp-1: 8px;
-  --sp-2: 16px;
-  --sp-3: 24px;
-  --sp-4: 32px;
-  --sp-5: 48px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -78,8 +64,8 @@ html, body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-ui);
-  font-size: 15px;
-  line-height: 1.55;
+  font-size: 14px;
+  line-height: 1.5;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
@@ -91,30 +77,30 @@ input, textarea, select { font-family: inherit; color: inherit; }
 textarea { resize: none; }
 
 /* ============================================================
-   LAYOUT — 3 columnas con MÁS AIRE
+   LAYOUT — 3 columnas en iPad horizontal y arriba
+   Breakpoint 900: bajo el cual cae a 1 columna
    ============================================================ */
 
 .app {
   display: grid;
-  grid-template-columns: 220px 1fr 320px;
-  gap: var(--sp-3);
-  padding: var(--sp-3);
+  grid-template-columns: 180px 1fr 280px;
+  gap: 14px;
+  padding: 14px;
   min-height: 100vh;
-  max-width: 1600px;
+  max-width: 1500px;
   margin: 0 auto;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 900px) {
   .app {
     grid-template-columns: 1fr;
-    gap: var(--sp-2);
-    padding: var(--sp-2);
+    gap: 12px;
+    padding: 12px;
   }
 }
 
 /* ============================================================
-   SIDEBAR IZQUIERDO — Tarjeta única con MUCHO aire
-   Estructura: logo arriba (con aire) → nav medio → rincón abajo grande
+   SIDEBAR IZQUIERDO
    ============================================================ */
 
 .sidebar-left {
@@ -122,15 +108,24 @@ textarea { resize: none; }
   border: 1px solid var(--border);
   border-radius: var(--r-card);
   box-shadow: var(--shadow);
-  padding: var(--sp-3) var(--sp-2);
+  padding: 16px 12px;
   display: flex;
   flex-direction: column;
-  gap: var(--sp-3);
-  min-height: calc(100vh - var(--sp-3) * 2);
+  gap: 16px;
+  min-height: calc(100vh - 28px);
+  max-height: calc(100vh - 28px);
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .sidebar-left {
+    min-height: auto;
+    max-height: none;
+  }
 }
 
 .logo {
-  padding: var(--sp-1) 0 0 var(--sp-1);
+  padding: 4px 4px 0;
   display: flex;
   align-items: baseline;
   gap: 6px;
@@ -138,14 +133,14 @@ textarea { resize: none; }
 .logo-text {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 28px;
+  font-size: 22px;
   color: var(--text);
   position: relative;
 }
 .logo-text::after {
   content: '';
   position: absolute;
-  bottom: -4px;
+  bottom: -3px;
   left: 0;
   width: 70%;
   height: 3px;
@@ -156,19 +151,19 @@ textarea { resize: none; }
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-top: var(--sp-2);
+  gap: 4px;
+  margin-top: 8px;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
-  border-radius: 20px;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 16px;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 17px;
+  font-size: 15px;
   color: var(--text-soft);
   background: transparent;
   text-align: left;
@@ -183,36 +178,36 @@ textarea { resize: none; }
   box-shadow: var(--shadow-s);
 }
 .nav-item .nav-icon {
-  width: 32px; height: 32px;
+  width: 26px; height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
+.nav-item .nav-icon svg { width: 22px; height: 22px; }
 
-/* Rincón de Gina — DIBUJO GRANDE abajo */
 .rincon {
   margin-top: auto;
-  padding: var(--sp-1);
+  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 0;
+  overflow: hidden;
 }
 .rincon img {
   max-width: 100%;
-  max-height: 240px;
+  max-height: 180px;
   height: auto;
+  width: auto;
   border-radius: var(--r-input);
 }
 .rincon-placeholder {
   width: 100%;
-  min-height: 180px;
-  background: transparent;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  position: relative;
-  padding-bottom: var(--sp-2);
+  padding: 8px 4px;
 }
 
 /* ============================================================
@@ -222,153 +217,135 @@ textarea { resize: none; }
 .main {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-3);
-  max-width: 920px;
+  gap: 14px;
+  max-width: 100%;
   width: 100%;
-  margin: 0 auto;
   position: relative;
 }
 
 #seccionContenido {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-3);
+  gap: 14px;
 }
 
 /* Header con washi tape */
 .header {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: var(--sp-3);
+  gap: 12px;
   align-items: start;
-  padding: var(--sp-1) var(--sp-1) 0;
+  padding: 4px 4px 0;
   position: relative;
 }
 .header-greet h1 {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 34px;
+  font-size: 26px;
   color: var(--text);
   line-height: 1.1;
-  margin-bottom: 6px;
+  margin-bottom: 2px;
 }
 .header-greet h1 .sol {
   display: inline-block;
-  vertical-align: -4px;
-  margin-left: 6px;
+  vertical-align: -3px;
+  margin-left: 4px;
+  font-size: 22px;
 }
 .header-greet p {
   font-family: var(--font-ui);
-  font-size: 16px;
+  font-size: 13px;
   color: var(--text-soft);
 }
-.header-doodles {
-  position: absolute;
-  pointer-events: none;
-}
 
-/* Sticker washi tape de la fecha */
+/* Sticker washi tape */
 .fecha-sticker {
   position: relative;
   background: #EBDFFB;
-  border-radius: 14px;
-  padding: 14px 22px;
+  border-radius: 12px;
+  padding: 10px 16px;
   font-family: var(--font-hand);
-  font-size: 17px;
+  font-size: 14px;
   color: #553A7A;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   box-shadow: var(--shadow);
   transform: rotate(-1.2deg);
-  min-width: 210px;
+  min-width: 175px;
 }
 .fecha-sticker::before {
-  /* cinta amarilla arriba */
   content: '';
   position: absolute;
-  top: -10px;
-  right: 26px;
-  width: 50px;
-  height: 18px;
+  top: -8px;
+  right: 22px;
+  width: 42px;
+  height: 14px;
   background: rgba(246,196,69,0.65);
   transform: rotate(10deg);
   border-radius: 2px;
   box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
-.fecha-sticker svg { width: 18px; height: 18px; flex-shrink: 0; }
+.fecha-sticker svg { width: 16px; height: 16px; flex-shrink: 0; }
 .fecha-sticker .fecha-texto {
   display: flex;
   flex-direction: column;
   line-height: 1.15;
-  text-align: left;
 }
-.fecha-sticker .fecha-larga { font-size: 15px; font-weight: 700; }
-.fecha-sticker .fecha-dia { font-size: 13px; opacity: 0.75; }
+.fecha-sticker .fecha-larga { font-size: 13px; font-weight: 700; }
+.fecha-sticker .fecha-dia { font-size: 12px; opacity: 0.75; }
 
-/* Tarjeta genérica - MUCHO más aire */
+/* Tarjeta genérica */
 .card {
   background: var(--card);
   border-radius: var(--r-card);
   border: 1px solid var(--border-soft);
   box-shadow: var(--shadow);
-  padding: var(--sp-3);
+  padding: 16px;
   position: relative;
 }
 
 .card-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 18px;
+  font-size: 15px;
   color: var(--text);
-  margin-bottom: var(--sp-2);
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
 }
-
-/* Doodle decorativo sutil dentro de cards (esquina) */
-.card-doodle {
-  position: absolute;
-  pointer-events: none;
-  opacity: 0.6;
-}
-.card-doodle.tr { top: 14px; right: 14px; }
-.card-doodle.br { bottom: 14px; right: 14px; }
-.card-doodle.bl { bottom: 14px; left: 14px; }
 
 /* ============================================================
-   FRASE + EMOCIONES — fila
+   FRASE + EMOCIONES
    ============================================================ */
 
 .row-frase-emociones {
   display: grid;
-  grid-template-columns: minmax(280px, 380px) 1fr;
-  gap: var(--sp-3);
+  grid-template-columns: minmax(220px, 320px) 1fr;
+  gap: 14px;
   align-items: stretch;
 }
 @media (max-width: 900px) {
   .row-frase-emociones { grid-template-columns: 1fr; }
 }
 
-/* FRASE — nota especial scrapbook */
 .frase {
   background: linear-gradient(140deg, #EFE2FB 0%, #FBEAF3 100%);
   border: 1px solid #E5D5F0;
-  padding: var(--sp-3);
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: var(--sp-2);
+  gap: 10px;
   position: relative;
 }
 .frase::before {
-  /* Washi tape encima */
   content: '';
   position: absolute;
-  top: -8px;
+  top: -7px;
   left: 30%;
-  width: 60px;
-  height: 14px;
+  width: 50px;
+  height: 12px;
   background: rgba(246,196,69,0.55);
   transform: rotate(-4deg);
   border-radius: 2px;
@@ -377,72 +354,76 @@ textarea { resize: none; }
 .frase-header {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 16px;
+  font-size: 13px;
   color: #6B4A98;
   text-align: center;
   letter-spacing: 0.2px;
 }
 .frase-body {
   display: grid;
-  grid-template-columns: 96px 1fr;
-  gap: 14px;
+  grid-template-columns: 76px 1fr;
+  gap: 12px;
   align-items: center;
 }
 .frase-imagen {
-  width: 96px;
-  height: 116px;
-  border-radius: 16px;
+  width: 76px;
+  height: 92px;
+  border-radius: 12px;
   overflow: hidden;
   background: var(--card);
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: var(--shadow-s);
-  border: 3px solid var(--card);
+  border: 2.5px solid var(--card);
   transform: rotate(-2deg);
 }
-.frase-imagen img {
-  width: 100%; height: 100%; object-fit: cover;
-}
+.frase-imagen img { width: 100%; height: 100%; object-fit: cover; }
 .frase-persona {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 18px;
+  font-size: 15px;
   color: #6B4A98;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 .frase-texto {
   font-family: var(--font-hand);
-  font-size: 19px;
+  font-size: 15px;
   line-height: 1.3;
   color: var(--text);
 }
 .frase-bio {
   font-family: var(--font-hand);
-  font-size: 15px;
+  font-size: 13px;
   color: var(--text-soft);
-  padding-top: var(--sp-2);
+  padding-top: 8px;
   border-top: 1px dashed #D9C7E8;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 /* EMOCIONES */
 .emociones-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 10px;
-  row-gap: 18px;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+  row-gap: 10px;
 }
-@media (max-width: 700px) {
+@media (max-width: 1200px) {
+  .emociones-grid { grid-template-columns: repeat(7, 1fr); }
+}
+@media (max-width: 900px) {
+  .emociones-grid { grid-template-columns: repeat(8, 1fr); }
+}
+@media (max-width: 600px) {
   .emociones-grid { grid-template-columns: repeat(4, 1fr); }
 }
 .emocion {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  padding: 8px 4px;
-  border-radius: 16px;
+  gap: 4px;
+  padding: 4px 2px;
+  border-radius: 12px;
   background: transparent;
   cursor: pointer;
   transition: transform 0.2s, background 0.2s;
@@ -456,8 +437,8 @@ textarea { resize: none; }
   box-shadow: 0 0 0 3px var(--amarillo);
 }
 .emocion-img {
-  width: 56px;
-  height: 56px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -466,26 +447,24 @@ textarea { resize: none; }
   overflow: hidden;
   transition: box-shadow 0.2s;
 }
-.emocion-img img {
-  width: 100%; height: 100%; object-fit: cover;
-}
+.emocion-img img { width: 100%; height: 100%; object-fit: cover; }
 .emocion-label {
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
   color: var(--text-soft);
   text-align: center;
-  line-height: 1.15;
+  line-height: 1.1;
 }
 .emocion.selected .emocion-label { color: var(--text); }
 
 /* ============================================================
-   ACTIVIDAD + (ALGO BUENO + APRENDÍ)
+   ACTIVIDAD + ALGO BUENO + APRENDÍ
    ============================================================ */
 
 .row-actividad-bueno {
   display: grid;
-  grid-template-columns: minmax(280px, 380px) 1fr;
-  gap: var(--sp-3);
+  grid-template-columns: minmax(220px, 320px) 1fr;
+  gap: 14px;
   align-items: stretch;
 }
 @media (max-width: 900px) {
@@ -494,7 +473,7 @@ textarea { resize: none; }
 .bueno-aprendi-col {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--sp-3);
+  gap: 14px;
 }
 @media (max-width: 700px) {
   .bueno-aprendi-col { grid-template-columns: 1fr; }
@@ -505,18 +484,18 @@ select.input-base, input.input-base, textarea.input-base {
   background: var(--bg);
   border: 1.5px solid var(--border-soft);
   border-radius: var(--r-input);
-  padding: 13px 16px;
-  font-size: 15px;
+  padding: 10px 12px;
+  font-size: 13px;
   color: var(--text);
   transition: border-color 0.2s;
   font-family: var(--font-ui);
 }
 select.input-base { cursor: pointer; }
 textarea.input-base {
-  min-height: 88px;
+  min-height: 64px;
   resize: vertical;
   font-family: var(--font-hand);
-  font-size: 18px;
+  font-size: 15px;
   line-height: 1.4;
 }
 .input-base:focus {
@@ -525,26 +504,22 @@ textarea.input-base {
 }
 
 .actividad-label {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-soft);
-  margin: 14px 0 8px;
+  margin: 10px 0 6px;
 }
 
-.algo-bueno-list { display: flex; flex-direction: column; gap: 12px; }
-.algo-bueno-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+.algo-bueno-list { display: flex; flex-direction: column; gap: 8px; }
+.algo-bueno-item { display: flex; align-items: center; gap: 10px; }
 .algo-bueno-num {
-  width: 30px; height: 30px;
+  width: 24px; height: 24px;
   border-radius: 50%;
   background: var(--amarillo);
   color: var(--text);
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 15px;
+  font-size: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -556,15 +531,12 @@ textarea.input-base {
   border: none;
   border-bottom: 1.5px dashed var(--border);
   border-radius: 0;
-  padding: 8px 4px;
+  padding: 6px 4px;
   font-family: var(--font-hand);
-  font-size: 17px;
+  font-size: 14px;
 }
 .algo-bueno-item input::placeholder { color: var(--text-mute); }
-.algo-bueno-item input:focus {
-  outline: none;
-  border-bottom-color: var(--amarillo);
-}
+.algo-bueno-item input:focus { outline: none; border-bottom-color: var(--amarillo); }
 
 .aprendi-card {
   background: linear-gradient(140deg, #EFFBEA 0%, #FFFDF9 60%);
@@ -582,38 +554,37 @@ textarea.input-base {
 .dificil-toggle {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   cursor: pointer;
   user-select: none;
 }
 .dificil-check {
-  width: 24px; height: 24px;
+  width: 20px; height: 20px;
   border: 2px solid var(--text-soft);
-  border-radius: 7px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   background: var(--card);
-  transition: background 0.2s, border-color 0.2s;
 }
 .dificil-card.active .dificil-check {
   background: var(--amarillo);
   border-color: var(--amarillo);
 }
-.dificil-check svg { width: 14px; height: 14px; display: none; }
+.dificil-check svg { width: 12px; height: 12px; display: none; }
 .dificil-card.active .dificil-check svg { display: block; }
 .dificil-toggle-label {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 17px;
+  font-size: 14px;
   color: var(--text);
 }
 .dificil-detalle {
   display: none;
-  margin-top: var(--sp-3);
+  margin-top: 14px;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
+  gap: 10px;
 }
 .dificil-card.active .dificil-detalle { display: grid; }
 @media (max-width: 900px) {
@@ -626,13 +597,13 @@ textarea.input-base {
   background: var(--card);
   border: 1px solid var(--border-soft);
   border-radius: var(--r-input);
-  padding: 14px;
+  padding: 10px;
 }
 .dificil-campo .field-label {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--text-soft);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -643,19 +614,19 @@ textarea.input-base {
   padding: 0;
   width: 100%;
   font-family: var(--font-hand);
-  font-size: 16px;
-  min-height: 64px;
+  font-size: 14px;
+  min-height: 44px;
 }
 .dificil-campo textarea:focus { outline: none; }
 
 /* ============================================================
-   COSAS QUE HICE — placeholders pastel
+   COSAS QUE HICE
    ============================================================ */
 
 .cosas-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
+  gap: 10px;
 }
 @media (max-width: 700px) {
   .cosas-grid { grid-template-columns: repeat(2, 1fr); }
@@ -665,44 +636,39 @@ textarea.input-base {
   position: relative;
   background: var(--card);
   border: 1.5px solid var(--border-soft);
-  border-radius: 20px;
-  padding: 16px 10px 14px;
+  border-radius: 16px;
+  padding: 12px 8px 10px;
   text-align: center;
   cursor: pointer;
   transition: transform 0.2s, border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
-.cosa:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow);
-}
+.cosa:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 .cosa:active { transform: scale(0.97); }
 .cosa.checked {
   background: #F3FBED;
   border-color: var(--mint);
 }
 .cosa-img {
-  width: 76px; height: 76px;
-  margin: 0 auto 10px;
-  border-radius: 18px;
+  width: 56px; height: 56px;
+  margin: 0 auto 6px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--peach);
   overflow: hidden;
 }
-.cosa-img img {
-  width: 100%; height: 100%; object-fit: cover;
-}
+.cosa-img img { width: 100%; height: 100%; object-fit: cover; }
 .cosa-label {
   font-family: var(--font-hand);
-  font-size: 15px;
+  font-size: 13px;
   color: var(--text);
   line-height: 1.2;
 }
 .cosa-check {
   position: absolute;
-  top: 10px; right: 10px;
-  width: 24px; height: 24px;
+  top: 8px; right: 8px;
+  width: 20px; height: 20px;
   background: #5BAE3F;
   border-radius: 50%;
   display: none;
@@ -711,20 +677,15 @@ textarea.input-base {
   box-shadow: var(--shadow-s);
 }
 .cosa.checked .cosa-check { display: flex; }
-.cosa-check svg { width: 14px; height: 14px; }
+.cosa-check svg { width: 12px; height: 12px; }
 
-/* Placeholder pastel rotativo en cosas */
 .cosa-img.pastel-1 { background: #FFD3B6; }
 .cosa-img.pastel-2 { background: #BEE5B0; }
 .cosa-img.pastel-3 { background: #FFB3D1; }
 .cosa-img.pastel-4 { background: #C8B6E2; }
 .cosa-img.pastel-5 { background: #A9D6E5; }
 
-.cosa-placeholder-icon {
-  width: 36px;
-  height: 36px;
-  opacity: 0.7;
-}
+.cosa-placeholder-icon { width: 28px; height: 28px; opacity: 0.75; }
 
 /* ============================================================
    SIDEBAR DERECHO
@@ -733,18 +694,18 @@ textarea.input-base {
 .sidebar-right {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-3);
+  gap: 12px;
 }
 
 .perfil-card {
   display: grid;
-  grid-template-columns: 72px 1fr;
-  gap: var(--sp-2);
+  grid-template-columns: 56px 1fr;
+  gap: 12px;
   align-items: center;
-  padding: var(--sp-3);
+  padding: 14px;
 }
 .perfil-avatar {
-  width: 72px; height: 72px;
+  width: 56px; height: 56px;
   border-radius: 50%;
   background: var(--peach);
   position: relative;
@@ -757,9 +718,9 @@ textarea.input-base {
 }
 .perfil-avatar .corona {
   position: absolute;
-  top: -12px; left: 50%;
+  top: -10px; left: 50%;
   transform: translateX(-50%) rotate(-8deg);
-  width: 30px; height: 30px;
+  width: 24px; height: 24px;
 }
 .perfil-avatar .avatar-inner {
   width: 100%; height: 100%;
@@ -773,51 +734,51 @@ textarea.input-base {
 .perfil-avatar .inicial {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 28px;
+  font-size: 22px;
   color: var(--text);
 }
-.perfil-info { display: flex; flex-direction: column; gap: 2px; }
+.perfil-info { display: flex; flex-direction: column; gap: 1px; }
 .perfil-cumple-label {
   font-family: var(--font-hand);
-  font-size: 14px;
+  font-size: 12px;
   color: var(--text-soft);
   line-height: 1;
 }
 .perfil-cumple-dias {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 32px;
+  font-size: 22px;
   color: var(--text);
   line-height: 1;
-  margin: 4px 0;
+  margin: 2px 0;
 }
 .perfil-cumple-bottom {
   font-family: var(--font-hand);
-  font-size: 14px;
+  font-size: 12px;
   color: var(--text-soft);
   line-height: 1.1;
 }
 .perfil-altura {
   font-family: var(--font-hand);
-  font-size: 13px;
+  font-size: 11px;
   color: var(--text-mute);
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .calendario-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--sp-2);
+  margin-bottom: 8px;
 }
 .calendario-titulo {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 17px;
+  font-size: 14px;
 }
-.cal-nav { display: flex; gap: 4px; }
+.cal-nav { display: flex; gap: 2px; }
 .cal-nav button {
-  width: 28px; height: 28px;
+  width: 22px; height: 22px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -829,14 +790,14 @@ textarea.input-base {
 .calendario-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+  gap: 3px;
 }
 .cal-dow {
   text-align: center;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: var(--text-mute);
-  padding-bottom: 6px;
+  padding-bottom: 4px;
 }
 .cal-day {
   aspect-ratio: 1;
@@ -844,10 +805,10 @@ textarea.input-base {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--text-soft);
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   position: relative;
   transition: background 0.15s;
@@ -864,9 +825,9 @@ textarea.input-base {
   box-shadow: inset 0 0 0 2px var(--coral);
 }
 .cal-dot {
-  width: 5px; height: 5px;
+  width: 4px; height: 4px;
   border-radius: 50%;
-  margin-top: 2px;
+  margin-top: 1px;
   background: transparent;
 }
 
@@ -874,36 +835,27 @@ textarea.input-base {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 0;
+  padding: 2px 0;
 }
 .resumen .resumen-line span:first-child {
   font-family: var(--font-hand);
   color: var(--text-soft);
-  font-size: 15px;
+  font-size: 13px;
 }
 .resumen .resumen-line .resumen-valor {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .spotify-empty {
   background: var(--bg);
   border-radius: var(--r-input);
-  padding: var(--sp-2);
+  padding: 10px;
   text-align: center;
   font-family: var(--font-hand);
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-mute);
-}
-
-/* ============================================================
-   DOODLES decorativos (en main)
-   ============================================================ */
-.doodle {
-  position: absolute;
-  pointer-events: none;
-  z-index: 0;
 }
 
 /* ============================================================
@@ -918,41 +870,41 @@ textarea.input-base {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: 12px;
   z-index: 1000;
   transition: opacity 0.3s;
 }
 .loading-screen.hide { opacity: 0; pointer-events: none; }
 .loading-screen .loader-text {
   font-family: var(--font-hand);
-  font-size: 20px;
+  font-size: 18px;
   color: var(--text-soft);
 }
 .loading-screen .loader-dots span {
   display: inline-block;
-  width: 10px; height: 10px;
+  width: 8px; height: 8px;
   background: var(--coral);
   border-radius: 50%;
-  margin: 0 4px;
+  margin: 0 3px;
   animation: bounce 1.2s infinite;
 }
 .loading-screen .loader-dots span:nth-child(2) { animation-delay: 0.15s; background: var(--amarillo); }
 .loading-screen .loader-dots span:nth-child(3) { animation-delay: 0.3s; background: var(--mint); }
 @keyframes bounce {
   0%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-14px); }
+  40% { transform: translateY(-12px); }
 }
 
 .toast {
   position: fixed;
-  bottom: 24px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%) translateY(80px);
   background: var(--text);
   color: var(--card);
-  padding: 12px 22px;
+  padding: 10px 18px;
   border-radius: var(--r-pill);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   box-shadow: var(--shadow-l);
   opacity: 0;
@@ -960,15 +912,12 @@ textarea.input-base {
   z-index: 999;
   pointer-events: none;
 }
-.toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .toast.success { background: #2D5232; }
 
 .version-tag {
   position: fixed;
-  bottom: 8px; right: 10px;
+  bottom: 6px; right: 8px;
   font-size: 10px;
   color: var(--text-mute);
   font-family: var(--font-hand);
@@ -983,7 +932,7 @@ textarea.input-base {
   justify-content: center;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 22px;
+  font-size: 18px;
   color: var(--text);
   background: var(--peach);
 }
@@ -992,19 +941,41 @@ textarea.input-base {
   background: var(--card);
   border: 1.5px dashed var(--border);
   border-radius: var(--r-card);
-  padding: 80px var(--sp-3);
+  padding: 60px 20px;
   text-align: center;
   font-family: var(--font-hand);
-  font-size: 20px;
+  font-size: 18px;
   color: var(--text-mute);
+}
+
+/* Aviso de orientación */
+.orientacion-aviso {
+  display: none;
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--amarillo-soft);
+  border: 1px solid var(--amarillo);
+  border-radius: var(--r-pill);
+  padding: 8px 16px;
+  font-family: var(--font-hand);
+  font-size: 13px;
+  color: var(--text);
+  box-shadow: var(--shadow);
+  z-index: 500;
+  white-space: nowrap;
+}
+@media (max-width: 900px) and (orientation: portrait) and (min-width: 600px) {
+  .orientacion-aviso { display: flex; align-items: center; gap: 6px; }
 }
 
 @supports (padding: max(0px)) {
   .app {
-    padding-left: max(var(--sp-3), env(safe-area-inset-left));
-    padding-right: max(var(--sp-3), env(safe-area-inset-right));
-    padding-top: max(var(--sp-3), env(safe-area-inset-top));
-    padding-bottom: max(var(--sp-3), env(safe-area-inset-bottom));
+    padding-left: max(14px, env(safe-area-inset-left));
+    padding-right: max(14px, env(safe-area-inset-right));
+    padding-top: max(14px, env(safe-area-inset-top));
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
   }
 }
 </style>
@@ -1020,13 +991,11 @@ textarea.input-base {
 
 <div class="app" id="app" style="visibility: hidden;">
 
-  <!-- ============================================================
-       SIDEBAR IZQUIERDO
-       ============================================================ -->
+  <!-- SIDEBAR IZQUIERDO -->
   <aside class="sidebar-left">
     <div class="logo">
       <span class="logo-text">Mi diario</span>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F28C8C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F28C8C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
       </svg>
     </div>
@@ -1034,7 +1003,7 @@ textarea.input-base {
     <nav class="nav" id="nav">
       <button class="nav-item active" data-section="hoy">
         <span class="nav-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="4.5"/>
             <path d="M12 2v2.5M12 19.5V22M4.22 4.22l1.77 1.77M18.01 18.01l1.77 1.77M2 12h2.5M19.5 12H22M4.22 19.78l1.77-1.77M18.01 5.99l1.77-1.77" stroke="#F6C445" stroke-width="2.2" fill="none"/>
           </svg>
@@ -1043,7 +1012,7 @@ textarea.input-base {
       </button>
       <button class="nav-item" data-section="yo-soy">
         <span class="nav-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="#BEE5B0" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" fill="#BEE5B0" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 4 C13 8, 16 9, 18 9 C16 11, 15 14, 15 17 L9 17 C9 14, 8 11, 6 9 C8 9, 11 8, 12 4 Z"/>
             <line x1="12" y1="17" x2="12" y2="21"/>
           </svg>
@@ -1052,7 +1021,7 @@ textarea.input-base {
       </button>
       <button class="nav-item" data-section="charlar">
         <span class="nav-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="#C8B6E2" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" fill="#C8B6E2" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 5 C4 4, 5 3, 6 3 L18 3 C19 3, 20 4, 20 5 L20 14 C20 15, 19 16, 18 16 L11 16 L7 20 L7 16 L6 16 C5 16, 4 15, 4 14 Z"/>
           </svg>
         </span>
@@ -1060,7 +1029,7 @@ textarea.input-base {
       </button>
       <button class="nav-item" data-section="retos">
         <span class="nav-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 3 L14.5 9 L21 9.5 L16 14 L17.5 20.5 L12 17 L6.5 20.5 L8 14 L3 9.5 L9.5 9 Z"/>
           </svg>
         </span>
@@ -1068,7 +1037,7 @@ textarea.input-base {
       </button>
       <button class="nav-item" data-section="biblioteca">
         <span class="nav-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="#A9D6E5" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" fill="#A9D6E5" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 4 L11 4 L11 20 L4 20 Z M11 4 L11 20 M11 4 L19 5 L18 18 L11 20"/>
           </svg>
         </span>
@@ -1076,7 +1045,7 @@ textarea.input-base {
       </button>
       <button class="nav-item" data-section="capsula">
         <span class="nav-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="#F28C8C" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" fill="#F28C8C" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M7 3 L17 3 L17 8 C17 10, 15 11, 13 12 C15 13, 17 14, 17 16 L17 21 L7 21 L7 16 C7 14, 9 13, 11 12 C9 11, 7 10, 7 8 Z"/>
           </svg>
         </span>
@@ -1084,14 +1053,10 @@ textarea.input-base {
       </button>
     </nav>
 
-    <div class="rincon" id="rincon">
-      <!-- Inyectado por JS -->
-    </div>
+    <div class="rincon" id="rincon"></div>
   </aside>
 
-  <!-- ============================================================
-       MAIN
-       ============================================================ -->
+  <!-- MAIN -->
   <main class="main" id="main">
 
     <div class="header">
@@ -1106,37 +1071,13 @@ textarea.input-base {
           <span class="fecha-dia" id="fechaDia">—</span>
         </div>
       </div>
-
-      <!-- Doodles del header -->
-      <svg class="doodle" style="top: -10px; right: 220px; opacity: 0.7;" width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <path d="M20 6 L22.5 17.5 L34 20 L22.5 22.5 L20 34 L17.5 22.5 L6 20 L17.5 17.5 Z" fill="#F6C445"/>
-      </svg>
-      <svg class="doodle" style="top: 40px; right: 180px; opacity: 0.6;" width="22" height="22" viewBox="0 0 24 24" fill="#F28C8C">
-        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-      </svg>
     </div>
 
-    <div id="seccionContenido">
-      <!-- Inyectado por JS -->
-    </div>
-
-    <!-- Doodles laterales del main -->
-    <svg class="doodle" style="top: 30%; left: -28px; opacity: 0.6;" width="32" height="32" viewBox="0 0 24 24" fill="#FFB3D1">
-      <circle cx="12" cy="12" r="3"/>
-      <circle cx="12" cy="6" r="2.5"/>
-      <circle cx="12" cy="18" r="2.5"/>
-      <circle cx="6" cy="12" r="2.5"/>
-      <circle cx="18" cy="12" r="2.5"/>
-    </svg>
-    <svg class="doodle" style="bottom: 8%; right: -30px; opacity: 0.5;" width="44" height="44" viewBox="0 0 44 44">
-      <path d="M8 28 C 4 24, 4 16, 14 14 C 17 6, 30 6, 32 16 C 40 16, 40 26, 34 28 Z" fill="#FFFDF9" stroke="#E8DDCF" stroke-width="1.5"/>
-    </svg>
+    <div id="seccionContenido"></div>
 
   </main>
 
-  <!-- ============================================================
-       SIDEBAR DERECHO
-       ============================================================ -->
+  <!-- SIDEBAR DERECHO -->
   <aside class="sidebar-right">
 
     <div class="card perfil-card">
@@ -1157,10 +1098,10 @@ textarea.input-base {
         <span class="calendario-titulo" id="calTitulo">—</span>
         <div class="cal-nav">
           <button id="calPrev" aria-label="Mes anterior">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
           <button id="calNext" aria-label="Mes siguiente">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
         </div>
       </div>
@@ -1190,16 +1131,16 @@ textarea.input-base {
 
 </div>
 
+<div class="orientacion-aviso">
+  📱 Mejor en horizontal para Mi diario
+</div>
+
 <div class="toast" id="toast"></div>
-<div class="version-tag">v0.3.0</div>
+<div class="version-tag">v0.4.0</div>
 
 <script>
-/* ============================================================
-   GINA — Frontend v0.3
-   ============================================================ */
-
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwnuMgU-Ooa0qsq_MgDAo4FOBGHH5WiVhgSEFtQ1LPbXUfouaHw9jJbYLEE39btsJQD/exec';
-const VERSION = 'v0.3.0';
+const VERSION = 'v0.4.0';
 
 const state = {
   bootstrap: null,
@@ -1249,7 +1190,6 @@ async function api(action, params = {}) {
   return json.data;
 }
 
-// Fallback global de imágenes
 document.addEventListener('error', function(e) {
   const img = e.target;
   if (img.tagName !== 'IMG') return;
@@ -1261,23 +1201,13 @@ document.addEventListener('error', function(e) {
   parent.innerHTML = `<div class="img-fallback" style="background: ${bg};">${initial}</div>`;
 }, true);
 
-// SVG-icons placeholder para "cosas que hice" mientras no haya imágenes
 const COSA_PLACEHOLDER_ICONS = [
-  // corazón
   `<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`,
-  // estrella
   `<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L14.5 9 L22 9.5 L16.5 14 L18 21 L12 17.5 L6 21 L7.5 14 L2 9.5 L9.5 9 Z"/></svg>`,
-  // flor
   `<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="6" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="12" r="3"/><circle cx="12" cy="18" r="3"/><circle cx="12" cy="12" r="2.5" fill="#F6C445"/></svg>`,
-  // nube
   `<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18 C 3 18, 2 15, 3.5 13 C 4 9, 9 9, 10 11 C 11 7, 18 7, 18 12 C 21 12, 21 16, 19 18 Z"/></svg>`,
-  // hojita
   `<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 C 4 10, 10 4, 20 4 C 20 14, 14 20, 4 20 Z M4 20 L12 12"/></svg>`,
 ];
-
-// ============================================================
-// SECCIÓN HOY
-// ============================================================
 
 function pintarSeccionHoy() {
   const html = `
@@ -1285,9 +1215,7 @@ function pintarSeccionHoy() {
       <div class="card frase" id="fraseCard">
         <div class="frase-header">Alguien dijo una vez…</div>
         <div class="frase-body">
-          <div class="frase-imagen" id="fraseImagen">
-            <div class="img-fallback">?</div>
-          </div>
+          <div class="frase-imagen" id="fraseImagen"><div class="img-fallback">?</div></div>
           <div class="frase-contenido">
             <div class="frase-persona" id="frasePersona">—</div>
             <div class="frase-texto" id="fraseTexto">—</div>
@@ -1336,27 +1264,15 @@ function pintarSeccionHoy() {
         <span class="dificil-toggle-label">¿Hoy hubo un momento difícil? 🌩️</span>
       </div>
       <div class="dificil-detalle">
-        <div class="dificil-campo">
-          <div class="field-label">🌩️ Qué pasó</div>
-          <textarea id="mdQuePaso" placeholder="Escribe aquí..."></textarea>
-        </div>
-        <div class="dificil-campo">
-          <div class="field-label">💥 Qué sentí</div>
-          <textarea id="mdQueSenti" placeholder="Escribe aquí..."></textarea>
-        </div>
-        <div class="dificil-campo">
-          <div class="field-label">🔧 Qué me ayudó</div>
-          <textarea id="mdQueAyudo" placeholder="Escribe aquí..."></textarea>
-        </div>
-        <div class="dificil-campo">
-          <div class="field-label">❤️ Qué necesito</div>
-          <textarea id="mdQueNecesito" placeholder="Escribe aquí..."></textarea>
-        </div>
+        <div class="dificil-campo"><div class="field-label">🌩️ Qué pasó</div><textarea id="mdQuePaso" placeholder="Escribe..."></textarea></div>
+        <div class="dificil-campo"><div class="field-label">💥 Qué sentí</div><textarea id="mdQueSenti" placeholder="Escribe..."></textarea></div>
+        <div class="dificil-campo"><div class="field-label">🔧 Qué me ayudó</div><textarea id="mdQueAyudo" placeholder="Escribe..."></textarea></div>
+        <div class="dificil-campo"><div class="field-label">❤️ Qué necesito</div><textarea id="mdQueNecesito" placeholder="Escribe..."></textarea></div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-title">✓ Cosas que hice <span id="cosasContador" style="font-family: var(--font-hand); font-weight: normal; color: var(--text-mute); font-size: 14px; margin-left: auto;"></span></div>
+      <div class="card-title">✓ Cosas que hice <span id="cosasContador" style="font-family: var(--font-hand); font-weight: normal; color: var(--text-mute); font-size: 12px; margin-left: auto;"></span></div>
       <div class="cosas-grid" id="cosasGrid"></div>
     </div>
   `;
@@ -1441,7 +1357,7 @@ function pintarActividades() {
 function pintarCosas() {
   let checks = (state.bootstrap.checks_cosas_hice || []);
   if (!checks.length) {
-    $('#cosasGrid').innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 24px; color: var(--text-mute); font-family: var(--font-hand); font-size: 16px;">Pegá checks en el Sheet (pestaña Checks_Cosas_Hice).</div>`;
+    $('#cosasGrid').innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 18px; color: var(--text-mute); font-family: var(--font-hand); font-size: 14px;">Pegá checks en el Sheet (pestaña Checks_Cosas_Hice).</div>`;
     actualizarContadorCosas();
     return;
   }
@@ -1461,9 +1377,7 @@ function pintarCosas() {
     return `
       <div class="cosa" data-id="${c.id}">
         <div class="cosa-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="cosa-img ${tienImagen ? '' : pastel}">
-          ${imgContent}
-        </div>
+        <div class="cosa-img ${tienImagen ? '' : pastel}">${imgContent}</div>
         <div class="cosa-label">${c.texto || ''}</div>
       </div>
     `;
@@ -1589,10 +1503,6 @@ async function guardar() {
   }
 }
 
-// ============================================================
-// CALENDARIO
-// ============================================================
-
 function pintarCalendario() {
   const m = state.calendarioMes;
   const titulo = `${MESES[m.getMonth()]} ${m.getFullYear()}`;
@@ -1661,18 +1571,12 @@ function pintarResumenSemana() {
   $('#resumenEmocion').textContent = top ? top[0] : '—';
 }
 
-// ============================================================
-// PERFIL & RINCÓN
-// ============================================================
-
 function pintarPerfil() {
   const p = state.bootstrap.perfil || {};
-
   const av = $('#perfilAvatar');
   if (p.avatar_url && p.avatar_url.length > 4) {
     av.innerHTML = `<svg class="corona" viewBox="0 0 32 32" fill="#F28C8C"><path d="M4 22 L8 12 L12 18 L16 8 L20 18 L24 12 L28 22 Z"/></svg><div class="avatar-inner"><img src="${p.avatar_url}" alt="Gina" data-initial="G" data-bg="#FFD3B6" /></div>`;
   }
-
   if (p.fecha_cumple) {
     const hoy = new Date();
     const cumple = new Date(p.fecha_cumple);
@@ -1683,7 +1587,6 @@ function pintarPerfil() {
   } else {
     $('#diasCumple').textContent = '—';
   }
-
   try {
     const alturas = JSON.parse(p.alturas_json || '[]');
     if (alturas.length) {
@@ -1699,13 +1602,9 @@ function pintarPerfil() {
 
 function pintarRincon() {
   const cont = $('#rincon');
-  // Si no hay rincon-gina.webp, muestra un placeholder bonito con doodles
-  cont.innerHTML = `<img src="img/rincon-gina.webp" alt="Rincón de Gina" data-initial="G" data-bg="#FFD3B6" onerror="this.parentElement.innerHTML='<div class=\\'rincon-placeholder\\'><svg width=\\'160\\' height=\\'130\\' viewBox=\\'0 0 160 130\\' fill=\\'none\\'><ellipse cx=\\'48\\' cy=\\'112\\' rx=\\'28\\' ry=\\'4\\' fill=\\'#E8DDCF\\' opacity=\\'0.5\\'/><ellipse cx=\\'108\\' cy=\\'114\\' rx=\\'30\\' ry=\\'4\\' fill=\\'#E8DDCF\\' opacity=\\'0.5\\'/><path d=\\'M40 110 Q40 70, 38 50\\' stroke=\\'#7BA068\\' stroke-width=\\'2\\' stroke-linecap=\\'round\\'/><path d=\\'M38 65 Q30 60, 26 50\\' stroke=\\'#7BA068\\' stroke-width=\\'2\\' stroke-linecap=\\'round\\' fill=\\'none\\'/><path d=\\'M40 75 Q50 70, 54 60\\' stroke=\\'#7BA068\\' stroke-width=\\'2\\' stroke-linecap=\\'round\\' fill=\\'none\\'/><circle cx=\\'38\\' cy=\\'45\\' r=\\'8\\' fill=\\'#F28C8C\\'/><circle cx=\\'38\\' cy=\\'45\\' r=\\'3\\' fill=\\'#FFFDF9\\'/><path d=\\'M105 112 Q105 80, 108 55\\' stroke=\\'#7BA068\\' stroke-width=\\'2\\' stroke-linecap=\\'round\\'/><circle cx=\\'108\\' cy=\\'50\\' r=\\'10\\' fill=\\'#C8B6E2\\'/><circle cx=\\'108\\' cy=\\'50\\' r=\\'3\\' fill=\\'#F6C445\\'/><ellipse cx=\\'78\\' cy=\\'40\\' rx=\\'18\\' ry=\\'12\\' fill=\\'#FFFDF9\\' stroke=\\'#E8DDCF\\' stroke-width=\\'1.5\\'/><circle cx=\\'72\\' cy=\\'40\\' r=\\'1.5\\' fill=\\'#4A3F35\\'/><circle cx=\\'84\\' cy=\\'40\\' r=\\'1.5\\' fill=\\'#4A3F35\\'/><path d=\\'M75 44 Q78 46, 81 44\\' stroke=\\'#4A3F35\\' stroke-width=\\'1.2\\' fill=\\'none\\' stroke-linecap=\\'round\\'/><path d=\\'M130 20 L132 28 L140 30 L132 32 L130 40 L128 32 L120 30 L128 28 Z\\' fill=\\'#F6C445\\' opacity=\\'0.7\\'/></svg></div>';" style="border-radius: var(--r-input);" />`;
+  cont.innerHTML = `<img src="img/rincon-gina.webp" alt="Rincón de Gina" data-initial="G" data-bg="#FFD3B6" onerror="this.parentElement.innerHTML='<div class=\\'rincon-placeholder\\'><svg width=\\'140\\' height=\\'110\\' viewBox=\\'0 0 160 130\\' fill=\\'none\\'><ellipse cx=\\'48\\' cy=\\'112\\' rx=\\'28\\' ry=\\'4\\' fill=\\'#E8DDCF\\' opacity=\\'0.5\\'/><ellipse cx=\\'108\\' cy=\\'114\\' rx=\\'30\\' ry=\\'4\\' fill=\\'#E8DDCF\\' opacity=\\'0.5\\'/><path d=\\'M40 110 Q40 70, 38 50\\' stroke=\\'#7BA068\\' stroke-width=\\'2\\' stroke-linecap=\\'round\\'/><circle cx=\\'38\\' cy=\\'45\\' r=\\'8\\' fill=\\'#F28C8C\\'/><circle cx=\\'38\\' cy=\\'45\\' r=\\'3\\' fill=\\'#FFFDF9\\'/><path d=\\'M105 112 Q105 80, 108 55\\' stroke=\\'#7BA068\\' stroke-width=\\'2\\' stroke-linecap=\\'round\\'/><circle cx=\\'108\\' cy=\\'50\\' r=\\'10\\' fill=\\'#C8B6E2\\'/><circle cx=\\'108\\' cy=\\'50\\' r=\\'3\\' fill=\\'#F6C445\\'/><ellipse cx=\\'78\\' cy=\\'40\\' rx=\\'18\\' ry=\\'12\\' fill=\\'#FFFDF9\\' stroke=\\'#E8DDCF\\' stroke-width=\\'1.5\\'/><circle cx=\\'72\\' cy=\\'40\\' r=\\'1.5\\' fill=\\'#4A3F35\\'/><circle cx=\\'84\\' cy=\\'40\\' r=\\'1.5\\' fill=\\'#4A3F35\\'/><path d=\\'M75 44 Q78 46, 81 44\\' stroke=\\'#4A3F35\\' stroke-width=\\'1.2\\' fill=\\'none\\' stroke-linecap=\\'round\\'/></svg></div>';" style="border-radius: var(--r-input);" />`;
 }
 
-// ============================================================
-// SECCIONES OTRAS
-// ============================================================
 function pintarSeccionPlaceholder(titulo) {
   $('#seccionContenido').innerHTML = `<div class="placeholder-seccion">🚧 ${titulo} — próximamente</div>`;
 }
@@ -1765,7 +1664,6 @@ async function bootstrap() {
   setTimeout(() => $('#loadingScreen').classList.add('hide'), 300);
 }
 
-// === EVENTOS ===
 $('#nav').addEventListener('click', e => {
   const b = e.target.closest('.nav-item');
   if (!b) return;
@@ -1780,7 +1678,6 @@ $('#calNext').addEventListener('click', () => {
   pintarCalendario();
 });
 
-// === SERVICE WORKER ===
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/gina/sw.js').catch(() => {});
