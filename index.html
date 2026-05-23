@@ -15,22 +15,27 @@
 <title>Mi diario · Gina</title>
 <style>
 /* ============================================================
-   GINA v0.2 — Maquetación alineada al mockup
+   GINA v0.3 — Más aire, calidez, scrapbook real
    ============================================================ */
 
 :root {
+  /* Base */
   --bg: #F7F1E8;
   --card: #FFFDF9;
-  --card-soft: #FBF6EC;
   --border: #E8DDCF;
   --border-soft: #F0E6D6;
-  --shadow: 0 4px 12px rgba(214,196,170,0.18);
-  --shadow-lg: 0 8px 20px rgba(214,196,170,0.25);
 
+  /* Sombras suaves cálidas */
+  --shadow-s: 0 2px 6px rgba(214,196,170,0.10);
+  --shadow:   0 4px 12px rgba(214,196,170,0.12);
+  --shadow-l: 0 8px 20px rgba(214,196,170,0.18);
+
+  /* Texto */
   --text: #4A3F35;
   --text-soft: #6B5D4F;
   --text-mute: #A8927A;
 
+  /* Paleta exacta */
   --amarillo: #F6C445;
   --amarillo-soft: #FFE9A8;
   --coral: #F28C8C;
@@ -39,6 +44,7 @@
   --azul-nube: #A9D6E5;
   --peach: #FFD3B6;
 
+  /* Emociones */
   --e-contenta: #FFD95A;
   --e-tranquila: #BFE3C0;
   --e-emocionada: #FFB3D1;
@@ -48,13 +54,22 @@
   --e-nerviosa: #E8D5B5;
   --e-sensible: #E8D9FF;
 
+  /* Tipografías */
   --font-display: 'Baloo 2', system-ui, sans-serif;
   --font-ui: 'Nunito', system-ui, sans-serif;
   --font-hand: 'Patrick Hand', 'Bradley Hand', cursive;
 
+  /* Radios */
   --r-card: 24px;
   --r-input: 16px;
   --r-pill: 999px;
+
+  /* Escala de espaciado */
+  --sp-1: 8px;
+  --sp-2: 16px;
+  --sp-3: 24px;
+  --sp-4: 32px;
+  --sp-5: 48px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -64,7 +79,7 @@ html, body {
   color: var(--text);
   font-family: var(--font-ui);
   font-size: 15px;
-  line-height: 1.5;
+  line-height: 1.55;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
@@ -76,14 +91,14 @@ input, textarea, select { font-family: inherit; color: inherit; }
 textarea { resize: none; }
 
 /* ============================================================
-   LAYOUT — 3 columnas
+   LAYOUT — 3 columnas con MÁS AIRE
    ============================================================ */
 
 .app {
   display: grid;
   grid-template-columns: 220px 1fr 320px;
-  gap: 16px;
-  padding: 16px;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
   min-height: 100vh;
   max-width: 1600px;
   margin: 0 auto;
@@ -92,13 +107,14 @@ textarea { resize: none; }
 @media (max-width: 1100px) {
   .app {
     grid-template-columns: 1fr;
-    gap: 12px;
-    padding: 12px;
+    gap: var(--sp-2);
+    padding: var(--sp-2);
   }
 }
 
 /* ============================================================
-   SIDEBAR IZQUIERDO — tarjeta única que contiene logo+nav+rincón
+   SIDEBAR IZQUIERDO — Tarjeta única con MUCHO aire
+   Estructura: logo arriba (con aire) → nav medio → rincón abajo grande
    ============================================================ */
 
 .sidebar-left {
@@ -106,32 +122,32 @@ textarea { resize: none; }
   border: 1px solid var(--border);
   border-radius: var(--r-card);
   box-shadow: var(--shadow);
-  padding: 20px 14px;
+  padding: var(--sp-3) var(--sp-2);
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  position: relative;
+  gap: var(--sp-3);
+  min-height: calc(100vh - var(--sp-3) * 2);
 }
 
 .logo {
-  padding: 4px 8px 4px;
+  padding: var(--sp-1) 0 0 var(--sp-1);
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: 6px;
 }
 .logo-text {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 26px;
+  font-size: 28px;
   color: var(--text);
   position: relative;
 }
 .logo-text::after {
   content: '';
   position: absolute;
-  bottom: -3px;
+  bottom: -4px;
   left: 0;
-  width: 72%;
+  width: 70%;
   height: 3px;
   background: var(--amarillo);
   border-radius: 2px;
@@ -140,276 +156,293 @@ textarea { resize: none; }
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-top: 4px;
+  gap: 6px;
+  margin-top: var(--sp-2);
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 11px 14px;
-  border-radius: 18px;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 20px;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 16px;
+  font-size: 17px;
   color: var(--text-soft);
   background: transparent;
   text-align: left;
   width: 100%;
   transition: background 0.2s, transform 0.15s;
 }
-.nav-item:hover { background: rgba(246,196,69,0.10); }
+.nav-item:hover { background: rgba(246,196,69,0.08); }
 .nav-item:active { transform: scale(0.97); }
 .nav-item.active {
   background: var(--amarillo);
   color: var(--text);
+  box-shadow: var(--shadow-s);
 }
 .nav-item .nav-icon {
-  width: 30px; height: 30px;
+  width: 32px; height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 
-/* Rincón de Gina (foto/dibujo) abajo */
+/* Rincón de Gina — DIBUJO GRANDE abajo */
 .rincon {
   margin-top: auto;
+  padding: var(--sp-1);
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 140px;
 }
 .rincon img {
   max-width: 100%;
-  max-height: 220px;
+  max-height: 240px;
   height: auto;
   border-radius: var(--r-input);
 }
 .rincon-placeholder {
   width: 100%;
-  height: 140px;
-  background: var(--bg);
-  border: 1.5px dashed var(--border);
-  border-radius: var(--r-input);
+  min-height: 180px;
+  background: transparent;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  color: var(--text-mute);
-  font-family: var(--font-hand);
-  font-size: 16px;
-  text-align: center;
-  padding: 12px;
+  position: relative;
+  padding-bottom: var(--sp-2);
 }
 
 /* ============================================================
-   MAIN — Sección "Hoy"
+   MAIN
    ============================================================ */
 
 .main {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  max-width: 900px;
+  gap: var(--sp-3);
+  max-width: 920px;
   width: 100%;
   margin: 0 auto;
   position: relative;
 }
 
-/* Header: saludo + sticker fecha */
+#seccionContenido {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+/* Header con washi tape */
 .header {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 16px;
+  gap: var(--sp-3);
   align-items: start;
-  padding: 4px 8px 4px;
+  padding: var(--sp-1) var(--sp-1) 0;
   position: relative;
 }
 .header-greet h1 {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 30px;
+  font-size: 34px;
   color: var(--text);
   line-height: 1.1;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 .header-greet h1 .sol {
   display: inline-block;
   vertical-align: -4px;
-  margin-left: 4px;
+  margin-left: 6px;
 }
 .header-greet p {
   font-family: var(--font-ui);
   font-size: 16px;
   color: var(--text-soft);
 }
+.header-doodles {
+  position: absolute;
+  pointer-events: none;
+}
 
-/* Sticker washi tape con la fecha */
+/* Sticker washi tape de la fecha */
 .fecha-sticker {
   position: relative;
-  background: #E8D9FF;
+  background: #EBDFFB;
   border-radius: 14px;
-  padding: 10px 18px;
+  padding: 14px 22px;
   font-family: var(--font-hand);
-  font-size: 16px;
+  font-size: 17px;
   color: #553A7A;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   box-shadow: var(--shadow);
-  transform: rotate(-1deg);
-  min-width: 200px;
+  transform: rotate(-1.2deg);
+  min-width: 210px;
 }
 .fecha-sticker::before {
+  /* cinta amarilla arriba */
   content: '';
   position: absolute;
   top: -10px;
-  right: 18px;
-  width: 44px;
+  right: 26px;
+  width: 50px;
   height: 18px;
-  background: rgba(246,196,69,0.7);
-  transform: rotate(8deg);
+  background: rgba(246,196,69,0.65);
+  transform: rotate(10deg);
   border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
 .fecha-sticker svg { width: 18px; height: 18px; flex-shrink: 0; }
 .fecha-sticker .fecha-texto {
   display: flex;
   flex-direction: column;
-  line-height: 1.2;
-  text-align: center;
+  line-height: 1.15;
+  text-align: left;
 }
 .fecha-sticker .fecha-larga { font-size: 15px; font-weight: 700; }
 .fecha-sticker .fecha-dia { font-size: 13px; opacity: 0.75; }
 
-/* Tarjeta genérica */
+/* Tarjeta genérica - MUCHO más aire */
 .card {
   background: var(--card);
   border-radius: var(--r-card);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-soft);
   box-shadow: var(--shadow);
-  padding: 18px;
+  padding: var(--sp-3);
   position: relative;
-}
-.card-soft {
-  background: var(--card-soft);
 }
 
 .card-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 16px;
+  font-size: 18px;
   color: var(--text);
-  margin-bottom: 12px;
+  margin-bottom: var(--sp-2);
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-.card-title .title-icon {
-  width: 22px; height: 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  gap: 10px;
 }
 
+/* Doodle decorativo sutil dentro de cards (esquina) */
+.card-doodle {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.6;
+}
+.card-doodle.tr { top: 14px; right: 14px; }
+.card-doodle.br { bottom: 14px; right: 14px; }
+.card-doodle.bl { bottom: 14px; left: 14px; }
+
 /* ============================================================
-   FILA: FRASE + EMOCIONES (lado a lado, como mockup)
+   FRASE + EMOCIONES — fila
    ============================================================ */
 
 .row-frase-emociones {
   display: grid;
-  grid-template-columns: minmax(260px, 360px) 1fr;
-  gap: 14px;
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  gap: var(--sp-3);
   align-items: stretch;
 }
 @media (max-width: 900px) {
   .row-frase-emociones { grid-template-columns: 1fr; }
 }
 
+/* FRASE — nota especial scrapbook */
 .frase {
-  background: linear-gradient(135deg, #F3E8FF 0%, #FFEEF5 100%);
+  background: linear-gradient(140deg, #EFE2FB 0%, #FBEAF3 100%);
   border: 1px solid #E5D5F0;
-  padding: 16px;
+  padding: var(--sp-3);
   display: flex;
   flex-direction: column;
+  gap: var(--sp-2);
   position: relative;
+}
+.frase::before {
+  /* Washi tape encima */
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 30%;
+  width: 60px;
+  height: 14px;
+  background: rgba(246,196,69,0.55);
+  transform: rotate(-4deg);
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
 .frase-header {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 15px;
-  color: #553A7A;
-  margin-bottom: 10px;
+  font-weight: 700;
+  font-size: 16px;
+  color: #6B4A98;
   text-align: center;
+  letter-spacing: 0.2px;
 }
 .frase-body {
   display: grid;
-  grid-template-columns: 90px 1fr;
-  gap: 12px;
-  align-items: start;
+  grid-template-columns: 96px 1fr;
+  gap: 14px;
+  align-items: center;
 }
 .frase-imagen {
-  width: 90px;
-  height: 110px;
-  border-radius: 14px;
+  width: 96px;
+  height: 116px;
+  border-radius: 16px;
   overflow: hidden;
   background: var(--card);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow);
-  border: 2px solid var(--card);
+  box-shadow: var(--shadow-s);
+  border: 3px solid var(--card);
+  transform: rotate(-2deg);
 }
 .frase-imagen img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100%; height: 100%; object-fit: cover;
 }
-.frase-contenido { padding-top: 4px; }
 .frase-persona {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 16px;
-  color: #553A7A;
-  margin-bottom: 4px;
+  font-size: 18px;
+  color: #6B4A98;
+  margin-bottom: 6px;
 }
 .frase-texto {
   font-family: var(--font-hand);
-  font-size: 17px;
+  font-size: 19px;
   line-height: 1.3;
   color: var(--text);
 }
 .frase-bio {
   font-family: var(--font-hand);
-  font-size: 14px;
+  font-size: 15px;
   color: var(--text-soft);
-  margin-top: 10px;
-  padding-top: 10px;
+  padding-top: var(--sp-2);
   border-top: 1px dashed #D9C7E8;
-  line-height: 1.3;
+  line-height: 1.4;
 }
 
-/* ============================================================
-   EMOCIONES — grid 7 columnas como mockup
-   ============================================================ */
-
+/* EMOCIONES */
 .emociones-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
-  row-gap: 14px;
+  gap: 10px;
+  row-gap: 18px;
 }
 @media (max-width: 700px) {
   .emociones-grid { grid-template-columns: repeat(4, 1fr); }
 }
-
 .emocion {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 4px 2px;
-  border-radius: 14px;
+  gap: 6px;
+  padding: 8px 4px;
+  border-radius: 16px;
   background: transparent;
   cursor: pointer;
   transition: transform 0.2s, background 0.2s;
@@ -422,10 +455,9 @@ textarea { resize: none; }
 .emocion.selected .emocion-img {
   box-shadow: 0 0 0 3px var(--amarillo);
 }
-
 .emocion-img {
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -435,63 +467,56 @@ textarea { resize: none; }
   transition: box-shadow 0.2s;
 }
 .emocion-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100%; height: 100%; object-fit: cover;
 }
 .emocion-label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-soft);
   text-align: center;
-  line-height: 1.1;
+  line-height: 1.15;
 }
 .emocion.selected .emocion-label { color: var(--text); }
 
 /* ============================================================
-   FILA: ACTIVIDAD + (ALGO BUENO + ALGO APRENDÍ apiladas)
-   Mockup: actividad a la izquierda, lo otro a la derecha en 2 cards
+   ACTIVIDAD + (ALGO BUENO + APRENDÍ)
    ============================================================ */
 
 .row-actividad-bueno {
   display: grid;
-  grid-template-columns: minmax(260px, 360px) 1fr;
-  gap: 14px;
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  gap: var(--sp-3);
   align-items: stretch;
 }
 @media (max-width: 900px) {
   .row-actividad-bueno { grid-template-columns: 1fr; }
 }
-
 .bueno-aprendi-col {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: var(--sp-3);
 }
 @media (max-width: 700px) {
   .bueno-aprendi-col { grid-template-columns: 1fr; }
 }
 
-/* Inputs y selects */
-select.input-base,
-input.input-base,
-textarea.input-base {
+select.input-base, input.input-base, textarea.input-base {
   width: 100%;
   background: var(--bg);
-  border: 1.5px solid var(--border);
+  border: 1.5px solid var(--border-soft);
   border-radius: var(--r-input);
-  padding: 11px 14px;
-  font-size: 14px;
+  padding: 13px 16px;
+  font-size: 15px;
   color: var(--text);
   transition: border-color 0.2s;
   font-family: var(--font-ui);
 }
 select.input-base { cursor: pointer; }
 textarea.input-base {
-  min-height: 72px;
+  min-height: 88px;
   resize: vertical;
   font-family: var(--font-hand);
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.4;
 }
 .input-base:focus {
@@ -503,24 +528,23 @@ textarea.input-base {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-soft);
-  margin: 10px 0 6px;
+  margin: 14px 0 8px;
 }
 
-/* Algo bueno — 3 inputs numerados */
-.algo-bueno-list { display: flex; flex-direction: column; gap: 8px; }
+.algo-bueno-list { display: flex; flex-direction: column; gap: 12px; }
 .algo-bueno-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 .algo-bueno-num {
-  width: 28px; height: 28px;
+  width: 30px; height: 30px;
   border-radius: 50%;
   background: var(--amarillo);
   color: var(--text);
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -528,13 +552,13 @@ textarea.input-base {
 }
 .algo-bueno-item input {
   flex: 1;
-  background: var(--bg);
+  background: transparent;
   border: none;
   border-bottom: 1.5px dashed var(--border);
   border-radius: 0;
-  padding: 6px 4px;
+  padding: 8px 4px;
   font-family: var(--font-hand);
-  font-size: 16px;
+  font-size: 17px;
 }
 .algo-bueno-item input::placeholder { color: var(--text-mute); }
 .algo-bueno-item input:focus {
@@ -543,34 +567,35 @@ textarea.input-base {
 }
 
 .aprendi-card {
-  background: linear-gradient(135deg, #F1FBE9 0%, #FFFDF9 60%);
-  border: 1px solid #E0EED4;
+  background: linear-gradient(140deg, #EFFBEA 0%, #FFFDF9 60%);
+  border: 1px solid #DCEED1;
 }
 
 /* ============================================================
-   MOMENTO DIFÍCIL — tarjeta con toggle inline + detalle expandible
+   MOMENTO DIFÍCIL
    ============================================================ */
 
 .dificil-card {
-  background: linear-gradient(135deg, #EEF3FB 0%, #FFFDF9 80%);
-  border: 1px solid #DCE5F0;
+  background: linear-gradient(140deg, #EBF1FA 0%, #FFFDF9 80%);
+  border: 1px solid #D6E1F0;
 }
 .dificil-toggle {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   cursor: pointer;
   user-select: none;
 }
 .dificil-check {
-  width: 22px; height: 22px;
+  width: 24px; height: 24px;
   border: 2px solid var(--text-soft);
-  border-radius: 6px;
+  border-radius: 7px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   background: var(--card);
+  transition: background 0.2s, border-color 0.2s;
 }
 .dificil-card.active .dificil-check {
   background: var(--amarillo);
@@ -581,14 +606,14 @@ textarea.input-base {
 .dificil-toggle-label {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 16px;
+  font-size: 17px;
   color: var(--text);
 }
 .dificil-detalle {
   display: none;
-  margin-top: 16px;
+  margin-top: var(--sp-3);
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  gap: 14px;
 }
 .dificil-card.active .dificil-detalle { display: grid; }
 @media (max-width: 900px) {
@@ -597,18 +622,17 @@ textarea.input-base {
 @media (max-width: 600px) {
   .dificil-card.active .dificil-detalle { grid-template-columns: 1fr; }
 }
-
 .dificil-campo {
   background: var(--card);
   border: 1px solid var(--border-soft);
   border-radius: var(--r-input);
-  padding: 10px;
+  padding: 14px;
 }
 .dificil-campo .field-label {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--text-soft);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -619,19 +643,19 @@ textarea.input-base {
   padding: 0;
   width: 100%;
   font-family: var(--font-hand);
-  font-size: 15px;
-  min-height: 50px;
+  font-size: 16px;
+  min-height: 64px;
 }
 .dificil-campo textarea:focus { outline: none; }
 
 /* ============================================================
-   COSAS QUE HICE
+   COSAS QUE HICE — placeholders pastel
    ============================================================ */
 
 .cosas-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
+  gap: 14px;
 }
 @media (max-width: 700px) {
   .cosas-grid { grid-template-columns: repeat(2, 1fr); }
@@ -640,51 +664,67 @@ textarea.input-base {
 .cosa {
   position: relative;
   background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: 18px;
-  padding: 14px 8px 12px;
+  border: 1.5px solid var(--border-soft);
+  border-radius: 20px;
+  padding: 16px 10px 14px;
   text-align: center;
   cursor: pointer;
-  transition: transform 0.2s, border-color 0.2s, background 0.2s;
+  transition: transform 0.2s, border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
-.cosa:hover { transform: translateY(-2px); }
+.cosa:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
 .cosa:active { transform: scale(0.97); }
 .cosa.checked {
   background: #F3FBED;
   border-color: var(--mint);
 }
 .cosa-img {
-  width: 72px; height: 72px;
-  margin: 0 auto 8px;
-  border-radius: 16px;
+  width: 76px; height: 76px;
+  margin: 0 auto 10px;
+  border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg);
+  background: var(--peach);
   overflow: hidden;
 }
 .cosa-img img {
-  width: 100%; height: 100%;
-  object-fit: cover;
+  width: 100%; height: 100%; object-fit: cover;
 }
 .cosa-label {
   font-family: var(--font-hand);
   font-size: 15px;
   color: var(--text);
-  line-height: 1.15;
+  line-height: 1.2;
 }
 .cosa-check {
   position: absolute;
-  top: 8px; right: 8px;
-  width: 22px; height: 22px;
+  top: 10px; right: 10px;
+  width: 24px; height: 24px;
   background: #5BAE3F;
   border-radius: 50%;
   display: none;
   align-items: center;
   justify-content: center;
+  box-shadow: var(--shadow-s);
 }
 .cosa.checked .cosa-check { display: flex; }
 .cosa-check svg { width: 14px; height: 14px; }
+
+/* Placeholder pastel rotativo en cosas */
+.cosa-img.pastel-1 { background: #FFD3B6; }
+.cosa-img.pastel-2 { background: #BEE5B0; }
+.cosa-img.pastel-3 { background: #FFB3D1; }
+.cosa-img.pastel-4 { background: #C8B6E2; }
+.cosa-img.pastel-5 { background: #A9D6E5; }
+
+.cosa-placeholder-icon {
+  width: 36px;
+  height: 36px;
+  opacity: 0.7;
+}
 
 /* ============================================================
    SIDEBAR DERECHO
@@ -693,19 +733,18 @@ textarea.input-base {
 .sidebar-right {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--sp-3);
 }
 
-/* Avatar+cumple - tarjeta horizontal */
 .perfil-card {
   display: grid;
-  grid-template-columns: 70px 1fr;
-  gap: 14px;
+  grid-template-columns: 72px 1fr;
+  gap: var(--sp-2);
   align-items: center;
-  padding: 14px;
+  padding: var(--sp-3);
 }
 .perfil-avatar {
-  width: 70px; height: 70px;
+  width: 72px; height: 72px;
   border-radius: 50%;
   background: var(--peach);
   position: relative;
@@ -718,9 +757,9 @@ textarea.input-base {
 }
 .perfil-avatar .corona {
   position: absolute;
-  top: -10px; left: 50%;
+  top: -12px; left: 50%;
   transform: translateX(-50%) rotate(-8deg);
-  width: 28px; height: 28px;
+  width: 30px; height: 30px;
 }
 .perfil-avatar .avatar-inner {
   width: 100%; height: 100%;
@@ -730,59 +769,55 @@ textarea.input-base {
   align-items: center;
   justify-content: center;
 }
-.perfil-avatar img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-}
+.perfil-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .perfil-avatar .inicial {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 28px;
-  color: #4A3F35;
+  color: var(--text);
 }
 .perfil-info { display: flex; flex-direction: column; gap: 2px; }
 .perfil-cumple-label {
   font-family: var(--font-hand);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-soft);
   line-height: 1;
 }
 .perfil-cumple-dias {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 30px;
+  font-size: 32px;
   color: var(--text);
   line-height: 1;
-  margin: 2px 0;
+  margin: 4px 0;
 }
 .perfil-cumple-bottom {
   font-family: var(--font-hand);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-soft);
-  line-height: 1;
+  line-height: 1.1;
 }
 .perfil-altura {
   font-family: var(--font-hand);
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-mute);
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
-/* Calendario */
 .calendario-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: var(--sp-2);
 }
 .calendario-titulo {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 16px;
+  font-size: 17px;
 }
 .cal-nav { display: flex; gap: 4px; }
 .cal-nav button {
-  width: 24px; height: 24px;
+  width: 28px; height: 28px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -794,14 +829,14 @@ textarea.input-base {
 .calendario-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
+  gap: 4px;
 }
 .cal-dow {
   text-align: center;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--text-mute);
-  padding-bottom: 4px;
+  padding-bottom: 6px;
 }
 .cal-day {
   aspect-ratio: 1;
@@ -809,10 +844,10 @@ textarea.input-base {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-soft);
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   position: relative;
   transition: background 0.15s;
@@ -823,41 +858,39 @@ textarea.input-base {
 .cal-day.today {
   background: var(--amarillo);
   color: var(--text);
+  box-shadow: var(--shadow-s);
 }
 .cal-day.selected {
   box-shadow: inset 0 0 0 2px var(--coral);
 }
 .cal-dot {
-  width: 4px; height: 4px;
+  width: 5px; height: 5px;
   border-radius: 50%;
-  margin-top: 1px;
+  margin-top: 2px;
   background: transparent;
 }
 
-/* Resumen semana */
 .resumen .resumen-line {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 3px 0;
-  font-size: 14px;
+  padding: 4px 0;
 }
 .resumen .resumen-line span:first-child {
   font-family: var(--font-hand);
   color: var(--text-soft);
-  font-size: 14px;
+  font-size: 15px;
 }
 .resumen .resumen-line .resumen-valor {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 15px;
+  font-size: 16px;
 }
 
-/* Spotify */
 .spotify-empty {
   background: var(--bg);
   border-radius: var(--r-input);
-  padding: 12px;
+  padding: var(--sp-2);
   text-align: center;
   font-family: var(--font-hand);
   font-size: 13px;
@@ -865,21 +898,16 @@ textarea.input-base {
 }
 
 /* ============================================================
-   DOODLES decorativos
+   DOODLES decorativos (en main)
    ============================================================ */
 .doodle {
   position: absolute;
   pointer-events: none;
-  opacity: 0.7;
   z-index: 0;
 }
-.doodle-1 { top: 50px; right: -10px; }
-.doodle-2 { top: 280px; left: -15px; }
-.doodle-3 { bottom: 30px; right: 20px; }
-.doodle-4 { top: 600px; right: -20px; }
 
 /* ============================================================
-   ESTADOS DE CARGA Y TOAST
+   LOADING + TOAST + UTILS
    ============================================================ */
 
 .loading-screen {
@@ -890,7 +918,7 @@ textarea.input-base {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 14px;
   z-index: 1000;
   transition: opacity 0.3s;
 }
@@ -902,31 +930,31 @@ textarea.input-base {
 }
 .loading-screen .loader-dots span {
   display: inline-block;
-  width: 8px; height: 8px;
+  width: 10px; height: 10px;
   background: var(--coral);
   border-radius: 50%;
-  margin: 0 3px;
+  margin: 0 4px;
   animation: bounce 1.2s infinite;
 }
 .loading-screen .loader-dots span:nth-child(2) { animation-delay: 0.15s; background: var(--amarillo); }
 .loading-screen .loader-dots span:nth-child(3) { animation-delay: 0.3s; background: var(--mint); }
 @keyframes bounce {
   0%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-12px); }
+  40% { transform: translateY(-14px); }
 }
 
 .toast {
   position: fixed;
-  bottom: 20px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%) translateY(80px);
   background: var(--text);
   color: var(--card);
-  padding: 12px 20px;
+  padding: 12px 22px;
   border-radius: var(--r-pill);
   font-size: 14px;
   font-weight: 600;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-l);
   opacity: 0;
   transition: all 0.3s;
   z-index: 999;
@@ -940,7 +968,7 @@ textarea.input-base {
 
 .version-tag {
   position: fixed;
-  bottom: 6px; right: 8px;
+  bottom: 8px; right: 10px;
   font-size: 10px;
   color: var(--text-mute);
   font-family: var(--font-hand);
@@ -956,7 +984,7 @@ textarea.input-base {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 22px;
-  color: var(--text-soft);
+  color: var(--text);
   background: var(--peach);
 }
 
@@ -964,7 +992,7 @@ textarea.input-base {
   background: var(--card);
   border: 1.5px dashed var(--border);
   border-radius: var(--r-card);
-  padding: 60px 20px;
+  padding: 80px var(--sp-3);
   text-align: center;
   font-family: var(--font-hand);
   font-size: 20px;
@@ -973,10 +1001,10 @@ textarea.input-base {
 
 @supports (padding: max(0px)) {
   .app {
-    padding-left: max(16px, env(safe-area-inset-left));
-    padding-right: max(16px, env(safe-area-inset-right));
-    padding-top: max(16px, env(safe-area-inset-top));
-    padding-bottom: max(16px, env(safe-area-inset-bottom));
+    padding-left: max(var(--sp-3), env(safe-area-inset-left));
+    padding-right: max(var(--sp-3), env(safe-area-inset-right));
+    padding-top: max(var(--sp-3), env(safe-area-inset-top));
+    padding-bottom: max(var(--sp-3), env(safe-area-inset-bottom));
   }
 }
 </style>
@@ -992,9 +1020,9 @@ textarea.input-base {
 
 <div class="app" id="app" style="visibility: hidden;">
 
-  <!-- =================================================
+  <!-- ============================================================
        SIDEBAR IZQUIERDO
-       ================================================= -->
+       ============================================================ -->
   <aside class="sidebar-left">
     <div class="logo">
       <span class="logo-text">Mi diario</span>
@@ -1006,7 +1034,7 @@ textarea.input-base {
     <nav class="nav" id="nav">
       <button class="nav-item active" data-section="hoy">
         <span class="nav-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="4.5"/>
             <path d="M12 2v2.5M12 19.5V22M4.22 4.22l1.77 1.77M18.01 18.01l1.77 1.77M2 12h2.5M19.5 12H22M4.22 19.78l1.77-1.77M18.01 5.99l1.77-1.77" stroke="#F6C445" stroke-width="2.2" fill="none"/>
           </svg>
@@ -1015,7 +1043,7 @@ textarea.input-base {
       </button>
       <button class="nav-item" data-section="yo-soy">
         <span class="nav-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="#BEE5B0" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#BEE5B0" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 4 C13 8, 16 9, 18 9 C16 11, 15 14, 15 17 L9 17 C9 14, 8 11, 6 9 C8 9, 11 8, 12 4 Z"/>
             <line x1="12" y1="17" x2="12" y2="21"/>
           </svg>
@@ -1024,7 +1052,7 @@ textarea.input-base {
       </button>
       <button class="nav-item" data-section="charlar">
         <span class="nav-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="#C8B6E2" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#C8B6E2" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 5 C4 4, 5 3, 6 3 L18 3 C19 3, 20 4, 20 5 L20 14 C20 15, 19 16, 18 16 L11 16 L7 20 L7 16 L6 16 C5 16, 4 15, 4 14 Z"/>
           </svg>
         </span>
@@ -1032,7 +1060,7 @@ textarea.input-base {
       </button>
       <button class="nav-item" data-section="retos">
         <span class="nav-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 3 L14.5 9 L21 9.5 L16 14 L17.5 20.5 L12 17 L6.5 20.5 L8 14 L3 9.5 L9.5 9 Z"/>
           </svg>
         </span>
@@ -1040,7 +1068,7 @@ textarea.input-base {
       </button>
       <button class="nav-item" data-section="biblioteca">
         <span class="nav-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="#A9D6E5" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#A9D6E5" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 4 L11 4 L11 20 L4 20 Z M11 4 L11 20 M11 4 L19 5 L18 18 L11 20"/>
           </svg>
         </span>
@@ -1048,7 +1076,7 @@ textarea.input-base {
       </button>
       <button class="nav-item" data-section="capsula">
         <span class="nav-icon">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="#F28C8C" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#F28C8C" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M7 3 L17 3 L17 8 C17 10, 15 11, 13 12 C15 13, 17 14, 17 16 L17 21 L7 21 L7 16 C7 14, 9 13, 11 12 C9 11, 7 10, 7 8 Z"/>
           </svg>
         </span>
@@ -1061,28 +1089,10 @@ textarea.input-base {
     </div>
   </aside>
 
-  <!-- =================================================
+  <!-- ============================================================
        MAIN
-       ================================================= -->
+       ============================================================ -->
   <main class="main" id="main">
-
-    <!-- Doodles decorativos -->
-    <svg class="doodle doodle-1" width="40" height="40" viewBox="0 0 40 40" fill="none">
-      <path d="M20 8 L22 18 L32 20 L22 22 L20 32 L18 22 L8 20 L18 18 Z" fill="#F6C445" opacity="0.7"/>
-    </svg>
-    <svg class="doodle doodle-2" width="50" height="50" viewBox="0 0 50 50" fill="none">
-      <circle cx="25" cy="25" r="6" fill="#F28C8C" opacity="0.7"/>
-      <circle cx="25" cy="14" r="5" fill="#FFB3D1" opacity="0.7"/>
-      <circle cx="25" cy="36" r="5" fill="#FFB3D1" opacity="0.7"/>
-      <circle cx="14" cy="25" r="5" fill="#FFB3D1" opacity="0.7"/>
-      <circle cx="36" cy="25" r="5" fill="#FFB3D1" opacity="0.7"/>
-    </svg>
-    <svg class="doodle doodle-3" width="44" height="44" viewBox="0 0 44 44" fill="none">
-      <path d="M8 28 C 4 24, 4 16, 14 14 C 17 6, 30 6, 32 16 C 40 16, 40 26, 34 28 Z" fill="#FFFDF9" stroke="#E8DDCF" stroke-width="1.5"/>
-    </svg>
-    <svg class="doodle doodle-4" width="32" height="32" viewBox="0 0 24 24" fill="#F28C8C" opacity="0.6">
-      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-    </svg>
 
     <div class="header">
       <div class="header-greet">
@@ -1096,17 +1106,37 @@ textarea.input-base {
           <span class="fecha-dia" id="fechaDia">—</span>
         </div>
       </div>
+
+      <!-- Doodles del header -->
+      <svg class="doodle" style="top: -10px; right: 220px; opacity: 0.7;" width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <path d="M20 6 L22.5 17.5 L34 20 L22.5 22.5 L20 34 L17.5 22.5 L6 20 L17.5 17.5 Z" fill="#F6C445"/>
+      </svg>
+      <svg class="doodle" style="top: 40px; right: 180px; opacity: 0.6;" width="22" height="22" viewBox="0 0 24 24" fill="#F28C8C">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
     </div>
 
-    <div id="seccionContenido" style="display: flex; flex-direction: column; gap: 14px;">
+    <div id="seccionContenido">
       <!-- Inyectado por JS -->
     </div>
 
+    <!-- Doodles laterales del main -->
+    <svg class="doodle" style="top: 30%; left: -28px; opacity: 0.6;" width="32" height="32" viewBox="0 0 24 24" fill="#FFB3D1">
+      <circle cx="12" cy="12" r="3"/>
+      <circle cx="12" cy="6" r="2.5"/>
+      <circle cx="12" cy="18" r="2.5"/>
+      <circle cx="6" cy="12" r="2.5"/>
+      <circle cx="18" cy="12" r="2.5"/>
+    </svg>
+    <svg class="doodle" style="bottom: 8%; right: -30px; opacity: 0.5;" width="44" height="44" viewBox="0 0 44 44">
+      <path d="M8 28 C 4 24, 4 16, 14 14 C 17 6, 30 6, 32 16 C 40 16, 40 26, 34 28 Z" fill="#FFFDF9" stroke="#E8DDCF" stroke-width="1.5"/>
+    </svg>
+
   </main>
 
-  <!-- =================================================
+  <!-- ============================================================
        SIDEBAR DERECHO
-       ================================================= -->
+       ============================================================ -->
   <aside class="sidebar-right">
 
     <div class="card perfil-card">
@@ -1161,19 +1191,16 @@ textarea.input-base {
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-tag">v0.2.0</div>
+<div class="version-tag">v0.3.0</div>
 
 <script>
 /* ============================================================
-   GINA — Frontend v0.2
-   Vanilla JS. Sin frameworks. Sin build.
+   GINA — Frontend v0.3
    ============================================================ */
 
-// === CONFIG ===
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwnuMgU-Ooa0qsq_MgDAo4FOBGHH5WiVhgSEFtQ1LPbXUfouaHw9jJbYLEE39btsJQD/exec';
-const VERSION = 'v0.2.0';
+const VERSION = 'v0.3.0';
 
-// === ESTADO ===
 const state = {
   bootstrap: null,
   fechaActual: null,
@@ -1185,7 +1212,6 @@ const state = {
   saving: false,
 };
 
-// === HELPERS ===
 function $(s) { return document.querySelector(s); }
 function $$(s) { return document.querySelectorAll(s); }
 
@@ -1223,7 +1249,7 @@ async function api(action, params = {}) {
   return json.data;
 }
 
-// === FALLBACK GLOBAL DE IMÁGENES ===
+// Fallback global de imágenes
 document.addEventListener('error', function(e) {
   const img = e.target;
   if (img.tagName !== 'IMG') return;
@@ -1235,7 +1261,23 @@ document.addEventListener('error', function(e) {
   parent.innerHTML = `<div class="img-fallback" style="background: ${bg};">${initial}</div>`;
 }, true);
 
-// === SECCIÓN HOY ===
+// SVG-icons placeholder para "cosas que hice" mientras no haya imágenes
+const COSA_PLACEHOLDER_ICONS = [
+  // corazón
+  `<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`,
+  // estrella
+  `<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L14.5 9 L22 9.5 L16.5 14 L18 21 L12 17.5 L6 21 L7.5 14 L2 9.5 L9.5 9 Z"/></svg>`,
+  // flor
+  `<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="6" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="12" r="3"/><circle cx="12" cy="18" r="3"/><circle cx="12" cy="12" r="2.5" fill="#F6C445"/></svg>`,
+  // nube
+  `<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18 C 3 18, 2 15, 3.5 13 C 4 9, 9 9, 10 11 C 11 7, 18 7, 18 12 C 21 12, 21 16, 19 18 Z"/></svg>`,
+  // hojita
+  `<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 C 4 10, 10 4, 20 4 C 20 14, 14 20, 4 20 Z M4 20 L12 12"/></svg>`,
+];
+
+// ============================================================
+// SECCIÓN HOY
+// ============================================================
 
 function pintarSeccionHoy() {
   const html = `
@@ -1399,7 +1441,7 @@ function pintarActividades() {
 function pintarCosas() {
   let checks = (state.bootstrap.checks_cosas_hice || []);
   if (!checks.length) {
-    $('#cosasGrid').innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 20px; color: var(--text-mute); font-family: var(--font-hand);">Pegá checks en el Sheet (pestaña Checks_Cosas_Hice).</div>`;
+    $('#cosasGrid').innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 24px; color: var(--text-mute); font-family: var(--font-hand); font-size: 16px;">Pegá checks en el Sheet (pestaña Checks_Cosas_Hice).</div>`;
     actualizarContadorCosas();
     return;
   }
@@ -1407,16 +1449,25 @@ function pintarCosas() {
   const seed = state.fechaActual ? state.fechaActual.split('-').join('') : Date.now();
   const arr = [...checks].sort((a, b) => hashStr(a.id + seed) - hashStr(b.id + seed));
   const elegidos = arr.slice(0, 5);
+
   const grid = $('#cosasGrid');
-  grid.innerHTML = elegidos.map(c => `
-    <div class="cosa" data-id="${c.id}">
-      <div class="cosa-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-      <div class="cosa-img">
-        <img src="img/cosas/${c.imagen || c.emoji || 'cosa-01.webp'}" alt="${c.texto}" data-initial="${(c.texto || '?')[0]}" data-bg="#FFD3B6" />
+  grid.innerHTML = elegidos.map((c, idx) => {
+    const tienImagen = c.imagen && c.imagen.length > 3;
+    const pastel = `pastel-${(idx % 5) + 1}`;
+    const icono = COSA_PLACEHOLDER_ICONS[idx % COSA_PLACEHOLDER_ICONS.length];
+    const imgContent = tienImagen
+      ? `<img src="img/cosas/${c.imagen}" alt="${c.texto}" data-initial="${(c.texto || '?')[0]}" data-bg="#FFD3B6" />`
+      : icono;
+    return `
+      <div class="cosa" data-id="${c.id}">
+        <div class="cosa-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cosa-img ${tienImagen ? '' : pastel}">
+          ${imgContent}
+        </div>
+        <div class="cosa-label">${c.texto || ''}</div>
       </div>
-      <div class="cosa-label">${c.texto || ''}</div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 
   grid.addEventListener('click', e => {
     const el = e.target.closest('.cosa');
@@ -1538,7 +1589,9 @@ async function guardar() {
   }
 }
 
-// === CALENDARIO ===
+// ============================================================
+// CALENDARIO
+// ============================================================
 
 function pintarCalendario() {
   const m = state.calendarioMes;
@@ -1573,7 +1626,6 @@ function pintarCalendario() {
   }
 
   grid.innerHTML = dowHtml + cellsHtml;
-
   grid.onclick = (e) => {
     const c = e.target.closest('.cal-day');
     if (!c || !c.dataset.fecha) return;
@@ -1609,7 +1661,10 @@ function pintarResumenSemana() {
   $('#resumenEmocion').textContent = top ? top[0] : '—';
 }
 
-// === PERFIL ===
+// ============================================================
+// PERFIL & RINCÓN
+// ============================================================
+
 function pintarPerfil() {
   const p = state.bootstrap.perfil || {};
 
@@ -1644,10 +1699,13 @@ function pintarPerfil() {
 
 function pintarRincon() {
   const cont = $('#rincon');
-  cont.innerHTML = `<img src="img/rincon-gina.webp" alt="Rincón de Gina" data-initial="G" data-bg="#FFD3B6" />`;
+  // Si no hay rincon-gina.webp, muestra un placeholder bonito con doodles
+  cont.innerHTML = `<img src="img/rincon-gina.webp" alt="Rincón de Gina" data-initial="G" data-bg="#FFD3B6" onerror="this.parentElement.innerHTML='<div class=\\'rincon-placeholder\\'><svg width=\\'160\\' height=\\'130\\' viewBox=\\'0 0 160 130\\' fill=\\'none\\'><ellipse cx=\\'48\\' cy=\\'112\\' rx=\\'28\\' ry=\\'4\\' fill=\\'#E8DDCF\\' opacity=\\'0.5\\'/><ellipse cx=\\'108\\' cy=\\'114\\' rx=\\'30\\' ry=\\'4\\' fill=\\'#E8DDCF\\' opacity=\\'0.5\\'/><path d=\\'M40 110 Q40 70, 38 50\\' stroke=\\'#7BA068\\' stroke-width=\\'2\\' stroke-linecap=\\'round\\'/><path d=\\'M38 65 Q30 60, 26 50\\' stroke=\\'#7BA068\\' stroke-width=\\'2\\' stroke-linecap=\\'round\\' fill=\\'none\\'/><path d=\\'M40 75 Q50 70, 54 60\\' stroke=\\'#7BA068\\' stroke-width=\\'2\\' stroke-linecap=\\'round\\' fill=\\'none\\'/><circle cx=\\'38\\' cy=\\'45\\' r=\\'8\\' fill=\\'#F28C8C\\'/><circle cx=\\'38\\' cy=\\'45\\' r=\\'3\\' fill=\\'#FFFDF9\\'/><path d=\\'M105 112 Q105 80, 108 55\\' stroke=\\'#7BA068\\' stroke-width=\\'2\\' stroke-linecap=\\'round\\'/><circle cx=\\'108\\' cy=\\'50\\' r=\\'10\\' fill=\\'#C8B6E2\\'/><circle cx=\\'108\\' cy=\\'50\\' r=\\'3\\' fill=\\'#F6C445\\'/><ellipse cx=\\'78\\' cy=\\'40\\' rx=\\'18\\' ry=\\'12\\' fill=\\'#FFFDF9\\' stroke=\\'#E8DDCF\\' stroke-width=\\'1.5\\'/><circle cx=\\'72\\' cy=\\'40\\' r=\\'1.5\\' fill=\\'#4A3F35\\'/><circle cx=\\'84\\' cy=\\'40\\' r=\\'1.5\\' fill=\\'#4A3F35\\'/><path d=\\'M75 44 Q78 46, 81 44\\' stroke=\\'#4A3F35\\' stroke-width=\\'1.2\\' fill=\\'none\\' stroke-linecap=\\'round\\'/><path d=\\'M130 20 L132 28 L140 30 L132 32 L130 40 L128 32 L120 30 L128 28 Z\\' fill=\\'#F6C445\\' opacity=\\'0.7\\'/></svg></div>';" style="border-radius: var(--r-input);" />`;
 }
 
-// === SECCIONES OTRAS ===
+// ============================================================
+// SECCIONES OTRAS
+// ============================================================
 function pintarSeccionPlaceholder(titulo) {
   $('#seccionContenido').innerHTML = `<div class="placeholder-seccion">🚧 ${titulo} — próximamente</div>`;
 }
