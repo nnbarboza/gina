@@ -70,6 +70,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior: none;
+  overflow-x: hidden;
 }
 
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
@@ -404,15 +405,9 @@ textarea { resize: none; }
 /* EMOCIONES */
 .emociones-grid {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 6px;
-  row-gap: 10px;
-}
-@media (max-width: 1200px) {
-  .emociones-grid { grid-template-columns: repeat(7, 1fr); }
-}
-@media (max-width: 900px) {
-  .emociones-grid { grid-template-columns: repeat(8, 1fr); }
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  row-gap: 12px;
 }
 @media (max-width: 600px) {
   .emociones-grid { grid-template-columns: repeat(4, 1fr); }
@@ -437,8 +432,8 @@ textarea { resize: none; }
   box-shadow: 0 0 0 3px var(--amarillo);
 }
 .emocion-img {
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -449,7 +444,7 @@ textarea { resize: none; }
 }
 .emocion-img img { width: 100%; height: 100%; object-fit: cover; }
 .emocion-label {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--text-soft);
   text-align: center;
@@ -461,22 +456,13 @@ textarea { resize: none; }
    ACTIVIDAD + ALGO BUENO + APRENDÍ
    ============================================================ */
 
-.row-actividad-bueno {
-  display: grid;
-  grid-template-columns: minmax(220px, 320px) 1fr;
-  gap: 14px;
-  align-items: stretch;
-}
-@media (max-width: 900px) {
-  .row-actividad-bueno { grid-template-columns: 1fr; }
-}
-.bueno-aprendi-col {
+.row-bueno-aprendi {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
 }
-@media (max-width: 700px) {
-  .bueno-aprendi-col { grid-template-columns: 1fr; }
+@media (max-width: 900px) {
+  .row-bueno-aprendi { grid-template-columns: 1fr; }
 }
 
 select.input-base, input.input-base, textarea.input-base {
@@ -541,6 +527,74 @@ textarea.input-base {
 .aprendi-card {
   background: linear-gradient(140deg, #EFFBEA 0%, #FFFDF9 60%);
   border: 1px solid #DCEED1;
+}
+
+/* ============================================================
+   ACTIVIDAD — card colapsable como "momento difícil"
+   ============================================================ */
+
+.actividad-card {
+  background: linear-gradient(140deg, #FFF5E0 0%, #FFFDF9 80%);
+  border: 1px solid #F0E0B8;
+}
+.actividad-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.actividad-check {
+  width: 20px; height: 20px;
+  border: 2px solid var(--text-soft);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--card);
+  transition: background 0.2s, border-color 0.2s;
+}
+.actividad-card.active .actividad-check {
+  background: var(--amarillo);
+  border-color: var(--amarillo);
+}
+.actividad-check svg { width: 12px; height: 12px; display: none; }
+.actividad-card.active .actividad-check svg { display: block; }
+.actividad-toggle-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text);
+  flex: 1;
+}
+.actividad-resumen {
+  font-family: var(--font-hand);
+  font-size: 14px;
+  color: var(--text-soft);
+  margin-left: 8px;
+  display: none;
+}
+.actividad-card.tiene-datos:not(.active) .actividad-resumen {
+  display: inline;
+}
+.actividad-detalle {
+  display: none;
+  margin-top: 14px;
+  grid-template-columns: 220px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+.actividad-card.active .actividad-detalle { display: grid; }
+@media (max-width: 700px) {
+  .actividad-card.active .actividad-detalle { grid-template-columns: 1fr; }
+}
+.actividad-detalle .field-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-soft);
+  margin-bottom: 4px;
+  display: block;
 }
 
 /* ============================================================
@@ -1136,11 +1190,11 @@ textarea.input-base {
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-tag">v0.4.0</div>
+<div class="version-tag">v0.4.1</div>
 
 <script>
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwnuMgU-Ooa0qsq_MgDAo4FOBGHH5WiVhgSEFtQ1LPbXUfouaHw9jJbYLEE39btsJQD/exec';
-const VERSION = 'v0.4.0';
+const VERSION = 'v0.4.1';
 
 const state = {
   bootstrap: null,
@@ -1230,29 +1284,40 @@ function pintarSeccionHoy() {
       </div>
     </div>
 
-    <div class="row-actividad-bueno">
-      <div class="card">
-        <div class="card-title">🎫 Actividad del día</div>
-        <select id="actividadSelect" class="input-base">
-          <option value="">Elige una actividad</option>
-        </select>
-        <div class="actividad-label">¿Qué pasó?</div>
-        <textarea id="actividadDetalle" class="input-base" placeholder="Cuéntame los detalles..."></textarea>
+    <div class="card actividad-card" id="actividadCard">
+      <div class="actividad-toggle" id="actividadToggle">
+        <div class="actividad-check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#4A3F35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <span class="actividad-toggle-label">🎫 ¿Hubo alguna actividad especial?</span>
+        <span class="actividad-resumen" id="actividadResumen"></span>
       </div>
+      <div class="actividad-detalle">
+        <div>
+          <label class="field-label">¿Qué hicimos?</label>
+          <select id="actividadSelect" class="input-base">
+            <option value="">Elige una actividad</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">¿Qué pasó?</label>
+          <textarea id="actividadDetalle" class="input-base" placeholder="Cuéntame los detalles..."></textarea>
+        </div>
+      </div>
+    </div>
 
-      <div class="bueno-aprendi-col">
-        <div class="card">
-          <div class="card-title">⭐ Algo bueno de hoy</div>
-          <div class="algo-bueno-list">
-            <div class="algo-bueno-item"><span class="algo-bueno-num">1</span><input id="algoBueno1" placeholder="Escribe algo bueno..." /></div>
-            <div class="algo-bueno-item"><span class="algo-bueno-num">2</span><input id="algoBueno2" placeholder="Escribe algo bueno..." /></div>
-            <div class="algo-bueno-item"><span class="algo-bueno-num">3</span><input id="algoBueno3" placeholder="Escribe algo bueno..." /></div>
-          </div>
+    <div class="row-bueno-aprendi">
+      <div class="card">
+        <div class="card-title">⭐ Algo bueno de hoy</div>
+        <div class="algo-bueno-list">
+          <div class="algo-bueno-item"><span class="algo-bueno-num">1</span><input id="algoBueno1" placeholder="Escribe algo bueno..." /></div>
+          <div class="algo-bueno-item"><span class="algo-bueno-num">2</span><input id="algoBueno2" placeholder="Escribe algo bueno..." /></div>
+          <div class="algo-bueno-item"><span class="algo-bueno-num">3</span><input id="algoBueno3" placeholder="Escribe algo bueno..." /></div>
         </div>
-        <div class="card aprendi-card">
-          <div class="card-title">🌱 Algo que aprendí</div>
-          <textarea id="aprendi" class="input-base" placeholder="Escribe aquí..."></textarea>
-        </div>
+      </div>
+      <div class="card aprendi-card">
+        <div class="card-title">🌱 Algo que aprendí</div>
+        <textarea id="aprendi" class="input-base" placeholder="Escribe aquí..."></textarea>
       </div>
     </div>
 
@@ -1415,8 +1480,12 @@ function conectarInputsHoy() {
     if (el) el.classList.add('selected');
   }
 
-  if (d.actividad_categoria) $('#actividadSelect').value = d.actividad_categoria;
+  if (d.actividad_categoria) {
+    $('#actividadSelect').value = d.actividad_categoria;
+    $('#actividadCard').classList.add('active', 'tiene-datos');
+  }
   $('#actividadDetalle').value = d.actividad_detalle || '';
+  actualizarResumenActividad();
   $('#algoBueno1').value = d.algo_bueno_1 || '';
   $('#algoBueno2').value = d.algo_bueno_2 || '';
   $('#algoBueno3').value = d.algo_bueno_3 || '';
@@ -1451,7 +1520,43 @@ function conectarInputsHoy() {
     $('#dificilCard').classList.toggle('active');
     guardarDebounced();
   });
+
+  $('#actividadToggle').addEventListener('click', () => {
+    const card = $('#actividadCard');
+    card.classList.toggle('active');
+    // Si se desactiva, limpiamos los campos
+    if (!card.classList.contains('active')) {
+      $('#actividadSelect').value = '';
+      $('#actividadDetalle').value = '';
+      card.classList.remove('tiene-datos');
+      actualizarResumenActividad();
+    }
+    guardarDebounced();
+  });
+
+  // Cuando cambia el select o el detalle, actualizar resumen
+  $('#actividadSelect').addEventListener('change', () => {
+    if ($('#actividadSelect').value) {
+      $('#actividadCard').classList.add('tiene-datos');
+    }
+    actualizarResumenActividad();
+  });
+  $('#actividadDetalle').addEventListener('input', actualizarResumenActividad);
 }
+
+function actualizarResumenActividad() {
+  const cat = $('#actividadSelect')?.value;
+  const det = $('#actividadDetalle')?.value;
+  const r = $('#actividadResumen');
+  if (!r) return;
+  if (cat || det) {
+    const partes = [];
+    if (cat) partes.push(cat);
+    if (det) partes.push(det.slice(0, 40) + (det.length > 40 ? '…' : ''));
+    r.textContent = '— ' + partes.join(' · ');
+  } else {
+    r.textContent = '';
+  }
 
 function recopilarDia() {
   const cosasChecked = [...$$('#cosasGrid .cosa.checked')].map(el => el.dataset.id);
