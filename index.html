@@ -1190,11 +1190,11 @@ textarea.input-base {
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-tag">v0.4.1</div>
+<div class="version-tag">v0.4.3</div>
 
 <script>
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwnuMgU-Ooa0qsq_MgDAo4FOBGHH5WiVhgSEFtQ1LPbXUfouaHw9jJbYLEE39btsJQD/exec';
-const VERSION = 'v0.4.1';
+const VERSION = 'v0.4.3';
 
 const state = {
   bootstrap: null,
@@ -1557,6 +1557,7 @@ function actualizarResumenActividad() {
   } else {
     r.textContent = '';
   }
+}
 
 function recopilarDia() {
   const cosasChecked = [...$$('#cosasGrid .cosa.checked')].map(el => el.dataset.id);
@@ -1707,7 +1708,32 @@ function pintarPerfil() {
 
 function pintarRincon() {
   const cont = $('#rincon');
-  cont.innerHTML = `<img src="img/rincon-gina.webp" alt="Rincón de Gina" data-initial="G" data-bg="#FFD3B6" onerror="this.parentElement.innerHTML='<div class=\\'rincon-placeholder\\'><svg width=\\'140\\' height=\\'110\\' viewBox=\\'0 0 160 130\\' fill=\\'none\\'><ellipse cx=\\'48\\' cy=\\'112\\' rx=\\'28\\' ry=\\'4\\' fill=\\'#E8DDCF\\' opacity=\\'0.5\\'/><ellipse cx=\\'108\\' cy=\\'114\\' rx=\\'30\\' ry=\\'4\\' fill=\\'#E8DDCF\\' opacity=\\'0.5\\'/><path d=\\'M40 110 Q40 70, 38 50\\' stroke=\\'#7BA068\\' stroke-width=\\'2\\' stroke-linecap=\\'round\\'/><circle cx=\\'38\\' cy=\\'45\\' r=\\'8\\' fill=\\'#F28C8C\\'/><circle cx=\\'38\\' cy=\\'45\\' r=\\'3\\' fill=\\'#FFFDF9\\'/><path d=\\'M105 112 Q105 80, 108 55\\' stroke=\\'#7BA068\\' stroke-width=\\'2\\' stroke-linecap=\\'round\\'/><circle cx=\\'108\\' cy=\\'50\\' r=\\'10\\' fill=\\'#C8B6E2\\'/><circle cx=\\'108\\' cy=\\'50\\' r=\\'3\\' fill=\\'#F6C445\\'/><ellipse cx=\\'78\\' cy=\\'40\\' rx=\\'18\\' ry=\\'12\\' fill=\\'#FFFDF9\\' stroke=\\'#E8DDCF\\' stroke-width=\\'1.5\\'/><circle cx=\\'72\\' cy=\\'40\\' r=\\'1.5\\' fill=\\'#4A3F35\\'/><circle cx=\\'84\\' cy=\\'40\\' r=\\'1.5\\' fill=\\'#4A3F35\\'/><path d=\\'M75 44 Q78 46, 81 44\\' stroke=\\'#4A3F35\\' stroke-width=\\'1.2\\' fill=\\'none\\' stroke-linecap=\\'round\\'/></svg></div>';" style="border-radius: var(--r-input);" />`;
+  // Probar primero la imagen real, con fallback a un SVG inyectado por JS si falla
+  const img = document.createElement('img');
+  img.src = 'img/rincon-gina.webp';
+  img.alt = 'Rincón de Gina';
+  img.style.borderRadius = 'var(--r-input)';
+  img.addEventListener('error', () => {
+    cont.innerHTML = `
+      <div class="rincon-placeholder">
+        <svg width="140" height="110" viewBox="0 0 160 130" fill="none">
+          <ellipse cx="48" cy="112" rx="28" ry="4" fill="#E8DDCF" opacity="0.5"/>
+          <ellipse cx="108" cy="114" rx="30" ry="4" fill="#E8DDCF" opacity="0.5"/>
+          <path d="M40 110 Q40 70, 38 50" stroke="#7BA068" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="38" cy="45" r="8" fill="#F28C8C"/>
+          <circle cx="38" cy="45" r="3" fill="#FFFDF9"/>
+          <path d="M105 112 Q105 80, 108 55" stroke="#7BA068" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="108" cy="50" r="10" fill="#C8B6E2"/>
+          <circle cx="108" cy="50" r="3" fill="#F6C445"/>
+          <ellipse cx="78" cy="40" rx="18" ry="12" fill="#FFFDF9" stroke="#E8DDCF" stroke-width="1.5"/>
+          <circle cx="72" cy="40" r="1.5" fill="#4A3F35"/>
+          <circle cx="84" cy="40" r="1.5" fill="#4A3F35"/>
+          <path d="M75 44 Q78 46, 81 44" stroke="#4A3F35" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>`;
+  });
+  cont.innerHTML = '';
+  cont.appendChild(img);
 }
 
 function pintarSeccionPlaceholder(titulo) {
