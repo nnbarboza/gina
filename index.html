@@ -84,11 +84,11 @@ textarea { resize: none; }
 
 .app {
   display: grid;
-  grid-template-columns: 168px 1fr 240px;
-  gap: 12px;
-  padding: 12px;
+  grid-template-columns: 160px 1fr 232px;
+  gap: 10px;
+  padding: 10px;
   min-height: 100vh;
-  max-width: 1500px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -221,6 +221,7 @@ textarea { resize: none; }
   gap: 14px;
   max-width: 100%;
   width: 100%;
+  min-width: 0;
   position: relative;
 }
 
@@ -232,17 +233,19 @@ textarea { resize: none; }
 
 /* Header con washi tape */
 .header {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
   align-items: start;
+  gap: 12px;
   padding: 4px 4px 0;
   position: relative;
 }
+.header-greet { min-width: 0; flex: 1; }
 .header-greet h1 {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 26px;
+  font-size: 24px;
   color: var(--text);
   line-height: 1.1;
   margin-bottom: 2px;
@@ -423,6 +426,27 @@ textarea { resize: none; }
   cursor: pointer;
   transition: transform 0.2s, background 0.2s;
 }
+.emocion {
+  position: relative;
+}
+.emocion-orden {
+  display: none;
+  position: absolute;
+  top: -2px;
+  right: 8px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--coral);
+  color: white;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 11px;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  box-shadow: var(--shadow-s);
+}
+.emocion.selected .emocion-orden { display: flex; }
 .emocion:hover { transform: translateY(-2px); }
 .emocion:active { transform: scale(0.95); }
 .emocion.selected {
@@ -749,17 +773,18 @@ textarea.input-base {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-width: 0;
 }
 
 .perfil-card {
   display: grid;
-  grid-template-columns: 56px 1fr;
-  gap: 12px;
+  grid-template-columns: 48px 1fr;
+  gap: 10px;
   align-items: center;
-  padding: 14px;
+  padding: 12px;
 }
 .perfil-avatar {
-  width: 56px; height: 56px;
+  width: 48px; height: 48px;
   border-radius: 50%;
   background: var(--peach);
   position: relative;
@@ -772,9 +797,9 @@ textarea.input-base {
 }
 .perfil-avatar .corona {
   position: absolute;
-  top: -10px; left: 50%;
+  top: -8px; left: 50%;
   transform: translateX(-50%) rotate(-8deg);
-  width: 24px; height: 24px;
+  width: 20px; height: 20px;
 }
 .perfil-avatar .avatar-inner {
   width: 100%; height: 100%;
@@ -788,7 +813,7 @@ textarea.input-base {
 .perfil-avatar .inicial {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 22px;
+  font-size: 20px;
   color: var(--text);
 }
 .perfil-info { display: flex; flex-direction: column; gap: 1px; }
@@ -801,7 +826,7 @@ textarea.input-base {
 .perfil-cumple-dias {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 22px;
+  font-size: 20px;
   color: var(--text);
   line-height: 1;
   margin: 2px 0;
@@ -1190,11 +1215,11 @@ textarea.input-base {
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-tag">v0.5.0</div>
+<div class="version-tag">v0.5.2</div>
 
 <script>
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwnuMgU-Ooa0qsq_MgDAo4FOBGHH5WiVhgSEFtQ1LPbXUfouaHw9jJbYLEE39btsJQD/exec';
-const VERSION = 'v0.5.0';
+const VERSION = 'v0.5.2';
 
 const state = {
   bootstrap: null,
@@ -1412,6 +1437,7 @@ function pintarEmociones() {
       : `<div class="img-fallback" style="background: ${color}; font-size: 16px;">${(e.label || '?')[0].toUpperCase()}</div>`;
     return `
       <div class="emocion" data-slug="${e.slug}">
+        <div class="emocion-orden"></div>
         <div class="emocion-img" style="background: ${color};">${imgContent}</div>
         <div class="emocion-label">${e.label}</div>
       </div>
@@ -1421,12 +1447,46 @@ function pintarEmociones() {
   grid.addEventListener('click', e => {
     const el = e.target.closest('.emocion');
     if (!el) return;
-    $$('.emocion').forEach(x => x.classList.remove('selected'));
-    el.classList.add('selected');
+    const slug = el.dataset.slug;
     if (!state.diaActual) state.diaActual = {};
-    state.diaActual.emocion = el.dataset.slug;
+    let seleccionadas = parseEmociones(state.diaActual.emocion);
+
+    if (seleccionadas.includes(slug)) {
+      // Si ya estaba, la quitamos
+      seleccionadas = seleccionadas.filter(s => s !== slug);
+    } else {
+      // Si no, la agregamos (máx 3)
+      if (seleccionadas.length >= 3) {
+        toast('Hasta 3 emociones por día');
+        return;
+      }
+      seleccionadas.push(slug);
+    }
+
+    state.diaActual.emocion = seleccionadas.join(',');
+    aplicarSeleccionEmociones(seleccionadas);
     pintarCalendario();
     guardarDebounced();
+  });
+}
+
+// Convierte el string "contenta,triste" a ['contenta','triste']
+function parseEmociones(str) {
+  if (!str) return [];
+  return String(str).split(',').map(s => s.trim()).filter(Boolean);
+}
+
+// Aplica clases visuales a las emociones según el orden seleccionado
+function aplicarSeleccionEmociones(seleccionadas) {
+  $$('.emocion').forEach(el => {
+    const slug = el.dataset.slug;
+    const idx = seleccionadas.indexOf(slug);
+    el.classList.toggle('selected', idx >= 0);
+    const ordenEl = el.querySelector('.emocion-orden');
+    if (ordenEl) {
+      ordenEl.textContent = idx >= 0 ? (idx + 1) : '';
+      ordenEl.style.display = idx >= 0 ? 'flex' : 'none';
+    }
   });
 }
 
@@ -1493,8 +1553,7 @@ function conectarInputsHoy() {
   const d = state.diaActual || {};
 
   if (d.emocion) {
-    const el = document.querySelector(`.emocion[data-slug="${d.emocion}"]`);
-    if (el) el.classList.add('selected');
+    aplicarSeleccionEmociones(parseEmociones(d.emocion));
   }
 
   if (d.actividad_categoria) {
@@ -1578,11 +1637,12 @@ function actualizarResumenActividad() {
 
 function recopilarDia() {
   const cosasChecked = [...$$('#cosasGrid .cosa.checked')].map(el => el.dataset.id);
-  const emocionEl = $('.emocion.selected');
+  // Recopilamos emociones respetando el orden de selección guardado en state
+  const seleccionadas = parseEmociones(state.diaActual?.emocion);
   return {
     id: state.diaActual?.id || undefined,
     fecha: state.fechaActual,
-    emocion: emocionEl ? emocionEl.dataset.slug : (state.diaActual?.emocion || ''),
+    emocion: seleccionadas.join(','),
     actividad_categoria: $('#actividadSelect')?.value || '',
     actividad_detalle: $('#actividadDetalle')?.value || '',
     algo_bueno_1: $('#algoBueno1')?.value || '',
@@ -1650,7 +1710,9 @@ function pintarCalendario() {
     const isFuture = fecha > new Date();
     const isSelected = fkey === state.fechaActual;
     const dia = state.diasCalendario.find(x => x.fecha === fkey);
-    const color = dia && dia.emocion ? colorEmocion(dia.emocion) : 'transparent';
+    // Si hay varias emociones separadas por coma, usamos la primera (la principal)
+    const primeraEmocion = dia && dia.emocion ? parseEmociones(dia.emocion)[0] : null;
+    const color = primeraEmocion ? colorEmocion(primeraEmocion) : 'transparent';
 
     cellsHtml += `<div class="cal-day ${isToday ? 'today' : ''} ${isFuture ? 'future' : ''} ${isSelected ? 'selected' : ''}" data-fecha="${fkey}">
       <span>${d}</span>
@@ -1687,10 +1749,18 @@ function pintarResumenSemana() {
 
   const counts = {};
   escritos.forEach(d => {
-    if (d.emocion) counts[d.emocion] = (counts[d.emocion] || 0) + 1;
+    // Cada día puede tener hasta 3 emociones; contamos todas
+    parseEmociones(d.emocion).forEach(slug => {
+      counts[slug] = (counts[slug] || 0) + 1;
+    });
   });
   const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
-  $('#resumenEmocion').textContent = top ? top[0] : '—';
+  if (top) {
+    const e = getEmocionByslug(top[0]);
+    $('#resumenEmocion').textContent = e ? e.label : top[0];
+  } else {
+    $('#resumenEmocion').textContent = '—';
+  }
 }
 
 function pintarPerfil() {
