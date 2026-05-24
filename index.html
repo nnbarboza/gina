@@ -84,9 +84,9 @@ textarea { resize: none; }
 
 .app {
   display: grid;
-  grid-template-columns: 180px 1fr 280px;
-  gap: 14px;
-  padding: 14px;
+  grid-template-columns: 168px 1fr 240px;
+  gap: 12px;
+  padding: 12px;
   min-height: 100vh;
   max-width: 1500px;
   margin: 0 auto;
@@ -109,12 +109,12 @@ textarea { resize: none; }
   border: 1px solid var(--border);
   border-radius: var(--r-card);
   box-shadow: var(--shadow);
-  padding: 16px 12px;
+  padding: 14px 10px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  min-height: calc(100vh - 28px);
-  max-height: calc(100vh - 28px);
+  gap: 14px;
+  min-height: calc(100vh - 24px);
+  max-height: calc(100vh - 24px);
   overflow: hidden;
 }
 
@@ -134,7 +134,7 @@ textarea { resize: none; }
 .logo-text {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 22px;
+  font-size: 20px;
   color: var(--text);
   position: relative;
 }
@@ -159,12 +159,12 @@ textarea { resize: none; }
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 16px;
+  gap: 8px;
+  padding: 9px 10px;
+  border-radius: 14px;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 15px;
+  font-size: 14px;
   color: var(--text-soft);
   background: transparent;
   text-align: left;
@@ -227,7 +227,7 @@ textarea { resize: none; }
 #seccionContenido {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 /* Header con washi tape */
@@ -302,7 +302,7 @@ textarea { resize: none; }
   border-radius: var(--r-card);
   border: 1px solid var(--border-soft);
   box-shadow: var(--shadow);
-  padding: 16px;
+  padding: 14px;
   position: relative;
 }
 
@@ -432,8 +432,8 @@ textarea { resize: none; }
   box-shadow: 0 0 0 3px var(--amarillo);
 }
 .emocion-img {
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -1115,7 +1115,7 @@ textarea.input-base {
 
     <div class="header">
       <div class="header-greet">
-        <h1>¡Hola Georgin! <span class="sol">☀️</span></h1>
+        <h1>¡Hola Gina! <span class="sol">☀️</span></h1>
         <p>¿Cómo está tu pequeño universo hoy?</p>
       </div>
       <div class="fecha-sticker" id="fechaSticker">
@@ -1190,11 +1190,11 @@ textarea.input-base {
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-tag">v0.4.3</div>
+<div class="version-tag">v0.5.0</div>
 
 <script>
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwnuMgU-Ooa0qsq_MgDAo4FOBGHH5WiVhgSEFtQ1LPbXUfouaHw9jJbYLEE39btsJQD/exec';
-const VERSION = 'v0.4.3';
+const VERSION = 'v0.5.0';
 
 const state = {
   bootstrap: null,
@@ -1284,6 +1284,21 @@ function pintarSeccionHoy() {
       </div>
     </div>
 
+    <div class="row-bueno-aprendi">
+      <div class="card">
+        <div class="card-title">⭐ Algo bueno de hoy</div>
+        <div class="algo-bueno-list">
+          <div class="algo-bueno-item"><span class="algo-bueno-num">1</span><input id="algoBueno1" placeholder="Escribe algo bueno..." /></div>
+          <div class="algo-bueno-item"><span class="algo-bueno-num">2</span><input id="algoBueno2" placeholder="Escribe algo bueno..." /></div>
+          <div class="algo-bueno-item"><span class="algo-bueno-num">3</span><input id="algoBueno3" placeholder="Escribe algo bueno..." /></div>
+        </div>
+      </div>
+      <div class="card aprendi-card">
+        <div class="card-title">🌱 Algo que aprendí</div>
+        <textarea id="aprendi" class="input-base" placeholder="Escribe aquí..."></textarea>
+      </div>
+    </div>
+
     <div class="card actividad-card" id="actividadCard">
       <div class="actividad-toggle" id="actividadToggle">
         <div class="actividad-check">
@@ -1303,21 +1318,6 @@ function pintarSeccionHoy() {
           <label class="field-label">¿Qué pasó?</label>
           <textarea id="actividadDetalle" class="input-base" placeholder="Cuéntame los detalles..."></textarea>
         </div>
-      </div>
-    </div>
-
-    <div class="row-bueno-aprendi">
-      <div class="card">
-        <div class="card-title">⭐ Algo bueno de hoy</div>
-        <div class="algo-bueno-list">
-          <div class="algo-bueno-item"><span class="algo-bueno-num">1</span><input id="algoBueno1" placeholder="Escribe algo bueno..." /></div>
-          <div class="algo-bueno-item"><span class="algo-bueno-num">2</span><input id="algoBueno2" placeholder="Escribe algo bueno..." /></div>
-          <div class="algo-bueno-item"><span class="algo-bueno-num">3</span><input id="algoBueno3" placeholder="Escribe algo bueno..." /></div>
-        </div>
-      </div>
-      <div class="card aprendi-card">
-        <div class="card-title">🌱 Algo que aprendí</div>
-        <textarea id="aprendi" class="input-base" placeholder="Escribe aquí..."></textarea>
       </div>
     </div>
 
@@ -1371,35 +1371,52 @@ function pintarFrase() {
   cont.innerHTML = `<img src="img/frases/${archivo}" alt="${f.persona || 'frase'}" data-initial="${(f.persona || '?')[0]}" data-bg="#E8D9FF" />`;
 }
 
-const EMOCIONES = [
-  { slug: 'contenta', label: 'contenta', color: 'var(--e-contenta)' },
-  { slug: 'contentisima', label: 'contentísima', color: 'var(--e-contenta)' },
-  { slug: 'triste', label: 'triste', color: 'var(--e-triste)' },
-  { slug: 'tranquila', label: 'tranquila', color: 'var(--e-tranquila)' },
-  { slug: 'emocionada', label: 'emocionada', color: 'var(--e-emocionada)' },
-  { slug: 'sensible', label: 'sensible', color: 'var(--e-sensible)' },
-  { slug: 'cansada', label: 'cansada', color: 'var(--e-nerviosa)' },
-  { slug: 'frustrada', label: 'frustrada', color: 'var(--e-frustrada)' },
-  { slug: 'orgullosa', label: 'orgullosa', color: 'var(--e-orgullosa)' },
-  { slug: 'confundida', label: 'confundida', color: 'var(--e-orgullosa)' },
-  { slug: 'enfadada', label: 'enfadada', color: 'var(--e-frustrada)' },
-  { slug: 'sola', label: 'sola', color: 'var(--e-triste)' },
-  { slug: 'nerviosa', label: 'nerviosa', color: 'var(--e-nerviosa)' },
-  { slug: 'vergonzosa', label: 'vergonzosa', color: 'var(--e-emocionada)' },
-  { slug: 'enferma', label: 'enferma', color: 'var(--e-tranquila)' },
-  { slug: 'otro', label: 'otro', color: 'var(--bg)' },
+// Las emociones ahora vienen del Sheet (pestaña Emociones).
+// Conservamos un fallback mínimo por si el Sheet no las devuelve, para no romper la UI.
+const EMOCIONES_FALLBACK = [
+  { slug: 'contenta', label: 'contenta', color: '#FFD95A' },
+  { slug: 'triste', label: 'triste', color: '#AFCBFF' },
+  { slug: 'tranquila', label: 'tranquila', color: '#FFD95A' },
+  { slug: 'otra', label: 'otra', color: '#E8DDCF' },
 ];
+
+function getEmociones() {
+  // Solo activas, ordenadas por la columna 'orden'
+  const list = (state.bootstrap?.emociones || []);
+  if (!list.length) return EMOCIONES_FALLBACK;
+  return list
+    .filter(e => _truthy(e.activa))
+    .sort((a, b) => (parseInt(a.orden) || 999) - (parseInt(b.orden) || 999));
+}
+
+// Resolver una emoción (incluso si está desactivada — para días pasados en calendario)
+function getEmocionByslug(slug) {
+  const list = (state.bootstrap?.emociones || []);
+  return list.find(e => e.slug === slug) || EMOCIONES_FALLBACK.find(e => e.slug === slug);
+}
+
+function _truthy(v) {
+  if (v === true || v === 1) return true;
+  const s = String(v || '').trim().toLowerCase();
+  return s === 'true' || s === '1' || s === 'si' || s === 'sí' || s === 'yes' || s === 'x';
+}
 
 function pintarEmociones() {
   const grid = $('#emocionesGrid');
-  grid.innerHTML = EMOCIONES.map(e => `
-    <div class="emocion" data-slug="${e.slug}">
-      <div class="emocion-img" style="background: ${e.color};">
-        <img src="img/emociones/${e.slug}.webp" alt="${e.label}" data-initial="${e.label[0]}" data-bg="${e.color}" />
+  const emociones = getEmociones();
+  grid.innerHTML = emociones.map(e => {
+    const color = e.color || '#E8DDCF';
+    const tieneImg = e.imagen && e.imagen.length > 3;
+    const imgContent = tieneImg
+      ? `<img src="img/emociones/${e.imagen}" alt="${e.label}" data-initial="${(e.label || '?')[0]}" data-bg="${color}" />`
+      : `<div class="img-fallback" style="background: ${color}; font-size: 16px;">${(e.label || '?')[0].toUpperCase()}</div>`;
+    return `
+      <div class="emocion" data-slug="${e.slug}">
+        <div class="emocion-img" style="background: ${color};">${imgContent}</div>
+        <div class="emocion-label">${e.label}</div>
       </div>
-      <div class="emocion-label">${e.label}</div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 
   grid.addEventListener('click', e => {
     const el = e.target.closest('.emocion');
@@ -1650,10 +1667,9 @@ function pintarCalendario() {
 }
 
 function colorEmocion(slug) {
-  const e = EMOCIONES.find(x => x.slug === slug);
-  if (!e) return 'var(--text-mute)';
-  const varName = e.color.replace('var(', '').replace(')', '').trim();
-  return getComputedStyle(document.documentElement).getPropertyValue(varName) || '#999';
+  if (!slug) return 'transparent';
+  const e = getEmocionByslug(slug);
+  return (e && e.color) ? e.color : '#A8927A';
 }
 
 function pintarResumenSemana() {
