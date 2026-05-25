@@ -15,23 +15,21 @@
 <title>Mi diario · Gina</title>
 <style>
 /* ============================================================
-   GINA v0.4 — Densidad correcta para iPad 10.2"/10.9" horizontal
+   GINA v0.6 — Layout reorganizado, biblioteca, calendario inteligente
    ============================================================ */
 
 :root {
   --bg: #F7F1E8;
+  --bg-darker: #EFE5D2;       /* fondo días conmigo */
   --card: #FFFDF9;
   --border: #E8DDCF;
   --border-soft: #F0E6D6;
-
   --shadow-s: 0 2px 6px rgba(214,196,170,0.10);
   --shadow:   0 4px 12px rgba(214,196,170,0.12);
   --shadow-l: 0 8px 20px rgba(214,196,170,0.18);
-
   --text: #4A3F35;
   --text-soft: #6B5D4F;
   --text-mute: #A8927A;
-
   --amarillo: #F6C445;
   --amarillo-soft: #FFE9A8;
   --coral: #F28C8C;
@@ -39,20 +37,9 @@
   --lavanda: #C8B6E2;
   --azul-nube: #A9D6E5;
   --peach: #FFD3B6;
-
-  --e-contenta: #FFD95A;
-  --e-tranquila: #BFE3C0;
-  --e-emocionada: #FFB3D1;
-  --e-triste: #AFCBFF;
-  --e-frustrada: #FF9B73;
-  --e-orgullosa: #D6C2FF;
-  --e-nerviosa: #E8D5B5;
-  --e-sensible: #E8D9FF;
-
   --font-display: 'Baloo 2', system-ui, sans-serif;
   --font-ui: 'Nunito', system-ui, sans-serif;
   --font-hand: 'Patrick Hand', 'Bradley Hand', cursive;
-
   --r-card: 20px;
   --r-input: 14px;
   --r-pill: 999px;
@@ -78,20 +65,18 @@ input, textarea, select { font-family: inherit; color: inherit; }
 textarea { resize: none; }
 
 /* ============================================================
-   LAYOUT — 3 columnas en iPad horizontal y arriba
-   Breakpoint 900: bajo el cual cae a 1 columna
+   LAYOUT 3 columnas para iPad 9 horizontal (1080px)
    ============================================================ */
 
 .app {
   display: grid;
-  grid-template-columns: 160px 1fr 232px;
+  grid-template-columns: 160px minmax(0, 1fr) 232px;
   gap: 10px;
   padding: 10px;
   min-height: 100vh;
   max-width: 1400px;
   margin: 0 auto;
 }
-
 @media (max-width: 900px) {
   .app {
     grid-template-columns: 1fr;
@@ -117,20 +102,11 @@ textarea { resize: none; }
   max-height: calc(100vh - 24px);
   overflow: hidden;
 }
-
 @media (max-width: 900px) {
-  .sidebar-left {
-    min-height: auto;
-    max-height: none;
-  }
+  .sidebar-left { min-height: auto; max-height: none; }
 }
 
-.logo {
-  padding: 4px 4px 0;
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-}
+.logo { padding: 4px 4px 0; display: flex; align-items: baseline; gap: 6px; }
 .logo-text {
   font-family: var(--font-display);
   font-weight: 700;
@@ -149,13 +125,7 @@ textarea { resize: none; }
   border-radius: 2px;
 }
 
-.nav {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 8px;
-}
-
+.nav { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
 .nav-item {
   display: flex;
   align-items: center;
@@ -178,31 +148,11 @@ textarea { resize: none; }
   color: var(--text);
   box-shadow: var(--shadow-s);
 }
-.nav-item .nav-icon {
-  width: 26px; height: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
+.nav-item .nav-icon { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .nav-item .nav-icon svg { width: 22px; height: 22px; }
 
-.rincon {
-  margin-top: auto;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 0;
-  overflow: hidden;
-}
-.rincon img {
-  max-width: 100%;
-  max-height: 180px;
-  height: auto;
-  width: auto;
-  border-radius: var(--r-input);
-}
+.rincon { margin-top: auto; padding: 4px; display: flex; align-items: center; justify-content: center; min-height: 0; overflow: hidden; }
+.rincon img { max-width: 100%; max-height: 180px; height: auto; width: auto; border-radius: var(--r-input); }
 .rincon-placeholder {
   width: 100%;
   display: flex;
@@ -218,18 +168,13 @@ textarea { resize: none; }
 .main {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   max-width: 100%;
   width: 100%;
   min-width: 0;
   position: relative;
 }
-
-#seccionContenido {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+#seccionContenido { display: flex; flex-direction: column; gap: 12px; }
 
 /* Header con washi tape */
 .header {
@@ -250,19 +195,10 @@ textarea { resize: none; }
   line-height: 1.1;
   margin-bottom: 2px;
 }
-.header-greet h1 .sol {
-  display: inline-block;
-  vertical-align: -3px;
-  margin-left: 4px;
-  font-size: 22px;
-}
-.header-greet p {
-  font-family: var(--font-ui);
-  font-size: 13px;
-  color: var(--text-soft);
-}
+.header-greet h1 .sol { display: inline-block; vertical-align: -3px; margin-left: 4px; font-size: 22px; }
+.header-greet p { font-family: var(--font-ui); font-size: 13px; color: var(--text-soft); }
 
-/* Sticker washi tape */
+/* Sticker washi tape — SOLO una cinta arriba (limpio) */
 .fecha-sticker {
   position: relative;
   background: #EBDFFB;
@@ -275,31 +211,14 @@ textarea { resize: none; }
   align-items: center;
   gap: 8px;
   box-shadow: var(--shadow);
-  transform: rotate(-1.2deg);
   min-width: 175px;
 }
-.fecha-sticker::before {
-  content: '';
-  position: absolute;
-  top: -8px;
-  right: 22px;
-  width: 42px;
-  height: 14px;
-  background: rgba(246,196,69,0.65);
-  transform: rotate(10deg);
-  border-radius: 2px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-}
 .fecha-sticker svg { width: 16px; height: 16px; flex-shrink: 0; }
-.fecha-sticker .fecha-texto {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.15;
-}
+.fecha-sticker .fecha-texto { display: flex; flex-direction: column; line-height: 1.15; }
 .fecha-sticker .fecha-larga { font-size: 13px; font-weight: 700; }
 .fecha-sticker .fecha-dia { font-size: 12px; opacity: 0.75; }
 
-/* Tarjeta genérica */
+/* Tarjeta */
 .card {
   background: var(--card);
   border-radius: var(--r-card);
@@ -308,7 +227,6 @@ textarea { resize: none; }
   padding: 14px;
   position: relative;
 }
-
 .card-title {
   font-family: var(--font-display);
   font-weight: 700;
@@ -321,119 +239,98 @@ textarea { resize: none; }
 }
 
 /* ============================================================
-   FRASE + EMOCIONES
+   FILA SUPERIOR: izquierda (frase+bueno+aprendí) | derecha (emociones full alto)
    ============================================================ */
 
-.row-frase-emociones {
+.row-top {
   display: grid;
   grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
-  gap: 14px;
+  gap: 12px;
   align-items: stretch;
 }
-@media (max-width: 900px) {
-  .row-frase-emociones { grid-template-columns: 1fr; }
-}
+@media (max-width: 900px) { .row-top { grid-template-columns: 1fr; } }
 
+.col-izq { display: flex; flex-direction: column; gap: 12px; }
+.col-der { display: flex; flex-direction: column; }
+.col-der .card { flex: 1; display: flex; flex-direction: column; }
+.col-der .emociones-grid { flex: 1; align-content: start; }
+
+/* FRASE — compacta (sin washi tape sobrepuesto, solo gradiente y contenido) */
 .frase {
   background: linear-gradient(140deg, #EFE2FB 0%, #FBEAF3 100%);
   border: 1px solid #E5D5F0;
-  padding: 16px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  position: relative;
-}
-.frase::before {
-  content: '';
-  position: absolute;
-  top: -7px;
-  left: 30%;
-  width: 50px;
-  height: 12px;
-  background: rgba(246,196,69,0.55);
-  transform: rotate(-4deg);
-  border-radius: 2px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-}
-.frase-header {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 13px;
-  color: #6B4A98;
-  text-align: center;
-  letter-spacing: 0.2px;
+  gap: 8px;
 }
 .frase-body {
   display: grid;
-  grid-template-columns: 76px 1fr;
-  gap: 12px;
-  align-items: center;
+  grid-template-columns: 64px 1fr;
+  gap: 10px;
+  align-items: start;
 }
 .frase-imagen {
-  width: 76px;
-  height: 92px;
-  border-radius: 12px;
+  width: 64px;
+  height: 76px;
+  border-radius: 10px;
   overflow: hidden;
   background: var(--card);
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: var(--shadow-s);
-  border: 2.5px solid var(--card);
-  transform: rotate(-2deg);
+  border: 2px solid var(--card);
 }
 .frase-imagen img { width: 100%; height: 100%; object-fit: cover; }
 .frase-persona {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 15px;
+  font-size: 14px;
   color: #6B4A98;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 .frase-texto {
   font-family: var(--font-hand);
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.3;
   color: var(--text);
 }
 .frase-bio {
   font-family: var(--font-hand);
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-soft);
-  padding-top: 8px;
+  padding-top: 6px;
   border-top: 1px dashed #D9C7E8;
   line-height: 1.35;
 }
 
-/* EMOCIONES */
+/* EMOCIONES — 4 columnas x 5 filas (20 huecos, 19 emociones) */
 .emociones-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 6px;
-  row-gap: 10px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  row-gap: 12px;
 }
-@media (max-width: 600px) {
-  .emociones-grid { grid-template-columns: repeat(4, 1fr); }
-}
+@media (max-width: 600px) { .emociones-grid { grid-template-columns: repeat(3, 1fr); } }
+
 .emocion {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 4px 2px;
-  border-radius: 12px;
+  padding: 6px 2px;
+  border-radius: 14px;
   background: transparent;
   cursor: pointer;
   transition: transform 0.2s, background 0.2s;
 }
-.emocion {
-  position: relative;
-}
 .emocion-orden {
   display: none;
   position: absolute;
-  top: -2px;
-  right: 8px;
+  top: 0;
+  right: 18%;
   width: 18px; height: 18px;
   border-radius: 50%;
   background: var(--coral);
@@ -449,12 +346,8 @@ textarea { resize: none; }
 .emocion.selected .emocion-orden { display: flex; }
 .emocion:hover { transform: translateY(-2px); }
 .emocion:active { transform: scale(0.95); }
-.emocion.selected {
-  background: var(--amarillo-soft);
-}
-.emocion.selected .emocion-img {
-  box-shadow: 0 0 0 3px var(--amarillo);
-}
+.emocion.selected { background: var(--amarillo-soft); }
+.emocion.selected .emocion-img { box-shadow: 0 0 0 3px var(--amarillo); }
 .emocion-img {
   width: 48px;
   height: 48px;
@@ -477,17 +370,103 @@ textarea { resize: none; }
 .emocion.selected .emocion-label { color: var(--text); }
 
 /* ============================================================
-   ACTIVIDAD + ALGO BUENO + APRENDÍ
+   ACTIVIDAD ESPECIAL Y MOMENTO DIFÍCIL — toggle cards
    ============================================================ */
 
-.row-bueno-aprendi {
+.toggle-card {
+  background: var(--card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-card);
+  box-shadow: var(--shadow);
+  padding: 14px;
+}
+.toggle-card.actividad-card { background: linear-gradient(140deg, #FFF5E0 0%, #FFFDF9 80%); border-color: #F0E0B8; }
+.toggle-card.dificil-card { background: linear-gradient(140deg, #EBF1FA 0%, #FFFDF9 80%); border-color: #D6E1F0; }
+
+.toggle-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.toggle-check {
+  width: 20px; height: 20px;
+  border: 2px solid var(--text-soft);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--card);
+  transition: background 0.2s, border-color 0.2s;
+}
+.toggle-card.active .toggle-check {
+  background: var(--amarillo);
+  border-color: var(--amarillo);
+}
+.toggle-check svg { width: 12px; height: 12px; display: none; }
+.toggle-card.active .toggle-check svg { display: block; }
+.toggle-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text);
+  flex: 1;
+}
+.toggle-resumen {
+  font-family: var(--font-hand);
+  font-size: 14px;
+  color: var(--text-soft);
+  margin-left: 8px;
+  display: none;
+}
+.toggle-card.tiene-datos:not(.active) .toggle-resumen { display: inline; }
+
+.toggle-body {
+  display: none;
+  margin-top: 14px;
+}
+.toggle-card.active .toggle-body { display: block; }
+
+.actividad-body {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  grid-template-columns: 200px 1fr;
+  gap: 12px;
 }
-@media (max-width: 900px) {
-  .row-bueno-aprendi { grid-template-columns: 1fr; }
+@media (max-width: 700px) { .actividad-body { grid-template-columns: 1fr; } }
+
+.field-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-soft);
+  margin-bottom: 4px;
+  display: block;
 }
+
+.dificil-body {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+@media (max-width: 900px) { .dificil-body { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .dificil-body { grid-template-columns: 1fr; } }
+.dificil-campo {
+  background: var(--card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-input);
+  padding: 10px;
+}
+.dificil-campo textarea {
+  background: transparent;
+  border: none;
+  padding: 0;
+  width: 100%;
+  font-family: var(--font-hand);
+  font-size: 14px;
+  min-height: 44px;
+}
+.dificil-campo textarea:focus { outline: none; }
 
 select.input-base, input.input-base, textarea.input-base {
   width: 100%;
@@ -508,18 +487,9 @@ textarea.input-base {
   font-size: 15px;
   line-height: 1.4;
 }
-.input-base:focus {
-  outline: none;
-  border-color: var(--amarillo);
-}
+.input-base:focus { outline: none; border-color: var(--amarillo); }
 
-.actividad-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-soft);
-  margin: 10px 0 6px;
-}
-
+/* Algo bueno */
 .algo-bueno-list { display: flex; flex-direction: column; gap: 8px; }
 .algo-bueno-item { display: flex; align-items: center; gap: 10px; }
 .algo-bueno-num {
@@ -553,162 +523,13 @@ textarea.input-base {
   border: 1px solid #DCEED1;
 }
 
-/* ============================================================
-   ACTIVIDAD — card colapsable como "momento difícil"
-   ============================================================ */
-
-.actividad-card {
-  background: linear-gradient(140deg, #FFF5E0 0%, #FFFDF9 80%);
-  border: 1px solid #F0E0B8;
-}
-.actividad-toggle {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  user-select: none;
-}
-.actividad-check {
-  width: 20px; height: 20px;
-  border: 2px solid var(--text-soft);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  background: var(--card);
-  transition: background 0.2s, border-color 0.2s;
-}
-.actividad-card.active .actividad-check {
-  background: var(--amarillo);
-  border-color: var(--amarillo);
-}
-.actividad-check svg { width: 12px; height: 12px; display: none; }
-.actividad-card.active .actividad-check svg { display: block; }
-.actividad-toggle-label {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--text);
-  flex: 1;
-}
-.actividad-resumen {
-  font-family: var(--font-hand);
-  font-size: 14px;
-  color: var(--text-soft);
-  margin-left: 8px;
-  display: none;
-}
-.actividad-card.tiene-datos:not(.active) .actividad-resumen {
-  display: inline;
-}
-.actividad-detalle {
-  display: none;
-  margin-top: 14px;
-  grid-template-columns: 220px 1fr;
-  gap: 14px;
-  align-items: start;
-}
-.actividad-card.active .actividad-detalle { display: grid; }
-@media (max-width: 700px) {
-  .actividad-card.active .actividad-detalle { grid-template-columns: 1fr; }
-}
-.actividad-detalle .field-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-soft);
-  margin-bottom: 4px;
-  display: block;
-}
-
-/* ============================================================
-   MOMENTO DIFÍCIL
-   ============================================================ */
-
-.dificil-card {
-  background: linear-gradient(140deg, #EBF1FA 0%, #FFFDF9 80%);
-  border: 1px solid #D6E1F0;
-}
-.dificil-toggle {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  user-select: none;
-}
-.dificil-check {
-  width: 20px; height: 20px;
-  border: 2px solid var(--text-soft);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  background: var(--card);
-}
-.dificil-card.active .dificil-check {
-  background: var(--amarillo);
-  border-color: var(--amarillo);
-}
-.dificil-check svg { width: 12px; height: 12px; display: none; }
-.dificil-card.active .dificil-check svg { display: block; }
-.dificil-toggle-label {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--text);
-}
-.dificil-detalle {
-  display: none;
-  margin-top: 14px;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-.dificil-card.active .dificil-detalle { display: grid; }
-@media (max-width: 900px) {
-  .dificil-card.active .dificil-detalle { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 600px) {
-  .dificil-card.active .dificil-detalle { grid-template-columns: 1fr; }
-}
-.dificil-campo {
-  background: var(--card);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--r-input);
-  padding: 10px;
-}
-.dificil-campo .field-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-soft);
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.dificil-campo textarea {
-  background: transparent;
-  border: none;
-  padding: 0;
-  width: 100%;
-  font-family: var(--font-hand);
-  font-size: 14px;
-  min-height: 44px;
-}
-.dificil-campo textarea:focus { outline: none; }
-
-/* ============================================================
-   COSAS QUE HICE
-   ============================================================ */
-
+/* COSAS QUE HICE */
 .cosas-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 10px;
 }
-@media (max-width: 700px) {
-  .cosas-grid { grid-template-columns: repeat(2, 1fr); }
-}
+@media (max-width: 700px) { .cosas-grid { grid-template-columns: repeat(2, 1fr); } }
 
 .cosa {
   position: relative;
@@ -722,10 +543,7 @@ textarea.input-base {
 }
 .cosa:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 .cosa:active { transform: scale(0.97); }
-.cosa.checked {
-  background: #F3FBED;
-  border-color: var(--mint);
-}
+.cosa.checked { background: #F3FBED; border-color: var(--mint); }
 .cosa-img {
   width: 56px; height: 56px;
   margin: 0 auto 6px;
@@ -756,33 +574,20 @@ textarea.input-base {
 }
 .cosa.checked .cosa-check { display: flex; }
 .cosa-check svg { width: 12px; height: 12px; }
-
 .cosa-img.pastel-1 { background: #FFD3B6; }
 .cosa-img.pastel-2 { background: #BEE5B0; }
 .cosa-img.pastel-3 { background: #FFB3D1; }
 .cosa-img.pastel-4 { background: #C8B6E2; }
 .cosa-img.pastel-5 { background: #A9D6E5; }
-
 .cosa-placeholder-icon { width: 28px; height: 28px; opacity: 0.75; }
 
 /* ============================================================
    SIDEBAR DERECHO
    ============================================================ */
 
-.sidebar-right {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-width: 0;
-}
+.sidebar-right { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 
-.perfil-card {
-  display: grid;
-  grid-template-columns: 48px 1fr;
-  gap: 10px;
-  align-items: center;
-  padding: 12px;
-}
+.perfil-card { display: grid; grid-template-columns: 48px 1fr; gap: 10px; align-items: center; padding: 12px; }
 .perfil-avatar {
   width: 48px; height: 48px;
   border-radius: 50%;
@@ -795,66 +600,20 @@ textarea.input-base {
   justify-content: center;
   box-shadow: 0 0 0 3px var(--amarillo-soft);
 }
-.perfil-avatar .corona {
-  position: absolute;
-  top: -8px; left: 50%;
-  transform: translateX(-50%) rotate(-8deg);
-  width: 20px; height: 20px;
-}
-.perfil-avatar .avatar-inner {
-  width: 100%; height: 100%;
-  border-radius: 50%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.perfil-avatar .corona { position: absolute; top: -8px; left: 50%; transform: translateX(-50%) rotate(-8deg); width: 20px; height: 20px; }
+.perfil-avatar .avatar-inner { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .perfil-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.perfil-avatar .inicial {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 20px;
-  color: var(--text);
-}
-.perfil-info { display: flex; flex-direction: column; gap: 1px; }
-.perfil-cumple-label {
-  font-family: var(--font-hand);
-  font-size: 12px;
-  color: var(--text-soft);
-  line-height: 1;
-}
-.perfil-cumple-dias {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 20px;
-  color: var(--text);
-  line-height: 1;
-  margin: 2px 0;
-}
-.perfil-cumple-bottom {
-  font-family: var(--font-hand);
-  font-size: 12px;
-  color: var(--text-soft);
-  line-height: 1.1;
-}
-.perfil-altura {
-  font-family: var(--font-hand);
-  font-size: 11px;
-  color: var(--text-mute);
-  margin-top: 4px;
-}
+.perfil-avatar .inicial { font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--text); }
+.perfil-info { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.perfil-cumple-label { font-family: var(--font-hand); font-size: 12px; color: var(--text-soft); line-height: 1; }
+.perfil-cumple-dias { font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--text); line-height: 1; margin: 2px 0; }
+.perfil-cumple-bottom { font-family: var(--font-hand); font-size: 12px; color: var(--text-soft); line-height: 1.1; }
+.perfil-altura { font-family: var(--font-hand); font-size: 11px; color: var(--text-mute); margin-top: 4px; }
 
-.calendario-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-.calendario-titulo {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 14px;
-}
+/* Calendario */
+.calendario-card { padding: 12px; }
+.calendario-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.calendario-titulo { font-family: var(--font-display); font-weight: 700; font-size: 14px; }
 .cal-nav { display: flex; gap: 2px; }
 .cal-nav button {
   width: 22px; height: 22px;
@@ -866,18 +625,31 @@ textarea.input-base {
 }
 .cal-nav button:hover { background: var(--bg); }
 
-.calendario-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 3px;
+/* Switch entre vista emociones / actividades */
+.cal-switch {
+  display: flex;
+  background: var(--bg);
+  border-radius: var(--r-pill);
+  padding: 2px;
+  margin-bottom: 8px;
+  font-size: 11px;
 }
-.cal-dow {
-  text-align: center;
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-mute);
-  padding-bottom: 4px;
+.cal-switch button {
+  flex: 1;
+  padding: 4px 6px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--text-soft);
+  transition: background 0.2s, color 0.2s;
 }
+.cal-switch button.active {
+  background: var(--amarillo);
+  color: var(--text);
+}
+
+.calendario-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-dow { text-align: center; font-size: 10px; font-weight: 700; color: var(--text-mute); padding-bottom: 4px; }
 .cal-day {
   aspect-ratio: 1;
   display: flex;
@@ -895,46 +667,351 @@ textarea.input-base {
 .cal-day:hover { background: var(--bg); }
 .cal-day.empty { cursor: default; visibility: hidden; }
 .cal-day.future { color: var(--text-mute); }
+.cal-day.conmigo { background: var(--bg-darker); }
 .cal-day.today {
   background: var(--amarillo);
   color: var(--text);
   box-shadow: var(--shadow-s);
 }
-.cal-day.selected {
-  box-shadow: inset 0 0 0 2px var(--coral);
+.cal-day.selected { box-shadow: inset 0 0 0 2px var(--coral); }
+.cal-num { line-height: 1; }
+.cal-icon-evento {
+  position: absolute;
+  top: 1px;
+  right: 2px;
+  font-size: 9px;
+  line-height: 1;
 }
-.cal-dot {
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  margin-top: 1px;
-  background: transparent;
+.cal-dot { width: 5px; height: 5px; border-radius: 50%; margin-top: 2px; background: transparent; }
+.cal-actividad-emoji { font-size: 11px; margin-top: 1px; }
+
+.cal-leyenda {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 10px;
+  color: var(--text-soft);
+  font-family: var(--font-hand);
+}
+.cal-leyenda-item { display: flex; align-items: center; gap: 4px; }
+.cal-leyenda-item .emoji { font-size: 12px; }
+.cal-leyenda-conmigo {
+  background: var(--bg-darker);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 10px;
 }
 
-.resumen .resumen-line {
+/* Resumen y Spotify */
+.resumen .resumen-line { display: flex; justify-content: space-between; align-items: center; padding: 2px 0; }
+.resumen .resumen-line span:first-child { font-family: var(--font-hand); color: var(--text-soft); font-size: 13px; }
+.resumen .resumen-line .resumen-valor { font-family: var(--font-display); font-weight: 700; font-size: 14px; }
+.spotify-empty { background: var(--bg); border-radius: var(--r-input); padding: 10px; text-align: center; font-family: var(--font-hand); font-size: 12px; color: var(--text-mute); }
+
+/* ============================================================
+   BIBLIOTECA
+   ============================================================ */
+
+.biblio-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2px 0;
+  margin-bottom: 8px;
 }
-.resumen .resumen-line span:first-child {
+.biblio-titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.biblio-subtitulo { font-family: var(--font-hand); font-size: 14px; color: var(--text-mute); }
+
+.biblio-row-section {
+  margin-bottom: 16px;
+}
+.biblio-section-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.libros-fila {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+.libro-card {
+  background: var(--card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-input);
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+.libro-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.libro-portada {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--peach);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.libro-portada img { width: 100%; height: 100%; object-fit: cover; }
+.libro-titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+.libro-autor {
   font-family: var(--font-hand);
+  font-size: 12px;
   color: var(--text-soft);
+  line-height: 1.2;
+}
+.libro-stars { font-size: 10px; color: var(--amarillo); margin-top: 4px; letter-spacing: 1px; }
+
+.libro-añadir {
+  background: transparent;
+  border: 2px dashed var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 200px;
+  color: var(--text-mute);
+  font-family: var(--font-hand);
   font-size: 13px;
 }
-.resumen .resumen-line .resumen-valor {
+.libro-añadir-plus { font-size: 32px; line-height: 1; }
+
+/* Ficha de libro (pantalla completa) */
+.ficha-libro {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 100;
+  overflow-y: auto;
+  padding: 16px;
+}
+.ficha-libro.show { display: block; }
+.ficha-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  padding: 6px 12px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-s);
+}
+.ficha-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+@media (max-width: 700px) { .ficha-grid { grid-template-columns: 1fr; } }
+.ficha-portada {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: var(--r-card);
+  overflow: hidden;
+  background: var(--peach);
+  box-shadow: var(--shadow-l);
+}
+.ficha-portada img { width: 100%; height: 100%; object-fit: cover; }
+.ficha-titulo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.ficha-autor {
+  font-family: var(--font-hand);
+  font-size: 18px;
+  color: var(--text-soft);
+  margin-bottom: 16px;
+}
+.ficha-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.ficha-datos-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+.ficha-datos-item .ficha-icon { width: 16px; height: 16px; opacity: 0.7; }
+
+.ficha-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.ficha-card {
+  background: var(--card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-input);
+  padding: 12px;
+}
+.ficha-card-title {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 14px;
+  color: var(--text);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ficha-chip-list { display: flex; flex-direction: column; gap: 6px; }
+.ficha-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg);
+  border-radius: var(--r-input);
+  padding: 6px 10px;
+  font-family: var(--font-hand);
+  font-size: 14px;
+}
+.ficha-chip-remove {
+  margin-left: auto;
+  color: var(--text-mute);
+  font-size: 14px;
+  cursor: pointer;
+}
+.ficha-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 1px dashed var(--border);
+  border-radius: var(--r-pill);
+  padding: 6px 12px;
+  font-family: var(--font-hand);
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-top: 6px;
 }
 
-.spotify-empty {
+.ficha-stars {
+  display: flex;
+  gap: 4px;
+  font-size: 22px;
+  cursor: pointer;
+}
+.ficha-star { color: #DDD3C2; transition: color 0.15s; }
+.ficha-star.active { color: var(--amarillo); }
+
+.ficha-megusto-row { display: flex; gap: 8px; margin-top: 8px; }
+.ficha-megusto-btn {
+  flex: 1;
   background: var(--bg);
+  border: 2px solid transparent;
   border-radius: var(--r-input);
   padding: 10px;
   text-align: center;
-  font-family: var(--font-hand);
-  font-size: 12px;
-  color: var(--text-mute);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.ficha-megusto-btn.active { border-color: var(--amarillo); background: var(--amarillo-soft); color: var(--text); }
+.ficha-megusto-emoji { font-size: 24px; display: block; margin-bottom: 2px; }
+
+/* Modal añadir libro */
+.modal-bg {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(74,63,53,0.5);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.modal-bg.show { display: flex; }
+.modal {
+  background: var(--card);
+  border-radius: var(--r-card);
+  padding: 20px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-l);
+}
+.modal-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+.modal-search-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-input);
+  padding: 10px 14px;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+.modal-search-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+}
+.modal-libro {
+  background: var(--bg);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-input);
+  padding: 6px;
+  cursor: pointer;
+  text-align: center;
+}
+.modal-libro:hover { background: var(--amarillo-soft); }
+.modal-libro img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 6px; }
+.modal-libro-titulo { font-size: 10px; font-weight: 700; margin-top: 4px; }
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--text-soft);
 }
 
 /* ============================================================
@@ -954,11 +1031,7 @@ textarea.input-base {
   transition: opacity 0.3s;
 }
 .loading-screen.hide { opacity: 0; pointer-events: none; }
-.loading-screen .loader-text {
-  font-family: var(--font-hand);
-  font-size: 18px;
-  color: var(--text-soft);
-}
+.loading-screen .loader-text { font-family: var(--font-hand); font-size: 18px; color: var(--text-soft); }
 .loading-screen .loader-dots span {
   display: inline-block;
   width: 8px; height: 8px;
@@ -969,10 +1042,7 @@ textarea.input-base {
 }
 .loading-screen .loader-dots span:nth-child(2) { animation-delay: 0.15s; background: var(--amarillo); }
 .loading-screen .loader-dots span:nth-child(3) { animation-delay: 0.3s; background: var(--mint); }
-@keyframes bounce {
-  0%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-12px); }
-}
+@keyframes bounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-12px); } }
 
 .toast {
   position: fixed;
@@ -994,15 +1064,7 @@ textarea.input-base {
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .toast.success { background: #2D5232; }
 
-.version-tag {
-  position: fixed;
-  bottom: 6px; right: 8px;
-  font-size: 10px;
-  color: var(--text-mute);
-  font-family: var(--font-hand);
-  pointer-events: none;
-  opacity: 0.5;
-}
+.version-tag { position: fixed; bottom: 6px; right: 8px; font-size: 10px; color: var(--text-mute); font-family: var(--font-hand); pointer-events: none; opacity: 0.5; }
 
 .img-fallback {
   width: 100%; height: 100%;
@@ -1026,45 +1088,12 @@ textarea.input-base {
   font-size: 18px;
   color: var(--text-mute);
 }
-
-/* Aviso de orientación */
-.orientacion-aviso {
-  display: none;
-  position: fixed;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--amarillo-soft);
-  border: 1px solid var(--amarillo);
-  border-radius: var(--r-pill);
-  padding: 8px 16px;
-  font-family: var(--font-hand);
-  font-size: 13px;
-  color: var(--text);
-  box-shadow: var(--shadow);
-  z-index: 500;
-  white-space: nowrap;
-}
-@media (max-width: 900px) and (orientation: portrait) and (min-width: 600px) {
-  .orientacion-aviso { display: flex; align-items: center; gap: 6px; }
-}
-
-@supports (padding: max(0px)) {
-  .app {
-    padding-left: max(14px, env(safe-area-inset-left));
-    padding-right: max(14px, env(safe-area-inset-right));
-    padding-top: max(14px, env(safe-area-inset-top));
-    padding-bottom: max(14px, env(safe-area-inset-bottom));
-  }
-}
 </style>
 </head>
 <body>
 
 <div class="loading-screen" id="loadingScreen">
-  <div class="loader-dots">
-    <span></span><span></span><span></span>
-  </div>
+  <div class="loader-dots"><span></span><span></span><span></span></div>
   <div class="loader-text">abriendo el diario...</div>
 </div>
 
@@ -1078,67 +1107,23 @@ textarea.input-base {
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
       </svg>
     </div>
-
     <nav class="nav" id="nav">
       <button class="nav-item active" data-section="hoy">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="4.5"/>
-            <path d="M12 2v2.5M12 19.5V22M4.22 4.22l1.77 1.77M18.01 18.01l1.77 1.77M2 12h2.5M19.5 12H22M4.22 19.78l1.77-1.77M18.01 5.99l1.77-1.77" stroke="#F6C445" stroke-width="2.2" fill="none"/>
-          </svg>
-        </span>
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.22 4.22l1.77 1.77M18.01 18.01l1.77 1.77M2 12h2.5M19.5 12H22M4.22 19.78l1.77-1.77M18.01 5.99l1.77-1.77" stroke="#F6C445" stroke-width="2.2" fill="none"/></svg></span>
         Hoy
       </button>
-      <button class="nav-item" data-section="yo-soy">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24" fill="#BEE5B0" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 4 C13 8, 16 9, 18 9 C16 11, 15 14, 15 17 L9 17 C9 14, 8 11, 6 9 C8 9, 11 8, 12 4 Z"/>
-            <line x1="12" y1="17" x2="12" y2="21"/>
-          </svg>
-        </span>
-        Yo soy
-      </button>
-      <button class="nav-item" data-section="charlar">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24" fill="#C8B6E2" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 5 C4 4, 5 3, 6 3 L18 3 C19 3, 20 4, 20 5 L20 14 C20 15, 19 16, 18 16 L11 16 L7 20 L7 16 L6 16 C5 16, 4 15, 4 14 Z"/>
-          </svg>
-        </span>
-        Charlar
-      </button>
-      <button class="nav-item" data-section="retos">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 3 L14.5 9 L21 9.5 L16 14 L17.5 20.5 L12 17 L6.5 20.5 L8 14 L3 9.5 L9.5 9 Z"/>
-          </svg>
-        </span>
-        Retos
-      </button>
-      <button class="nav-item" data-section="biblioteca">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24" fill="#A9D6E5" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 4 L11 4 L11 20 L4 20 Z M11 4 L11 20 M11 4 L19 5 L18 18 L11 20"/>
-          </svg>
-        </span>
-        Biblioteca
-      </button>
-      <button class="nav-item" data-section="capsula">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24" fill="#F28C8C" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M7 3 L17 3 L17 8 C17 10, 15 11, 13 12 C15 13, 17 14, 17 16 L17 21 L7 21 L7 16 C7 14, 9 13, 11 12 C9 11, 7 10, 7 8 Z"/>
-          </svg>
-        </span>
-        Cápsula
-      </button>
+      <button class="nav-item" data-section="yo-soy"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="#BEE5B0" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 C13 8, 16 9, 18 9 C16 11, 15 14, 15 17 L9 17 C9 14, 8 11, 6 9 C8 9, 11 8, 12 4 Z"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>Yo soy</button>
+      <button class="nav-item" data-section="charlar"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="#C8B6E2" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5 C4 4, 5 3, 6 3 L18 3 C19 3, 20 4, 20 5 L20 14 C20 15, 19 16, 18 16 L11 16 L7 20 L7 16 L6 16 C5 16, 4 15, 4 14 Z"/></svg></span>Charlar</button>
+      <button class="nav-item" data-section="retos"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L14.5 9 L21 9.5 L16 14 L17.5 20.5 L12 17 L6.5 20.5 L8 14 L3 9.5 L9.5 9 Z"/></svg></span>Retos</button>
+      <button class="nav-item" data-section="biblioteca"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="#A9D6E5" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4 L11 4 L11 20 L4 20 Z M11 4 L11 20 M11 4 L19 5 L18 18 L11 20"/></svg></span>Biblioteca</button>
+      <button class="nav-item" data-section="capsula"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="#F28C8C" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3 L17 3 L17 8 C17 10, 15 11, 13 12 C15 13, 17 14, 17 16 L17 21 L7 21 L7 16 C7 14, 9 13, 11 12 C9 11, 7 10, 7 8 Z"/></svg></span>Cápsula</button>
     </nav>
-
     <div class="rincon" id="rincon"></div>
   </aside>
 
   <!-- MAIN -->
   <main class="main" id="main">
-
-    <div class="header">
+    <div class="header" id="mainHeader">
       <div class="header-greet">
         <h1>¡Hola Gina! <span class="sol">☀️</span></h1>
         <p>¿Cómo está tu pequeño universo hoy?</p>
@@ -1151,14 +1136,11 @@ textarea.input-base {
         </div>
       </div>
     </div>
-
     <div id="seccionContenido"></div>
-
   </main>
 
   <!-- SIDEBAR DERECHO -->
   <aside class="sidebar-right">
-
     <div class="card perfil-card">
       <div class="perfil-avatar" id="perfilAvatar">
         <svg class="corona" viewBox="0 0 32 32" fill="#F28C8C"><path d="M4 22 L8 12 L12 18 L16 8 L20 18 L24 12 L28 22 Z"/></svg>
@@ -1172,54 +1154,60 @@ textarea.input-base {
       </div>
     </div>
 
-    <div class="card">
+    <div class="card calendario-card">
       <div class="calendario-header">
         <span class="calendario-titulo" id="calTitulo">—</span>
         <div class="cal-nav">
-          <button id="calPrev" aria-label="Mes anterior">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-          </button>
-          <button id="calNext" aria-label="Mes siguiente">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
+          <button id="calPrev"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <button id="calNext"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
         </div>
       </div>
+      <div class="cal-switch">
+        <button class="active" data-view="emociones">😊 Emociones</button>
+        <button data-view="actividades">🎫 Actividades</button>
+      </div>
       <div class="calendario-grid" id="calendarioGrid"></div>
+      <div class="cal-leyenda">
+        <div class="cal-leyenda-item"><span class="emoji">🎂</span> cumple</div>
+        <div class="cal-leyenda-item"><span class="emoji">🏖️</span> vacaciones</div>
+        <div class="cal-leyenda-item"><span class="emoji">✈️</span> viaje</div>
+        <div class="cal-leyenda-item"><span class="emoji">👯</span> amigas</div>
+        <div class="cal-leyenda-item" style="grid-column: 1/-1;"><span class="cal-leyenda-conmigo">conmigo</span></div>
+      </div>
     </div>
 
     <div class="card resumen">
       <div class="card-title">📊 Esta semana</div>
-      <div class="resumen-line">
-        <span>páginas escritas</span>
-        <span class="resumen-valor" id="resumenPaginas">0 / 7</span>
-      </div>
-      <div class="resumen-line">
-        <span>emoción favorita</span>
-        <span class="resumen-valor" id="resumenEmocion">—</span>
-      </div>
+      <div class="resumen-line"><span>páginas escritas</span><span class="resumen-valor" id="resumenPaginas">0 / 7</span></div>
+      <div class="resumen-line"><span>emoción favorita</span><span class="resumen-valor" id="resumenEmocion">—</span></div>
     </div>
 
     <div class="card">
       <div class="card-title">🎵 Canción del día</div>
-      <div class="spotify-empty">
-        Próximamente. Pegá un link de Spotify en el Sheet.
-      </div>
+      <div class="spotify-empty">Próximamente. Pegá un link de Spotify en el Sheet.</div>
     </div>
-
   </aside>
 
 </div>
 
-<div class="orientacion-aviso">
-  📱 Mejor en horizontal para Mi diario
+<!-- Ficha de libro (pantalla completa) -->
+<div class="ficha-libro" id="fichaLibro"></div>
+
+<!-- Modal añadir libro -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal" style="position: relative;">
+    <span class="modal-close" id="modalClose">×</span>
+    <div class="modal-title">📚 Añadir libro</div>
+    <input type="text" class="modal-search-input" id="modalSearchInput" placeholder="Busca un libro por título, autor..." />
+    <div class="modal-search-results" id="modalSearchResults"></div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-tag">v0.5.3</div>
+<div class="version-tag">v0.6.0</div>
 
 <script>
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwnuMgU-Ooa0qsq_MgDAo4FOBGHH5WiVhgSEFtQ1LPbXUfouaHw9jJbYLEE39btsJQD/exec';
-const VERSION = 'v0.5.3';
 
 const state = {
   bootstrap: null,
@@ -1227,9 +1215,12 @@ const state = {
   diaActual: null,
   diasCalendario: [],
   calendarioMes: null,
+  calendarioVista: 'emociones', // 'emociones' | 'actividades'
   seccionActiva: 'hoy',
   guardandoTimer: null,
   saving: false,
+  libros: [],
+  libroActual: null,
 };
 
 function $(s) { return document.querySelector(s); }
@@ -1239,14 +1230,14 @@ function fmtFecha(d) {
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, '0');
   const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
+  return yyyy + '-' + mm + '-' + dd;
 }
 
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
 const DIAS_CORTOS = ['L','M','X','J','V','S','D'];
 
-function fechaLarga(d) { return `${d.getDate()} de ${MESES[d.getMonth()]} de ${d.getFullYear()}`; }
+function fechaLarga(d) { return d.getDate() + ' de ' + MESES[d.getMonth()] + ' de ' + d.getFullYear(); }
 function fechaDiaSemana(d) { return DIAS[d.getDay()]; }
 
 function toast(msg, type) {
@@ -1254,14 +1245,15 @@ function toast(msg, type) {
   t.textContent = msg;
   t.className = 'toast show' + (type ? ' ' + type : '');
   clearTimeout(toast._timer);
-  toast._timer = setTimeout(() => t.classList.remove('show'), 2200);
+  toast._timer = setTimeout(function(){ t.classList.remove('show'); }, 2200);
 }
 
-async function api(action, params = {}) {
+async function api(action, params) {
+  params = params || {};
   const url = new URL(BACKEND_URL);
   url.searchParams.set('action', action);
-  Object.entries(params).forEach(([k, v]) => {
-    url.searchParams.set(k, typeof v === 'object' ? JSON.stringify(v) : String(v));
+  Object.entries(params).forEach(function(kv){
+    url.searchParams.set(kv[0], typeof kv[1] === 'object' ? JSON.stringify(kv[1]) : String(kv[1]));
   });
   const res = await fetch(url.toString(), { method: 'GET' });
   const json = await res.json();
@@ -1269,6 +1261,7 @@ async function api(action, params = {}) {
   return json.data;
 }
 
+// Fallback global imágenes
 document.addEventListener('error', function(e) {
   const img = e.target;
   if (img.tagName !== 'IMG') return;
@@ -1277,67 +1270,93 @@ document.addEventListener('error', function(e) {
   const parent = img.parentElement;
   const initial = (img.dataset.initial || img.alt || '?').slice(0, 1).toUpperCase();
   const bg = img.dataset.bg || '#FFD3B6';
-  parent.innerHTML = `<div class="img-fallback" style="background: ${bg};">${initial}</div>`;
+  parent.innerHTML = '<div class="img-fallback" style="background: ' + bg + ';">' + initial + '</div>';
 }, true);
 
-const COSA_PLACEHOLDER_ICONS = [
-  `<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`,
-  `<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L14.5 9 L22 9.5 L16.5 14 L18 21 L12 17.5 L6 21 L7.5 14 L2 9.5 L9.5 9 Z"/></svg>`,
-  `<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="6" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="12" r="3"/><circle cx="12" cy="18" r="3"/><circle cx="12" cy="12" r="2.5" fill="#F6C445"/></svg>`,
-  `<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18 C 3 18, 2 15, 3.5 13 C 4 9, 9 9, 10 11 C 11 7, 18 7, 18 12 C 21 12, 21 16, 19 18 Z"/></svg>`,
-  `<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 C 4 10, 10 4, 20 4 C 20 14, 14 20, 4 20 Z M4 20 L12 12"/></svg>`,
-];
+function _truthy(v) {
+  if (v === true || v === 1) return true;
+  const s = String(v || '').trim().toLowerCase();
+  return s === 'true' || s === '1' || s === 'si' || s === 'sí' || s === 'yes' || s === 'x';
+}
+
+function getEmociones() {
+  const list = (state.bootstrap && state.bootstrap.emociones) || [];
+  if (!list.length) return [{slug:'contenta',label:'contenta',color:'#FFD95A'}];
+  return list
+    .filter(function(e){ return _truthy(e.activa); })
+    .sort(function(a,b){ return (parseInt(a.orden)||999) - (parseInt(b.orden)||999); });
+}
+
+function getEmocionByslug(slug) {
+  const list = (state.bootstrap && state.bootstrap.emociones) || [];
+  return list.find(function(e){ return e.slug === slug; });
+}
+
+function colorEmocion(slug) {
+  if (!slug) return 'transparent';
+  const e = getEmocionByslug(slug);
+  return (e && e.color) ? e.color : '#A8927A';
+}
+
+function parseEmociones(str) {
+  if (!str) return [];
+  return String(str).split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+}
+
+// ============================================================
+// SECCIÓN HOY
+// ============================================================
 
 function pintarSeccionHoy() {
-  const html = `
-    <div class="row-frase-emociones">
-      <div class="card frase" id="fraseCard">
-        <div class="frase-header">Alguien dijo una vez…</div>
-        <div class="frase-body">
-          <div class="frase-imagen" id="fraseImagen"><div class="img-fallback">?</div></div>
-          <div class="frase-contenido">
-            <div class="frase-persona" id="frasePersona">—</div>
-            <div class="frase-texto" id="fraseTexto">—</div>
+  $('#mainHeader').style.display = '';
+  $('#seccionContenido').innerHTML = `
+    <div class="row-top">
+      <div class="col-izq">
+        <div class="card frase" id="fraseCard">
+          <div class="card-title">💜 Alguien dijo una vez…</div>
+          <div class="frase-body">
+            <div class="frase-imagen" id="fraseImagen"><div class="img-fallback">?</div></div>
+            <div>
+              <div class="frase-persona" id="frasePersona">—</div>
+              <div class="frase-texto" id="fraseTexto">—</div>
+            </div>
+          </div>
+          <div class="frase-bio" id="fraseBio"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">⭐ Algo bueno de hoy</div>
+          <div class="algo-bueno-list">
+            <div class="algo-bueno-item"><span class="algo-bueno-num">1</span><input id="algoBueno1" placeholder="Escribe algo bueno..." /></div>
+            <div class="algo-bueno-item"><span class="algo-bueno-num">2</span><input id="algoBueno2" placeholder="Escribe algo bueno..." /></div>
+            <div class="algo-bueno-item"><span class="algo-bueno-num">3</span><input id="algoBueno3" placeholder="Escribe algo bueno..." /></div>
           </div>
         </div>
-        <div class="frase-bio" id="fraseBio"></div>
+
+        <div class="card aprendi-card">
+          <div class="card-title">🌱 Algo que aprendí</div>
+          <textarea id="aprendi" class="input-base" placeholder="Escribe aquí..."></textarea>
+        </div>
       </div>
 
-      <div class="card">
-        <div class="card-title">Hoy me sentí…</div>
-        <div class="emociones-grid" id="emocionesGrid"></div>
+      <div class="col-der">
+        <div class="card">
+          <div class="card-title">Hoy me sentí…</div>
+          <div class="emociones-grid" id="emocionesGrid"></div>
+        </div>
       </div>
     </div>
 
-    <div class="row-bueno-aprendi">
-      <div class="card">
-        <div class="card-title">⭐ Algo bueno de hoy</div>
-        <div class="algo-bueno-list">
-          <div class="algo-bueno-item"><span class="algo-bueno-num">1</span><input id="algoBueno1" placeholder="Escribe algo bueno..." /></div>
-          <div class="algo-bueno-item"><span class="algo-bueno-num">2</span><input id="algoBueno2" placeholder="Escribe algo bueno..." /></div>
-          <div class="algo-bueno-item"><span class="algo-bueno-num">3</span><input id="algoBueno3" placeholder="Escribe algo bueno..." /></div>
-        </div>
+    <div class="toggle-card actividad-card" id="actividadCard">
+      <div class="toggle-header" id="actividadToggle">
+        <div class="toggle-check"><svg viewBox="0 0 24 24" fill="none" stroke="#4A3F35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="toggle-title">¿Hubo alguna actividad especial? ☕</span>
+        <span class="toggle-resumen" id="actividadResumen"></span>
       </div>
-      <div class="card aprendi-card">
-        <div class="card-title">🌱 Algo que aprendí</div>
-        <textarea id="aprendi" class="input-base" placeholder="Escribe aquí..."></textarea>
-      </div>
-    </div>
-
-    <div class="card actividad-card" id="actividadCard">
-      <div class="actividad-toggle" id="actividadToggle">
-        <div class="actividad-check">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#4A3F35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <span class="actividad-toggle-label">🎫 ¿Hubo alguna actividad especial?</span>
-        <span class="actividad-resumen" id="actividadResumen"></span>
-      </div>
-      <div class="actividad-detalle">
+      <div class="toggle-body actividad-body">
         <div>
           <label class="field-label">¿Qué hicimos?</label>
-          <select id="actividadSelect" class="input-base">
-            <option value="">Elige una actividad</option>
-          </select>
+          <select id="actividadSelect" class="input-base"><option value="">Elige una actividad</option></select>
         </div>
         <div>
           <label class="field-label">¿Qué pasó?</label>
@@ -1346,18 +1365,19 @@ function pintarSeccionHoy() {
       </div>
     </div>
 
-    <div class="card dificil-card" id="dificilCard">
-      <div class="dificil-toggle" id="dificilToggle">
-        <div class="dificil-check">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#4A3F35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <span class="dificil-toggle-label">¿Hoy hubo un momento difícil? 🌩️</span>
+    <div class="toggle-card dificil-card" id="dificilCard">
+      <div class="toggle-header" id="dificilToggle">
+        <div class="toggle-check"><svg viewBox="0 0 24 24" fill="none" stroke="#4A3F35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <span class="toggle-title">¿Hoy hubo un momento difícil? 🌩️</span>
+        <span class="toggle-resumen" id="dificilResumen"></span>
       </div>
-      <div class="dificil-detalle">
-        <div class="dificil-campo"><div class="field-label">🌩️ Qué pasó</div><textarea id="mdQuePaso" placeholder="Escribe..."></textarea></div>
-        <div class="dificil-campo"><div class="field-label">💥 Qué sentí</div><textarea id="mdQueSenti" placeholder="Escribe..."></textarea></div>
-        <div class="dificil-campo"><div class="field-label">🔧 Qué me ayudó</div><textarea id="mdQueAyudo" placeholder="Escribe..."></textarea></div>
-        <div class="dificil-campo"><div class="field-label">❤️ Qué necesito</div><textarea id="mdQueNecesito" placeholder="Escribe..."></textarea></div>
+      <div class="toggle-body">
+        <div class="dificil-body">
+          <div class="dificil-campo"><div class="field-label">🌩️ Qué pasó</div><textarea id="mdQuePaso" placeholder="Escribe..."></textarea></div>
+          <div class="dificil-campo"><div class="field-label">💥 Qué sentí</div><textarea id="mdQueSenti" placeholder="Escribe..."></textarea></div>
+          <div class="dificil-campo"><div class="field-label">🔧 Qué me ayudó</div><textarea id="mdQueAyudo" placeholder="Escribe..."></textarea></div>
+          <div class="dificil-campo"><div class="field-label">❤️ Qué necesito</div><textarea id="mdQueNecesito" placeholder="Escribe..."></textarea></div>
+        </div>
       </div>
     </div>
 
@@ -1366,7 +1386,6 @@ function pintarSeccionHoy() {
       <div class="cosas-grid" id="cosasGrid"></div>
     </div>
   `;
-  $('#seccionContenido').innerHTML = html;
 
   pintarFrase();
   pintarEmociones();
@@ -1376,7 +1395,7 @@ function pintarSeccionHoy() {
 }
 
 function pintarFrase() {
-  const frases = (state.bootstrap.frases || []).filter(f => f.frase);
+  const frases = ((state.bootstrap && state.bootstrap.frases) || []).filter(function(f){ return f.frase; });
   if (!frases.length) {
     $('#frasePersona').textContent = '';
     $('#fraseTexto').textContent = 'Hoy todavía no hay frase.';
@@ -1388,104 +1407,58 @@ function pintarFrase() {
   const f = frases[diaAnio % frases.length];
 
   $('#frasePersona').textContent = f.persona || '';
-  $('#fraseTexto').textContent = `"${f.frase}"`;
+  $('#fraseTexto').textContent = '"' + f.frase + '"';
   $('#fraseBio').textContent = f.mini_bio || '';
 
   const cont = $('#fraseImagen');
-  const archivo = f.imagen || `comodin-${(diaAnio % 3) + 1}.webp`;
-  cont.innerHTML = `<img src="img/frases/${archivo}" alt="${f.persona || 'frase'}" data-initial="${(f.persona || '?')[0]}" data-bg="#E8D9FF" />`;
-}
-
-// Las emociones ahora vienen del Sheet (pestaña Emociones).
-// Conservamos un fallback mínimo por si el Sheet no las devuelve, para no romper la UI.
-const EMOCIONES_FALLBACK = [
-  { slug: 'contenta', label: 'contenta', color: '#FFD95A' },
-  { slug: 'triste', label: 'triste', color: '#AFCBFF' },
-  { slug: 'tranquila', label: 'tranquila', color: '#FFD95A' },
-  { slug: 'otra', label: 'otra', color: '#E8DDCF' },
-];
-
-function getEmociones() {
-  // Solo activas, ordenadas por la columna 'orden'
-  const list = (state.bootstrap?.emociones || []);
-  if (!list.length) return EMOCIONES_FALLBACK;
-  return list
-    .filter(e => _truthy(e.activa))
-    .sort((a, b) => (parseInt(a.orden) || 999) - (parseInt(b.orden) || 999));
-}
-
-// Resolver una emoción (incluso si está desactivada — para días pasados en calendario)
-function getEmocionByslug(slug) {
-  const list = (state.bootstrap?.emociones || []);
-  return list.find(e => e.slug === slug) || EMOCIONES_FALLBACK.find(e => e.slug === slug);
-}
-
-function _truthy(v) {
-  if (v === true || v === 1) return true;
-  const s = String(v || '').trim().toLowerCase();
-  return s === 'true' || s === '1' || s === 'si' || s === 'sí' || s === 'yes' || s === 'x';
+  // Si hay imagen en el Sheet, usarla; si no, comodín rotando
+  const archivo = (f.imagen && f.imagen.length > 3) ? f.imagen : ('comodin-' + ((diaAnio % 3) + 1) + '.webp');
+  cont.innerHTML = '<img src="img/frases/' + archivo + '" alt="' + (f.persona || 'frase') + '" data-initial="' + ((f.persona || '?')[0]) + '" data-bg="#E8D9FF" />';
 }
 
 function pintarEmociones() {
   const grid = $('#emocionesGrid');
   const emociones = getEmociones();
-  grid.innerHTML = emociones.map(e => {
+  grid.innerHTML = emociones.map(function(e){
     const color = e.color || '#E8DDCF';
     const tieneImg = e.imagen && e.imagen.length > 3;
     const imgContent = tieneImg
-      ? `<img src="img/emociones/${e.imagen}" alt="${e.label}" data-initial="${(e.label || '?')[0]}" data-bg="${color}" />`
-      : `<div class="img-fallback" style="background: ${color}; font-size: 16px;">${(e.label || '?')[0].toUpperCase()}</div>`;
-    return `
-      <div class="emocion" data-slug="${e.slug}">
-        <div class="emocion-orden"></div>
-        <div class="emocion-img" style="background: ${color};">${imgContent}</div>
-        <div class="emocion-label">${e.label}</div>
-      </div>
-    `;
+      ? '<img src="img/emociones/' + e.imagen + '" alt="' + e.label + '" data-initial="' + ((e.label || '?')[0]) + '" data-bg="' + color + '" />'
+      : '<div class="img-fallback" style="background: ' + color + '; font-size: 16px;">' + (e.label || '?')[0].toUpperCase() + '</div>';
+    return '<div class="emocion" data-slug="' + e.slug + '">'
+      + '<div class="emocion-orden"></div>'
+      + '<div class="emocion-img" style="background: ' + color + ';">' + imgContent + '</div>'
+      + '<div class="emocion-label">' + e.label + '</div>'
+      + '</div>';
   }).join('');
 
-  grid.addEventListener('click', e => {
-    const el = e.target.closest('.emocion');
+  grid.addEventListener('click', function(ev){
+    const el = ev.target.closest('.emocion');
     if (!el) return;
     const slug = el.dataset.slug;
     if (!state.diaActual) state.diaActual = {};
-    let seleccionadas = parseEmociones(state.diaActual.emocion);
-
-    if (seleccionadas.includes(slug)) {
-      // Si ya estaba, la quitamos
-      seleccionadas = seleccionadas.filter(s => s !== slug);
+    let sel = parseEmociones(state.diaActual.emocion);
+    if (sel.includes(slug)) {
+      sel = sel.filter(function(s){ return s !== slug; });
     } else {
-      // Si no, la agregamos (máx 3)
-      if (seleccionadas.length >= 3) {
-        toast('Hasta 3 emociones por día');
-        return;
-      }
-      seleccionadas.push(slug);
+      if (sel.length >= 3) { toast('Hasta 3 emociones por día'); return; }
+      sel.push(slug);
     }
-
-    state.diaActual.emocion = seleccionadas.join(',');
-    aplicarSeleccionEmociones(seleccionadas);
+    state.diaActual.emocion = sel.join(',');
+    aplicarSeleccionEmociones(sel);
     pintarCalendario();
     guardarDebounced();
   });
 }
 
-// Convierte el string "contenta,triste" a ['contenta','triste']
-function parseEmociones(str) {
-  if (!str) return [];
-  return String(str).split(',').map(s => s.trim()).filter(Boolean);
-}
-
-// Aplica clases visuales a las emociones según el orden seleccionado
-function aplicarSeleccionEmociones(seleccionadas) {
-  $$('.emocion').forEach(el => {
-    const slug = el.dataset.slug;
-    const idx = seleccionadas.indexOf(slug);
+function aplicarSeleccionEmociones(sel) {
+  $$('.emocion').forEach(function(el){
+    const idx = sel.indexOf(el.dataset.slug);
     el.classList.toggle('selected', idx >= 0);
-    const ordenEl = el.querySelector('.emocion-orden');
-    if (ordenEl) {
-      ordenEl.textContent = idx >= 0 ? (idx + 1) : '';
-      ordenEl.style.display = idx >= 0 ? 'flex' : 'none';
+    const ord = el.querySelector('.emocion-orden');
+    if (ord) {
+      ord.textContent = idx >= 0 ? (idx + 1) : '';
+      ord.style.display = idx >= 0 ? 'flex' : 'none';
     }
   });
 }
@@ -1493,46 +1466,65 @@ function aplicarSeleccionEmociones(seleccionadas) {
 function pintarActividades() {
   const ACTIVIDADES = ['cine', 'cafecito', 'juntada con amigos', 'viaje / escapada', 'museo', 'parque', 'cole', 'familia', 'otro'];
   const sel = $('#actividadSelect');
-  sel.innerHTML = '<option value="">Elige una actividad</option>' + ACTIVIDADES.map(a => `<option value="${a}">${a}</option>`).join('');
+  sel.innerHTML = '<option value="">Elige una actividad</option>' + ACTIVIDADES.map(function(a){ return '<option value="' + a + '">' + a + '</option>'; }).join('');
 }
 
+// Rotación de cosas según columna 'dias' del Sheet (ej: "1,8,15,22,29")
 function pintarCosas() {
-  let checks = (state.bootstrap.checks_cosas_hice || []);
+  const checks = ((state.bootstrap && state.bootstrap.checks_cosas_hice) || []);
   if (!checks.length) {
-    $('#cosasGrid').innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 18px; color: var(--text-mute); font-family: var(--font-hand); font-size: 14px;">Pegá checks en el Sheet (pestaña Checks_Cosas_Hice).</div>`;
+    $('#cosasGrid').innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 18px; color: var(--text-mute); font-family: var(--font-hand); font-size: 14px;">Pegá checks en el Sheet (pestaña Checks_Cosas_Hice).</div>';
     actualizarContadorCosas();
     return;
   }
 
-  const seed = state.fechaActual ? state.fechaActual.split('-').join('') : Date.now();
-  const arr = [...checks].sort((a, b) => hashStr(a.id + seed) - hashStr(b.id + seed));
-  const elegidos = arr.slice(0, 5);
+  // Día del mes actual de la fecha que está editando
+  const diaDelMes = state.fechaActual ? parseInt(state.fechaActual.split('-')[2]) : new Date().getDate();
+
+  // Filtrar checks que contengan ese día del mes en su columna 'dias' (ej: "1,8,15,22,29")
+  // Si la columna 'dias' está vacía, lo incluimos siempre
+  const elegidos = checks.filter(function(c){
+    if (!c.dias || String(c.dias).trim() === '') return true;
+    const lista = String(c.dias).split(',').map(function(x){ return parseInt(x.trim()); });
+    return lista.includes(diaDelMes);
+  }).slice(0, 5); // máximo 5 visibles
+
+  if (!elegidos.length) {
+    $('#cosasGrid').innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 18px; color: var(--text-mute); font-family: var(--font-hand); font-size: 14px;">Hoy no hay cosas para marcar.</div>';
+    actualizarContadorCosas();
+    return;
+  }
+
+  const PASTEL_ICONS = [
+    '<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
+    '<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4"><path d="M12 2 L14.5 9 L22 9.5 L16.5 14 L18 21 L12 17.5 L6 21 L7.5 14 L2 9.5 L9.5 9 Z"/></svg>',
+    '<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4"><circle cx="12" cy="6" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="12" r="3"/><circle cx="12" cy="18" r="3"/><circle cx="12" cy="12" r="2.5" fill="#F6C445"/></svg>',
+    '<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4"><path d="M6 18 C 3 18, 2 15, 3.5 13 C 4 9, 9 9, 10 11 C 11 7, 18 7, 18 12 C 21 12, 21 16, 19 18 Z"/></svg>',
+    '<svg class="cosa-placeholder-icon" viewBox="0 0 24 24" fill="#fff" stroke="#4A3F35" stroke-width="1.4"><path d="M4 20 C 4 10, 10 4, 20 4 C 20 14, 14 20, 4 20 Z M4 20 L12 12"/></svg>',
+  ];
 
   const grid = $('#cosasGrid');
-  grid.innerHTML = elegidos.map((c, idx) => {
-    const tienImagen = c.imagen && c.imagen.length > 3;
-    const pastel = `pastel-${(idx % 5) + 1}`;
-    const icono = COSA_PLACEHOLDER_ICONS[idx % COSA_PLACEHOLDER_ICONS.length];
-    const imgContent = tienImagen
-      ? `<img src="img/cosas/${c.imagen}" alt="${c.texto}" data-initial="${(c.texto || '?')[0]}" data-bg="#FFD3B6" />`
+  grid.innerHTML = elegidos.map(function(c, idx){
+    const tieneImg = c.imagen && c.imagen.length > 3;
+    const pastel = 'pastel-' + ((idx % 5) + 1);
+    const icono = PASTEL_ICONS[idx % PASTEL_ICONS.length];
+    const imgContent = tieneImg
+      ? '<img src="img/cosas/' + c.imagen + '" alt="' + c.texto + '" data-initial="' + ((c.texto || '?')[0]) + '" data-bg="#FFD3B6" />'
       : icono;
-    return `
-      <div class="cosa" data-id="${c.id}">
-        <div class="cosa-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="cosa-img ${tienImagen ? '' : pastel}">${imgContent}</div>
-        <div class="cosa-label">${c.texto || ''}</div>
-      </div>
-    `;
+    return '<div class="cosa" data-id="' + c.id + '">'
+      + '<div class="cosa-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>'
+      + '<div class="cosa-img ' + (tieneImg ? '' : pastel) + '">' + imgContent + '</div>'
+      + '<div class="cosa-label">' + (c.texto || '') + '</div>'
+      + '</div>';
   }).join('');
 
-  grid.addEventListener('click', e => {
-    const el = e.target.closest('.cosa');
+  grid.addEventListener('click', function(ev){
+    const el = ev.target.closest('.cosa');
     if (!el) return;
     el.classList.toggle('checked');
     actualizarContadorCosas();
     guardarDebounced();
   });
-
   actualizarContadorCosas();
 }
 
@@ -1540,21 +1532,12 @@ function actualizarContadorCosas() {
   const total = $$('#cosasGrid .cosa').length;
   const checks = $$('#cosasGrid .cosa.checked').length;
   const cont = $('#cosasContador');
-  if (cont) cont.textContent = total ? `(${checks} de ${total})` : '';
-}
-
-function hashStr(s) {
-  let h = 0;
-  for (let i = 0; i < s.length; i++) h = (h << 5) - h + s.charCodeAt(i) | 0;
-  return Math.abs(h);
+  if (cont) cont.textContent = total ? '(' + checks + ' de ' + total + ')' : '';
 }
 
 function conectarInputsHoy() {
   const d = state.diaActual || {};
-
-  if (d.emocion) {
-    aplicarSeleccionEmociones(parseEmociones(d.emocion));
-  }
+  if (d.emocion) aplicarSeleccionEmociones(parseEmociones(d.emocion));
 
   if (d.actividad_categoria) {
     $('#actividadSelect').value = d.actividad_categoria;
@@ -1562,14 +1545,13 @@ function conectarInputsHoy() {
   }
   $('#actividadDetalle').value = d.actividad_detalle || '';
   actualizarResumenActividad();
+
   $('#algoBueno1').value = d.algo_bueno_1 || '';
   $('#algoBueno2').value = d.algo_bueno_2 || '';
   $('#algoBueno3').value = d.algo_bueno_3 || '';
   $('#aprendi').value = d.aprendi || '';
 
-  if (d.momento_dificil === 'true' || d.momento_dificil === true) {
-    $('#dificilCard').classList.add('active');
-  }
+  if (d.momento_dificil === 'true' || d.momento_dificil === true) $('#dificilCard').classList.add('active');
   $('#mdQuePaso').value = d.md_que_paso || '';
   $('#mdQueSenti').value = d.md_que_senti || '';
   $('#mdQueAyudo').value = d.md_que_ayudo || '';
@@ -1578,29 +1560,26 @@ function conectarInputsHoy() {
   try {
     const cosas = JSON.parse(d.cosas_hice_json || '[]');
     if (Array.isArray(cosas)) {
-      cosas.forEach(id => {
-        const el = document.querySelector(`.cosa[data-id="${id}"]`);
+      cosas.forEach(function(id){
+        const el = document.querySelector('.cosa[data-id="' + id + '"]');
         if (el) el.classList.add('checked');
       });
       actualizarContadorCosas();
     }
   } catch(_) {}
 
-  const inputs = ['#actividadSelect', '#actividadDetalle', '#algoBueno1', '#algoBueno2', '#algoBueno3', '#aprendi', '#mdQuePaso', '#mdQueSenti', '#mdQueAyudo', '#mdQueNecesito'];
-  inputs.forEach(sel => {
+  ['#actividadSelect', '#actividadDetalle', '#algoBueno1', '#algoBueno2', '#algoBueno3', '#aprendi', '#mdQuePaso', '#mdQueSenti', '#mdQueAyudo', '#mdQueNecesito'].forEach(function(sel){
     const el = $(sel);
     if (el) el.addEventListener('input', guardarDebounced);
   });
 
-  $('#dificilToggle').addEventListener('click', () => {
+  $('#dificilToggle').addEventListener('click', function(){
     $('#dificilCard').classList.toggle('active');
     guardarDebounced();
   });
-
-  $('#actividadToggle').addEventListener('click', () => {
+  $('#actividadToggle').addEventListener('click', function(){
     const card = $('#actividadCard');
     card.classList.toggle('active');
-    // Si se desactiva, limpiamos los campos
     if (!card.classList.contains('active')) {
       $('#actividadSelect').value = '';
       $('#actividadDetalle').value = '';
@@ -1609,20 +1588,16 @@ function conectarInputsHoy() {
     }
     guardarDebounced();
   });
-
-  // Cuando cambia el select o el detalle, actualizar resumen
-  $('#actividadSelect').addEventListener('change', () => {
-    if ($('#actividadSelect').value) {
-      $('#actividadCard').classList.add('tiene-datos');
-    }
+  $('#actividadSelect').addEventListener('change', function(){
+    if ($('#actividadSelect').value) $('#actividadCard').classList.add('tiene-datos');
     actualizarResumenActividad();
   });
   $('#actividadDetalle').addEventListener('input', actualizarResumenActividad);
 }
 
 function actualizarResumenActividad() {
-  const cat = $('#actividadSelect')?.value;
-  const det = $('#actividadDetalle')?.value;
+  const cat = $('#actividadSelect') ? $('#actividadSelect').value : '';
+  const det = $('#actividadDetalle') ? $('#actividadDetalle').value : '';
   const r = $('#actividadResumen');
   if (!r) return;
   if (cat || det) {
@@ -1636,24 +1611,23 @@ function actualizarResumenActividad() {
 }
 
 function recopilarDia() {
-  const cosasChecked = [...$$('#cosasGrid .cosa.checked')].map(el => el.dataset.id);
-  // Recopilamos emociones respetando el orden de selección guardado en state
-  const seleccionadas = parseEmociones(state.diaActual?.emocion);
+  const cosasChecked = [].slice.call($$('#cosasGrid .cosa.checked')).map(function(el){ return el.dataset.id; });
+  const sel = parseEmociones(state.diaActual && state.diaActual.emocion);
   return {
-    id: state.diaActual?.id || undefined,
+    id: (state.diaActual && state.diaActual.id) || undefined,
     fecha: state.fechaActual,
-    emocion: seleccionadas.join(','),
-    actividad_categoria: $('#actividadSelect')?.value || '',
-    actividad_detalle: $('#actividadDetalle')?.value || '',
-    algo_bueno_1: $('#algoBueno1')?.value || '',
-    algo_bueno_2: $('#algoBueno2')?.value || '',
-    algo_bueno_3: $('#algoBueno3')?.value || '',
-    aprendi: $('#aprendi')?.value || '',
-    momento_dificil: $('#dificilCard')?.classList.contains('active') ? 'true' : 'false',
-    md_que_paso: $('#mdQuePaso')?.value || '',
-    md_que_senti: $('#mdQueSenti')?.value || '',
-    md_que_ayudo: $('#mdQueAyudo')?.value || '',
-    md_que_necesito: $('#mdQueNecesito')?.value || '',
+    emocion: sel.join(','),
+    actividad_categoria: ($('#actividadSelect') && $('#actividadSelect').value) || '',
+    actividad_detalle: ($('#actividadDetalle') && $('#actividadDetalle').value) || '',
+    algo_bueno_1: ($('#algoBueno1') && $('#algoBueno1').value) || '',
+    algo_bueno_2: ($('#algoBueno2') && $('#algoBueno2').value) || '',
+    algo_bueno_3: ($('#algoBueno3') && $('#algoBueno3').value) || '',
+    aprendi: ($('#aprendi') && $('#aprendi').value) || '',
+    momento_dificil: ($('#dificilCard') && $('#dificilCard').classList.contains('active')) ? 'true' : 'false',
+    md_que_paso: ($('#mdQuePaso') && $('#mdQuePaso').value) || '',
+    md_que_senti: ($('#mdQueSenti') && $('#mdQueSenti').value) || '',
+    md_que_ayudo: ($('#mdQueAyudo') && $('#mdQueAyudo').value) || '',
+    md_que_necesito: ($('#mdQueNecesito') && $('#mdQueNecesito').value) || '',
     cosas_hice_json: JSON.stringify(cosasChecked),
   };
 }
@@ -1668,13 +1642,14 @@ async function guardar() {
   state.saving = true;
   try {
     const payload = recopilarDia();
-    const res = await api('saveDia', { payload });
+    const res = await api('saveDia', { payload: payload });
     if (res && res.id) {
-      state.diaActual = { ...state.diaActual, ...payload, id: res.id };
+      state.diaActual = Object.assign({}, state.diaActual, payload, { id: res.id });
       toast('Guardado ✨', 'success');
-      const idx = state.diasCalendario.findIndex(d => d.fecha === payload.fecha);
-      if (idx >= 0) state.diasCalendario[idx].emocion = payload.emocion;
-      else state.diasCalendario.push({ fecha: payload.fecha, emocion: payload.emocion });
+      const idx = state.diasCalendario.findIndex(function(d){ return d.fecha === payload.fecha; });
+      const calItem = { fecha: payload.fecha, emocion: payload.emocion, actividad: payload.actividad_categoria };
+      if (idx >= 0) state.diasCalendario[idx] = calItem;
+      else state.diasCalendario.push(calItem);
       pintarCalendario();
       pintarResumenSemana();
     }
@@ -1686,22 +1661,62 @@ async function guardar() {
   }
 }
 
+// ============================================================
+// CALENDARIO
+// ============================================================
+
+// Emojis por defecto para tipos de fecha especial
+const TIPO_EMOJI = {
+  cumple: '🎂', cumpleanos: '🎂', cumpleaños: '🎂',
+  vacaciones: '🏖️',
+  viaje: '✈️',
+  amigas: '👯', amiga: '👯',
+  cole: '🎒',
+};
+
+// Emojis para actividades del 'Hoy'
+const ACTIVIDAD_EMOJI = {
+  'cine': '🎬',
+  'cafecito': '☕',
+  'juntada con amigos': '🎉',
+  'viaje / escapada': '✈️',
+  'museo': '🏛️',
+  'parque': '🌳',
+  'cole': '🎒',
+  'familia': '👨‍👩‍👧',
+  'otro': '✨',
+};
+
+function getFechaEspecial(fkey) {
+  const list = (state.bootstrap && state.bootstrap.fechas_especiales) || [];
+  return list.find(function(f){
+    // f.fecha puede venir como string YYYY-MM-DD o "MM-DD" recurrente
+    if (!f.fecha) return false;
+    const fs = String(f.fecha).trim();
+    if (fs === fkey) return true;
+    // recurrente anual (MM-DD)
+    if (fs.length === 5 && fs[2] === '-') {
+      return fkey.endsWith(fs);
+    }
+    return false;
+  });
+}
+
 function pintarCalendario() {
   const m = state.calendarioMes;
-  const titulo = `${MESES[m.getMonth()]} ${m.getFullYear()}`;
+  const titulo = MESES[m.getMonth()] + ' ' + m.getFullYear();
   $('#calTitulo').textContent = titulo.charAt(0).toUpperCase() + titulo.slice(1);
 
   const grid = $('#calendarioGrid');
-  const dowHtml = DIAS_CORTOS.map(d => `<div class="cal-dow">${d}</div>`).join('');
+  const dowHtml = DIAS_CORTOS.map(function(d){ return '<div class="cal-dow">' + d + '</div>'; }).join('');
 
   const primerDia = new Date(m.getFullYear(), m.getMonth(), 1);
   const diasMes = new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate();
   const offset = (primerDia.getDay() + 6) % 7;
-
   const hoy = fmtFecha(new Date());
 
   let cellsHtml = '';
-  for (let i = 0; i < offset; i++) cellsHtml += `<div class="cal-day empty"></div>`;
+  for (let i = 0; i < offset; i++) cellsHtml += '<div class="cal-day empty"></div>';
 
   for (let d = 1; d <= diasMes; d++) {
     const fecha = new Date(m.getFullYear(), m.getMonth(), d);
@@ -1709,29 +1724,52 @@ function pintarCalendario() {
     const isToday = fkey === hoy;
     const isFuture = fecha > new Date();
     const isSelected = fkey === state.fechaActual;
-    const dia = state.diasCalendario.find(x => x.fecha === fkey);
-    // Si hay varias emociones separadas por coma, usamos la primera (la principal)
-    const primeraEmocion = dia && dia.emocion ? parseEmociones(dia.emocion)[0] : null;
-    const color = primeraEmocion ? colorEmocion(primeraEmocion) : 'transparent';
+    const dia = state.diasCalendario.find(function(x){ return x.fecha === fkey; });
 
-    cellsHtml += `<div class="cal-day ${isToday ? 'today' : ''} ${isFuture ? 'future' : ''} ${isSelected ? 'selected' : ''}" data-fecha="${fkey}">
-      <span>${d}</span>
-      <span class="cal-dot" style="background: ${color}"></span>
-    </div>`;
+    const fechaEsp = getFechaEspecial(fkey);
+    const esConmigo = fechaEsp && _truthy(fechaEsp.conmigo);
+
+    // Iconito de evento especial
+    let iconoEvento = '';
+    if (fechaEsp && fechaEsp.tipo && fechaEsp.tipo !== 'actividad') {
+      const emo = fechaEsp.emoji || TIPO_EMOJI[String(fechaEsp.tipo).toLowerCase()] || '⭐';
+      iconoEvento = '<span class="cal-icon-evento">' + emo + '</span>';
+    }
+
+    // Contenido principal según vista
+    let contenido = '';
+    if (state.calendarioVista === 'emociones') {
+      const primera = dia && dia.emocion ? parseEmociones(dia.emocion)[0] : null;
+      const color = primera ? colorEmocion(primera) : 'transparent';
+      contenido = '<span class="cal-dot" style="background: ' + color + '"></span>';
+    } else {
+      // vista actividades
+      const act = dia && dia.actividad ? dia.actividad : '';
+      const emoji = act ? (ACTIVIDAD_EMOJI[String(act).toLowerCase()] || '✨') : '';
+      contenido = emoji ? '<span class="cal-actividad-emoji">' + emoji + '</span>' : '<span class="cal-dot"></span>';
+    }
+
+    const classes = [
+      'cal-day',
+      isToday ? 'today' : '',
+      isFuture ? 'future' : '',
+      isSelected ? 'selected' : '',
+      esConmigo ? 'conmigo' : '',
+    ].filter(Boolean).join(' ');
+
+    cellsHtml += '<div class="' + classes + '" data-fecha="' + fkey + '">'
+      + iconoEvento
+      + '<span class="cal-num">' + d + '</span>'
+      + contenido
+      + '</div>';
   }
 
   grid.innerHTML = dowHtml + cellsHtml;
-  grid.onclick = (e) => {
+  grid.onclick = function(e){
     const c = e.target.closest('.cal-day');
     if (!c || !c.dataset.fecha) return;
     cargarDia(c.dataset.fecha);
   };
-}
-
-function colorEmocion(slug) {
-  if (!slug) return 'transparent';
-  const e = getEmocionByslug(slug);
-  return (e && e.color) ? e.color : '#A8927A';
 }
 
 function pintarResumenSemana() {
@@ -1744,17 +1782,14 @@ function pintarResumenSemana() {
     d.setDate(lunes.getDate() + i);
     if (d <= hoy) semana.push(fmtFecha(d));
   }
-  const escritos = state.diasCalendario.filter(d => semana.includes(d.fecha));
-  $('#resumenPaginas').textContent = `${escritos.length} / 7`;
+  const escritos = state.diasCalendario.filter(function(d){ return semana.includes(d.fecha); });
+  $('#resumenPaginas').textContent = escritos.length + ' / 7';
 
   const counts = {};
-  escritos.forEach(d => {
-    // Cada día puede tener hasta 3 emociones; contamos todas
-    parseEmociones(d.emocion).forEach(slug => {
-      counts[slug] = (counts[slug] || 0) + 1;
-    });
+  escritos.forEach(function(d){
+    parseEmociones(d.emocion).forEach(function(slug){ counts[slug] = (counts[slug] || 0) + 1; });
   });
-  const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  const top = Object.entries(counts).sort(function(a,b){ return b[1] - a[1]; })[0];
   if (top) {
     const e = getEmocionByslug(top[0]);
     $('#resumenEmocion').textContent = e ? e.label : top[0];
@@ -1764,10 +1799,10 @@ function pintarResumenSemana() {
 }
 
 function pintarPerfil() {
-  const p = state.bootstrap.perfil || {};
+  const p = (state.bootstrap && state.bootstrap.perfil) || {};
   const av = $('#perfilAvatar');
   if (p.avatar_url && p.avatar_url.length > 4) {
-    av.innerHTML = `<svg class="corona" viewBox="0 0 32 32" fill="#F28C8C"><path d="M4 22 L8 12 L12 18 L16 8 L20 18 L24 12 L28 22 Z"/></svg><div class="avatar-inner"><img src="${p.avatar_url}" alt="Gina" data-initial="G" data-bg="#FFD3B6" /></div>`;
+    av.innerHTML = '<svg class="corona" viewBox="0 0 32 32" fill="#F28C8C"><path d="M4 22 L8 12 L12 18 L16 8 L20 18 L24 12 L28 22 Z"/></svg><div class="avatar-inner"><img src="' + p.avatar_url + '" alt="Gina" data-initial="G" data-bg="#FFD3B6" /></div>';
   }
   if (p.fecha_cumple) {
     const hoy = new Date();
@@ -1783,7 +1818,7 @@ function pintarPerfil() {
     const alturas = JSON.parse(p.alturas_json || '[]');
     if (alturas.length) {
       const ult = alturas[alturas.length - 1];
-      $('#perfilAltura').textContent = `📏 altura: ${ult.cm} cm`;
+      $('#perfilAltura').textContent = '📏 altura: ' + ult.cm + ' cm';
     } else {
       $('#perfilAltura').style.display = 'none';
     }
@@ -1794,46 +1829,365 @@ function pintarPerfil() {
 
 function pintarRincon() {
   const cont = $('#rincon');
-  // Probar primero la imagen real, con fallback a un SVG inyectado por JS si falla
   const img = document.createElement('img');
   img.src = 'img/rincon-gina.webp';
   img.alt = 'Rincón de Gina';
   img.style.borderRadius = 'var(--r-input)';
-  img.addEventListener('error', () => {
-    cont.innerHTML = `
-      <div class="rincon-placeholder">
-        <svg width="140" height="110" viewBox="0 0 160 130" fill="none">
-          <ellipse cx="48" cy="112" rx="28" ry="4" fill="#E8DDCF" opacity="0.5"/>
-          <ellipse cx="108" cy="114" rx="30" ry="4" fill="#E8DDCF" opacity="0.5"/>
-          <path d="M40 110 Q40 70, 38 50" stroke="#7BA068" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="38" cy="45" r="8" fill="#F28C8C"/>
-          <circle cx="38" cy="45" r="3" fill="#FFFDF9"/>
-          <path d="M105 112 Q105 80, 108 55" stroke="#7BA068" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="108" cy="50" r="10" fill="#C8B6E2"/>
-          <circle cx="108" cy="50" r="3" fill="#F6C445"/>
-          <ellipse cx="78" cy="40" rx="18" ry="12" fill="#FFFDF9" stroke="#E8DDCF" stroke-width="1.5"/>
-          <circle cx="72" cy="40" r="1.5" fill="#4A3F35"/>
-          <circle cx="84" cy="40" r="1.5" fill="#4A3F35"/>
-          <path d="M75 44 Q78 46, 81 44" stroke="#4A3F35" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-        </svg>
-      </div>`;
+  img.addEventListener('error', function(){
+    cont.innerHTML = '<div class="rincon-placeholder">'
+      + '<svg width="140" height="110" viewBox="0 0 160 130" fill="none">'
+      + '<ellipse cx="48" cy="112" rx="28" ry="4" fill="#E8DDCF" opacity="0.5"/>'
+      + '<ellipse cx="108" cy="114" rx="30" ry="4" fill="#E8DDCF" opacity="0.5"/>'
+      + '<path d="M40 110 Q40 70, 38 50" stroke="#7BA068" stroke-width="2" stroke-linecap="round"/>'
+      + '<circle cx="38" cy="45" r="8" fill="#F28C8C"/><circle cx="38" cy="45" r="3" fill="#FFFDF9"/>'
+      + '<path d="M105 112 Q105 80, 108 55" stroke="#7BA068" stroke-width="2" stroke-linecap="round"/>'
+      + '<circle cx="108" cy="50" r="10" fill="#C8B6E2"/><circle cx="108" cy="50" r="3" fill="#F6C445"/>'
+      + '<ellipse cx="78" cy="40" rx="18" ry="12" fill="#FFFDF9" stroke="#E8DDCF" stroke-width="1.5"/>'
+      + '<circle cx="72" cy="40" r="1.5" fill="#4A3F35"/><circle cx="84" cy="40" r="1.5" fill="#4A3F35"/>'
+      + '<path d="M75 44 Q78 46, 81 44" stroke="#4A3F35" stroke-width="1.2" fill="none" stroke-linecap="round"/>'
+      + '</svg></div>';
   });
   cont.innerHTML = '';
   cont.appendChild(img);
 }
 
+// ============================================================
+// BIBLIOTECA
+// ============================================================
+
+async function pintarSeccionBiblioteca() {
+  $('#mainHeader').style.display = 'none';
+  $('#seccionContenido').innerHTML = `
+    <div class="biblio-header">
+      <div>
+        <div class="biblio-titulo">Mi biblioteca 💜</div>
+        <div class="biblio-subtitulo">Mis historias, ideas y recuerdos favoritos.</div>
+      </div>
+    </div>
+
+    <div class="biblio-row-section">
+      <div class="biblio-section-title">📖 Últimos libros leídos</div>
+      <div class="libros-fila" id="librosUltimos"></div>
+    </div>
+
+    <div class="biblio-row-section">
+      <div class="biblio-section-title">💖 Mis favoritos</div>
+      <div class="libros-fila" id="librosFavoritos"></div>
+    </div>
+  `;
+
+  if (!state.libros.length) {
+    try { state.libros = await api('getBiblioteca') || []; } catch(_) { state.libros = []; }
+  }
+
+  pintarLibrosUltimos();
+  pintarLibrosFavoritos();
+}
+
+function pintarLibrosUltimos() {
+  const cont = $('#librosUltimos');
+  if (!cont) return;
+  // Ordenar por fecha_terminado descendente, luego mostrar 4 + botón añadir
+  const ordenados = state.libros.slice().sort(function(a,b){
+    return (b.fecha_terminado || '').localeCompare(a.fecha_terminado || '');
+  });
+  const ultimos = ordenados.slice(0, 4);
+  const cards = ultimos.map(libroCardHtml).join('');
+  cont.innerHTML = cards + '<div class="libro-card libro-añadir" id="btnAñadirLibro"><div class="libro-añadir-plus">+</div><div>Añadir nuevo libro</div></div>';
+  $('#btnAñadirLibro').addEventListener('click', abrirModalAñadir);
+  cont.querySelectorAll('.libro-card:not(.libro-añadir)').forEach(function(el){
+    el.addEventListener('click', function(){ abrirFichaLibro(el.dataset.id); });
+  });
+}
+
+function pintarLibrosFavoritos() {
+  const cont = $('#librosFavoritos');
+  if (!cont) return;
+  const favs = state.libros.filter(function(l){ return _truthy(l.favorito); })
+    .sort(function(a,b){ return (parseInt(a.orden_favorito)||999) - (parseInt(b.orden_favorito)||999); })
+    .slice(0, 4);
+  const cards = favs.map(libroCardHtml).join('');
+  cont.innerHTML = cards + '<div class="libro-card libro-añadir" style="min-height: 200px; display:flex; align-items:center; justify-content:center; opacity: 0.7;">Elige tus 4 favoritos<br>desde la ficha</div>';
+  cont.querySelectorAll('.libro-card:not(.libro-añadir)').forEach(function(el){
+    el.addEventListener('click', function(){ abrirFichaLibro(el.dataset.id); });
+  });
+}
+
+function libroCardHtml(l) {
+  const stars = parseInt(l.estrellas) || 0;
+  const starsHtml = stars > 0 ? '<div class="libro-stars">' + '★'.repeat(stars) + '☆'.repeat(5-stars) + '</div>' : '';
+  const portada = l.portada_url
+    ? '<img src="' + l.portada_url + '" alt="' + (l.titulo || '') + '" data-initial="' + ((l.titulo||'?')[0]) + '" data-bg="#FFD3B6" />'
+    : '<div class="img-fallback">📖</div>';
+  return '<div class="libro-card" data-id="' + l.id + '">'
+    + '<div class="libro-portada">' + portada + '</div>'
+    + '<div class="libro-titulo">' + (l.titulo || '') + '</div>'
+    + '<div class="libro-autor">' + (l.autor || '') + '</div>'
+    + starsHtml
+    + '</div>';
+}
+
+function abrirModalAñadir() {
+  $('#modalBg').classList.add('show');
+  $('#modalSearchInput').value = '';
+  $('#modalSearchResults').innerHTML = '';
+  $('#modalSearchInput').focus();
+}
+
+function cerrarModal() { $('#modalBg').classList.remove('show'); }
+
+let searchTimer = null;
+function onSearchInput(ev) {
+  clearTimeout(searchTimer);
+  const q = ev.target.value.trim();
+  if (q.length < 3) { $('#modalSearchResults').innerHTML = ''; return; }
+  searchTimer = setTimeout(function(){ buscarLibros(q); }, 400);
+}
+
+async function buscarLibros(q) {
+  $('#modalSearchResults').innerHTML = '<div style="grid-column:1/-1; text-align:center; color: var(--text-mute);">Buscando…</div>';
+  try {
+    const results = await api('searchBooks', { q: q }) || [];
+    if (!results.length) {
+      $('#modalSearchResults').innerHTML = '<div style="grid-column:1/-1; text-align:center; color: var(--text-mute);">Sin resultados</div>';
+      return;
+    }
+    $('#modalSearchResults').innerHTML = results.map(function(r){
+      const img = r.portada_url ? '<img src="' + r.portada_url + '" alt="" />' : '<div style="aspect-ratio:2/3; background:#FFD3B6; display:flex; align-items:center; justify-content:center;">📖</div>';
+      return '<div class="modal-libro" data-r=\'' + JSON.stringify(r).replace(/'/g, '&#39;') + '\'>'
+        + img
+        + '<div class="modal-libro-titulo">' + r.titulo + '</div>'
+        + '</div>';
+    }).join('');
+    $$('#modalSearchResults .modal-libro').forEach(function(el){
+      el.addEventListener('click', function(){
+        const r = JSON.parse(el.dataset.r.replace(/&#39;/g, "'"));
+        añadirLibroDesdeBusqueda(r);
+      });
+    });
+  } catch (err) {
+    $('#modalSearchResults').innerHTML = '<div style="grid-column:1/-1; text-align:center; color: var(--coral);">Error: ' + err.message + '</div>';
+  }
+}
+
+async function añadirLibroDesdeBusqueda(r) {
+  const payload = Object.assign({}, r, {
+    fecha_terminado: fmtFecha(new Date()),
+    estrellas: '0',
+    favorito: '',
+    me_gusto: '',
+    personajes_favoritos_json: '[]',
+    frases_destacadas_json: '[]',
+  });
+  try {
+    const res = await api('saveLibro', { payload: payload });
+    cerrarModal();
+    state.libros = []; // forzar reload
+    state.libros = await api('getBiblioteca') || [];
+    toast('Libro añadido ✨', 'success');
+    abrirFichaLibro(res.id);
+  } catch (err) {
+    toast('No se pudo añadir 😢');
+  }
+}
+
+function abrirFichaLibro(id) {
+  const libro = state.libros.find(function(l){ return l.id === id; });
+  if (!libro) return;
+  state.libroActual = libro;
+
+  const portada = libro.portada_url
+    ? '<img src="' + libro.portada_url + '" alt="' + libro.titulo + '" data-initial="' + ((libro.titulo||'?')[0]) + '" data-bg="#FFD3B6" />'
+    : '<div class="img-fallback">📖</div>';
+
+  let personajes = [];
+  try { personajes = JSON.parse(libro.personajes_favoritos_json || '[]'); } catch(_) {}
+  let frases = [];
+  try { frases = JSON.parse(libro.frases_destacadas_json || '[]'); } catch(_) {}
+
+  const stars = parseInt(libro.estrellas) || 0;
+  const starsHtml = [1,2,3,4,5].map(function(n){
+    return '<span class="ficha-star ' + (n <= stars ? 'active' : '') + '" data-n="' + n + '">★</span>';
+  }).join('');
+
+  $('#fichaLibro').innerHTML = `
+    <button class="ficha-back" id="fichaBack">← Volver</button>
+    <div class="ficha-grid">
+      <div>
+        <div class="ficha-portada">${portada}</div>
+        <div style="margin-top: 12px;">
+          <label style="display: flex; align-items: center; gap: 6px; font-family: var(--font-hand); font-size: 14px; color: var(--text-soft); cursor: pointer;">
+            <input type="checkbox" id="fichaFavorito" ${_truthy(libro.favorito) ? 'checked' : ''}> 💖 Marcar como favorito
+          </label>
+        </div>
+        <button id="fichaBorrar" style="margin-top: 16px; color: var(--coral); font-size: 12px; font-family: var(--font-ui);">Eliminar libro</button>
+      </div>
+
+      <div>
+        <div class="ficha-titulo">${libro.titulo || ''}</div>
+        <div class="ficha-autor">${libro.autor || ''}</div>
+
+        <div class="ficha-datos">
+          ${libro.anio ? '<div class="ficha-datos-item"><span>📅</span> Año: ' + libro.anio + '</div>' : ''}
+          ${libro.paginas ? '<div class="ficha-datos-item"><span>📖</span> ' + libro.paginas + ' páginas</div>' : ''}
+          ${libro.editorial ? '<div class="ficha-datos-item"><span>🏢</span> ' + libro.editorial + '</div>' : ''}
+          ${libro.genero ? '<div class="ficha-datos-item"><span>📚</span> ' + libro.genero + '</div>' : ''}
+        </div>
+
+        ${libro.sinopsis ? '<div style="font-family: var(--font-hand); font-size: 14px; color: var(--text-soft); margin-bottom: 16px; line-height: 1.4;">' + libro.sinopsis.slice(0, 300) + (libro.sinopsis.length > 300 ? '…' : '') + '</div>' : ''}
+
+        <div class="ficha-cards">
+          <div class="ficha-card">
+            <div class="ficha-card-title">⭐ Mi valoración</div>
+            <div class="ficha-stars" id="fichaStars">${starsHtml}</div>
+            <div class="ficha-card-title" style="margin-top: 12px;">¿Te gustó?</div>
+            <div class="ficha-megusto-row">
+              <button class="ficha-megusto-btn ${libro.me_gusto === 'si' ? 'active' : ''}" data-val="si"><span class="ficha-megusto-emoji">😊</span>Me gustó</button>
+              <button class="ficha-megusto-btn ${libro.me_gusto === 'no' ? 'active' : ''}" data-val="no"><span class="ficha-megusto-emoji">😐</span>Meh</button>
+            </div>
+          </div>
+
+          <div class="ficha-card">
+            <div class="ficha-card-title">🎭 Personajes favoritos</div>
+            <div class="ficha-chip-list" id="fichaPersonajes">
+              ${personajes.map(function(p, i){ return '<div class="ficha-chip">' + p + '<span class="ficha-chip-remove" data-i="' + i + '">×</span></div>'; }).join('')}
+            </div>
+            <button class="ficha-add-btn" id="addPersonaje">+ Añadir personaje</button>
+          </div>
+
+          <div class="ficha-card">
+            <div class="ficha-card-title">💬 Frases destacadas</div>
+            <div class="ficha-chip-list" id="fichaFrases">
+              ${frases.map(function(f, i){ return '<div class="ficha-chip">' + f + '<span class="ficha-chip-remove" data-i="' + i + '">×</span></div>'; }).join('')}
+            </div>
+            <button class="ficha-add-btn" id="addFrase">+ Añadir frase</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  $('#fichaLibro').classList.add('show');
+  conectarFicha();
+}
+
+function conectarFicha() {
+  $('#fichaBack').addEventListener('click', function(){
+    $('#fichaLibro').classList.remove('show');
+  });
+  $('#fichaBorrar').addEventListener('click', async function(){
+    if (!confirm('¿Eliminar este libro?')) return;
+    try {
+      await api('deleteLibro', { id: state.libroActual.id });
+      state.libros = state.libros.filter(function(l){ return l.id !== state.libroActual.id; });
+      $('#fichaLibro').classList.remove('show');
+      toast('Libro eliminado');
+      pintarSeccionBiblioteca();
+    } catch(err) { toast('Error al borrar'); }
+  });
+
+  // Estrellas
+  $('#fichaStars').addEventListener('click', function(ev){
+    const s = ev.target.closest('.ficha-star');
+    if (!s) return;
+    const n = parseInt(s.dataset.n);
+    state.libroActual.estrellas = String(n);
+    $$('.ficha-star').forEach(function(el){ el.classList.toggle('active', parseInt(el.dataset.n) <= n); });
+    guardarLibroDebounced();
+  });
+
+  // Me gustó / Meh
+  $$('.ficha-megusto-btn').forEach(function(b){
+    b.addEventListener('click', function(){
+      const val = b.dataset.val;
+      state.libroActual.me_gusto = val;
+      $$('.ficha-megusto-btn').forEach(function(x){ x.classList.toggle('active', x.dataset.val === val); });
+      guardarLibroDebounced();
+    });
+  });
+
+  // Favorito
+  $('#fichaFavorito').addEventListener('change', function(){
+    state.libroActual.favorito = $('#fichaFavorito').checked ? 'sí' : '';
+    guardarLibroDebounced();
+  });
+
+  // Personajes y frases — añadir y quitar
+  $('#addPersonaje').addEventListener('click', function(){
+    const p = prompt('¿Qué personaje?');
+    if (!p) return;
+    let lista = []; try { lista = JSON.parse(state.libroActual.personajes_favoritos_json || '[]'); } catch(_){}
+    lista.push(p);
+    state.libroActual.personajes_favoritos_json = JSON.stringify(lista);
+    abrirFichaLibro(state.libroActual.id);
+    guardarLibroDebounced();
+  });
+  $('#addFrase').addEventListener('click', function(){
+    const f = prompt('Frase destacada:');
+    if (!f) return;
+    let lista = []; try { lista = JSON.parse(state.libroActual.frases_destacadas_json || '[]'); } catch(_){}
+    lista.push(f);
+    state.libroActual.frases_destacadas_json = JSON.stringify(lista);
+    abrirFichaLibro(state.libroActual.id);
+    guardarLibroDebounced();
+  });
+
+  $$('#fichaPersonajes .ficha-chip-remove').forEach(function(x){
+    x.addEventListener('click', function(){
+      let lista = []; try { lista = JSON.parse(state.libroActual.personajes_favoritos_json || '[]'); } catch(_){}
+      lista.splice(parseInt(x.dataset.i), 1);
+      state.libroActual.personajes_favoritos_json = JSON.stringify(lista);
+      abrirFichaLibro(state.libroActual.id);
+      guardarLibroDebounced();
+    });
+  });
+  $$('#fichaFrases .ficha-chip-remove').forEach(function(x){
+    x.addEventListener('click', function(){
+      let lista = []; try { lista = JSON.parse(state.libroActual.frases_destacadas_json || '[]'); } catch(_){}
+      lista.splice(parseInt(x.dataset.i), 1);
+      state.libroActual.frases_destacadas_json = JSON.stringify(lista);
+      abrirFichaLibro(state.libroActual.id);
+      guardarLibroDebounced();
+    });
+  });
+}
+
+let libroSaveTimer = null;
+function guardarLibroDebounced() {
+  clearTimeout(libroSaveTimer);
+  libroSaveTimer = setTimeout(guardarLibro, 1000);
+}
+async function guardarLibro() {
+  if (!state.libroActual) return;
+  try {
+    await api('saveLibro', { payload: state.libroActual });
+    // Actualizar la lista local
+    const idx = state.libros.findIndex(function(l){ return l.id === state.libroActual.id; });
+    if (idx >= 0) state.libros[idx] = state.libroActual;
+    toast('Guardado ✨', 'success');
+  } catch (err) {
+    toast('No se pudo guardar 😢');
+  }
+}
+
+// ============================================================
+// SECCIONES PLACEHOLDER
+// ============================================================
 function pintarSeccionPlaceholder(titulo) {
-  $('#seccionContenido').innerHTML = `<div class="placeholder-seccion">🚧 ${titulo} — próximamente</div>`;
+  $('#mainHeader').style.display = '';
+  $('#seccionContenido').innerHTML = '<div class="placeholder-seccion">🚧 ' + titulo + ' — próximamente</div>';
 }
 
 function cambiarSeccion(s) {
   state.seccionActiva = s;
-  $$('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.section === s));
+  $$('.nav-item').forEach(function(n){ n.classList.toggle('active', n.dataset.section === s); });
+  // Cerrar ficha de libro si estaba abierta
+  $('#fichaLibro').classList.remove('show');
   if (s === 'hoy') pintarSeccionHoy();
+  else if (s === 'biblioteca') pintarSeccionBiblioteca();
   else if (s === 'yo-soy') pintarSeccionPlaceholder('Yo soy');
   else if (s === 'charlar') pintarSeccionPlaceholder('Charlar');
   else if (s === 'retos') pintarSeccionPlaceholder('Retos');
-  else if (s === 'biblioteca') pintarSeccionPlaceholder('Biblioteca');
   else if (s === 'capsula') pintarSeccionPlaceholder('Cápsula');
 }
 
@@ -1868,38 +2222,51 @@ async function bootstrap() {
   pintarRincon();
 
   state.calendarioMes = new Date();
-  try {
-    state.diasCalendario = await api('getCalendario') || [];
-  } catch (_) { state.diasCalendario = []; }
+  try { state.diasCalendario = await api('getCalendario') || []; } catch(_) { state.diasCalendario = []; }
 
   pintarCalendario();
   pintarResumenSemana();
-
   await cargarDia(fmtFecha(new Date()));
 
   $('#app').style.visibility = 'visible';
-  setTimeout(() => $('#loadingScreen').classList.add('hide'), 300);
+  setTimeout(function(){ $('#loadingScreen').classList.add('hide'); }, 300);
 }
 
-$('#nav').addEventListener('click', e => {
+// Eventos
+$('#nav').addEventListener('click', function(e){
   const b = e.target.closest('.nav-item');
   if (!b) return;
   cambiarSeccion(b.dataset.section);
 });
-$('#calPrev').addEventListener('click', () => {
+$('#calPrev').addEventListener('click', function(){
   state.calendarioMes = new Date(state.calendarioMes.getFullYear(), state.calendarioMes.getMonth() - 1, 1);
   pintarCalendario();
 });
-$('#calNext').addEventListener('click', () => {
+$('#calNext').addEventListener('click', function(){
   state.calendarioMes = new Date(state.calendarioMes.getFullYear(), state.calendarioMes.getMonth() + 1, 1);
   pintarCalendario();
 });
 
+// Switch de vista del calendario
+document.addEventListener('click', function(e){
+  const b = e.target.closest('.cal-switch button');
+  if (!b) return;
+  state.calendarioVista = b.dataset.view;
+  $$('.cal-switch button').forEach(function(x){ x.classList.toggle('active', x === b); });
+  pintarCalendario();
+});
+
+// Modal
+$('#modalClose').addEventListener('click', cerrarModal);
+$('#modalBg').addEventListener('click', function(e){ if (e.target === $('#modalBg')) cerrarModal(); });
+$('#modalSearchInput').addEventListener('input', onSearchInput);
+
+// Service Worker
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/gina/sw.js').catch(() => {});
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('/gina/sw.js').catch(function(){});
   });
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
+  navigator.serviceWorker.addEventListener('controllerchange', function(){
     toast('Nueva versión disponible — recargá', 'success');
   });
 }
