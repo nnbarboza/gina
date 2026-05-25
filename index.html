@@ -326,7 +326,7 @@ textarea { resize: none; }
 
 .row-frase-emociones {
   display: grid;
-  grid-template-columns: minmax(220px, 320px) 1fr;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
   gap: 14px;
   align-items: stretch;
 }
@@ -408,9 +408,9 @@ textarea { resize: none; }
 /* EMOCIONES */
 .emociones-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
-  row-gap: 12px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  row-gap: 10px;
 }
 @media (max-width: 600px) {
   .emociones-grid { grid-template-columns: repeat(4, 1fr); }
@@ -1215,11 +1215,11 @@ textarea.input-base {
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-tag">v0.5.2</div>
+<div class="version-tag">v0.5.3</div>
 
 <script>
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwnuMgU-Ooa0qsq_MgDAo4FOBGHH5WiVhgSEFtQ1LPbXUfouaHw9jJbYLEE39btsJQD/exec';
-const VERSION = 'v0.5.2';
+const VERSION = 'v0.5.3';
 
 const state = {
   bootstrap: null,
