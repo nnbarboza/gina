@@ -1198,13 +1198,22 @@ textarea.input-base {
   <div class="modal" style="position: relative;">
     <span class="modal-close" id="modalClose">×</span>
     <div class="modal-title">📚 Añadir libro</div>
-    <input type="text" class="modal-search-input" id="modalSearchInput" placeholder="Busca un libro por título, autor..." />
-    <div class="modal-search-results" id="modalSearchResults"></div>
+    <div style="font-family: var(--font-hand); font-size: 13px; color: var(--text-mute); margin-bottom: 12px;">Escribí los datos del libro y le damos a buscar. Si lo encuentra, se enriquece con portada y datos.</div>
+    <label class="field-label">Título</label>
+    <input type="text" class="modal-search-input" id="modalTitulo" placeholder="ej: El principito" />
+    <label class="field-label">Autor (opcional)</label>
+    <input type="text" class="modal-search-input" id="modalAutor" placeholder="ej: Antoine de Saint-Exupéry" />
+    <label class="field-label">Extras (opcional: ISBN, editorial...)</label>
+    <input type="text" class="modal-search-input" id="modalExtras" placeholder="ej: ISBN 9788424116545" />
+    <div style="display: flex; gap: 8px; margin-top: 8px;">
+      <button id="modalBuscar" style="flex:1; background: var(--amarillo); color: var(--text); font-family: var(--font-display); font-weight: 700; font-size: 14px; padding: 12px; border-radius: var(--r-input); box-shadow: var(--shadow-s);">🔍 Añadir libro</button>
+    </div>
+    <div class="modal-search-results" id="modalSearchResults" style="margin-top: 14px;"></div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-tag">v0.6.0</div>
+<div class="version-tag">v0.7.0</div>
 
 <script>
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwnuMgU-Ooa0qsq_MgDAo4FOBGHH5WiVhgSEFtQ1LPbXUfouaHw9jJbYLEE39btsJQD/exec';
@@ -1929,65 +1938,77 @@ function libroCardHtml(l) {
 
 function abrirModalAñadir() {
   $('#modalBg').classList.add('show');
-  $('#modalSearchInput').value = '';
+  $('#modalTitulo').value = '';
+  $('#modalAutor').value = '';
+  $('#modalExtras').value = '';
   $('#modalSearchResults').innerHTML = '';
-  $('#modalSearchInput').focus();
+  setTimeout(function(){ $('#modalTitulo').focus(); }, 100);
 }
 
 function cerrarModal() { $('#modalBg').classList.remove('show'); }
 
-let searchTimer = null;
-function onSearchInput(ev) {
-  clearTimeout(searchTimer);
-  const q = ev.target.value.trim();
-  if (q.length < 3) { $('#modalSearchResults').innerHTML = ''; return; }
-  searchTimer = setTimeout(function(){ buscarLibros(q); }, 400);
-}
+async function buscarYAnadir() {
+  const titulo = $('#modalTitulo').value.trim();
+  const autor = $('#modalAutor').value.trim();
+  const extras = $('#modalExtras').value.trim();
 
-async function buscarLibros(q) {
-  $('#modalSearchResults').innerHTML = '<div style="grid-column:1/-1; text-align:center; color: var(--text-mute);">Buscando…</div>';
+  if (!titulo && !autor && !extras) {
+    toast('Pon al menos un dato');
+    return;
+  }
+
+  // Construir query: si hay autor, usar intitle/inauthor; si hay ISBN en extras, isbn:
+  let q = '';
+  if (titulo) q += 'intitle:' + titulo;
+  if (autor) q += (q ? '+' : '') + 'inauthor:' + autor;
+  if (extras) q += (q ? '+' : '') + extras;
+  if (!q) q = titulo + ' ' + autor + ' ' + extras;
+
+  $('#modalSearchResults').innerHTML = '<div style="text-align:center; padding: 14px; color: var(--text-mute); font-family: var(--font-hand);">Buscando…</div>';
+
+  let resultado = null;
   try {
     const results = await api('searchBooks', { q: q }) || [];
-    if (!results.length) {
-      $('#modalSearchResults').innerHTML = '<div style="grid-column:1/-1; text-align:center; color: var(--text-mute);">Sin resultados</div>';
-      return;
+    if (results.length > 0) {
+      resultado = results[0]; // tomamos el primer resultado (más relevante)
     }
-    $('#modalSearchResults').innerHTML = results.map(function(r){
-      const img = r.portada_url ? '<img src="' + r.portada_url + '" alt="" />' : '<div style="aspect-ratio:2/3; background:#FFD3B6; display:flex; align-items:center; justify-content:center;">📖</div>';
-      return '<div class="modal-libro" data-r=\'' + JSON.stringify(r).replace(/'/g, '&#39;') + '\'>'
-        + img
-        + '<div class="modal-libro-titulo">' + r.titulo + '</div>'
-        + '</div>';
-    }).join('');
-    $$('#modalSearchResults .modal-libro').forEach(function(el){
-      el.addEventListener('click', function(){
-        const r = JSON.parse(el.dataset.r.replace(/&#39;/g, "'"));
-        añadirLibroDesdeBusqueda(r);
-      });
-    });
   } catch (err) {
-    $('#modalSearchResults').innerHTML = '<div style="grid-column:1/-1; text-align:center; color: var(--coral);">Error: ' + err.message + '</div>';
+    $('#modalSearchResults').innerHTML = '<div style="text-align:center; padding: 14px; color: var(--coral); font-family: var(--font-hand);">Error: ' + err.message + '</div>';
+    return;
   }
-}
 
-async function añadirLibroDesdeBusqueda(r) {
-  const payload = Object.assign({}, r, {
-    fecha_terminado: fmtFecha(new Date()),
-    estrellas: '0',
-    favorito: '',
-    me_gusto: '',
-    personajes_favoritos_json: '[]',
-    frases_destacadas_json: '[]',
-  });
+  // Si no encontró, igual lo añadimos con los datos que escribió Nico
+  const payload = resultado ? Object.assign({}, resultado, {
+    titulo: titulo || resultado.titulo,
+    autor: autor || resultado.autor,
+  }) : {
+    titulo: titulo,
+    autor: autor,
+    portada_url: '',
+    anio: '',
+    paginas: '',
+    editorial: '',
+    genero: '',
+    isbn: '',
+    sinopsis: '',
+  };
+
+  payload.fecha_terminado = fmtFecha(new Date());
+  payload.estrellas = '0';
+  payload.favorito = '';
+  payload.me_gusto = '';
+  payload.comentario = '';
+  payload.personajes_favoritos_json = '[]';
+  payload.frases_destacadas_json = '[]';
+
   try {
     const res = await api('saveLibro', { payload: payload });
     cerrarModal();
-    state.libros = []; // forzar reload
     state.libros = await api('getBiblioteca') || [];
-    toast('Libro añadido ✨', 'success');
+    toast(resultado ? 'Libro añadido con datos de Google Books ✨' : 'Libro añadido (sin datos extra)', 'success');
     abrirFichaLibro(res.id);
   } catch (err) {
-    toast('No se pudo añadir 😢');
+    $('#modalSearchResults').innerHTML = '<div style="text-align:center; padding: 14px; color: var(--coral); font-family: var(--font-hand);">No se pudo añadir: ' + err.message + '</div>';
   }
 }
 
@@ -2045,6 +2066,8 @@ function abrirFichaLibro(id) {
               <button class="ficha-megusto-btn ${libro.me_gusto === 'si' ? 'active' : ''}" data-val="si"><span class="ficha-megusto-emoji">😊</span>Me gustó</button>
               <button class="ficha-megusto-btn ${libro.me_gusto === 'no' ? 'active' : ''}" data-val="no"><span class="ficha-megusto-emoji">😐</span>Meh</button>
             </div>
+            <div class="ficha-card-title" style="margin-top: 12px;">💭 Comentario</div>
+            <textarea id="fichaComentario" class="input-base" placeholder="¿Qué te pareció? ¿Cómo te hizo sentir?" style="min-height: 70px; font-family: var(--font-hand); font-size: 15px;">${libro.comentario || ''}</textarea>
           </div>
 
           <div class="ficha-card">
@@ -2111,6 +2134,14 @@ function conectarFicha() {
     state.libroActual.favorito = $('#fichaFavorito').checked ? 'sí' : '';
     guardarLibroDebounced();
   });
+
+  // Comentario
+  if ($('#fichaComentario')) {
+    $('#fichaComentario').addEventListener('input', function(){
+      state.libroActual.comentario = $('#fichaComentario').value;
+      guardarLibroDebounced();
+    });
+  }
 
   // Personajes y frases — añadir y quitar
   $('#addPersonaje').addEventListener('click', function(){
@@ -2259,7 +2290,13 @@ document.addEventListener('click', function(e){
 // Modal
 $('#modalClose').addEventListener('click', cerrarModal);
 $('#modalBg').addEventListener('click', function(e){ if (e.target === $('#modalBg')) cerrarModal(); });
-$('#modalSearchInput').addEventListener('input', onSearchInput);
+$('#modalBuscar').addEventListener('click', buscarYAnadir);
+// Enter en los inputs también dispara la búsqueda
+['#modalTitulo', '#modalAutor', '#modalExtras'].forEach(function(sel){
+  document.addEventListener('keypress', function(e){
+    if (e.target.matches(sel) && e.key === 'Enter') buscarYAnadir();
+  });
+});
 
 // Service Worker
 if ('serviceWorker' in navigator) {
