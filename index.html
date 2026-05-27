@@ -1064,7 +1064,8 @@ textarea.input-base {
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .toast.success { background: #2D5232; }
 
-.version-tag { position: fixed; bottom: 6px; right: 8px; font-size: 10px; color: var(--text-mute); font-family: var(--font-hand); pointer-events: none; opacity: 0.5; }
+.version-tag { position: fixed; bottom: 6px; right: 8px; font-size: 10px; color: var(--text-mute); font-family: var(--font-hand); opacity: 0.7; display: flex; align-items: center; gap: 2px; z-index: 10; }
+.version-tag button { pointer-events: auto; }
 
 .img-fallback {
   width: 100%; height: 100%;
@@ -1213,7 +1214,10 @@ textarea.input-base {
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-tag">v0.7.1</div>
+<div class="version-tag">
+  <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
+  v0.8.1
+</div>
 
 <script>
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwnuMgU-Ooa0qsq_MgDAo4FOBGHH5WiVhgSEFtQ1LPbXUfouaHw9jJbYLEE39btsJQD/exec';
@@ -1696,16 +1700,46 @@ const ACTIVIDAD_EMOJI = {
   'otro': '✨',
 };
 
+// Normaliza cualquier formato de fecha a YYYY-MM-DD
+function normalizarFecha(raw) {
+  if (!raw) return '';
+  // Si es Date object real (Apps Script puede devolver así si la celda es tipo Date)
+  if (raw instanceof Date) {
+    return fmtFecha(raw);
+  }
+  const s = String(raw).trim();
+  // Formato ISO ya correcto YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
+  // Formato DD/MM/YYYY (español)
+  const m1 = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (m1) {
+    const dd = m1[1].padStart(2, '0');
+    const mm = m1[2].padStart(2, '0');
+    return m1[3] + '-' + mm + '-' + dd;
+  }
+  // Formato DD-MM-YYYY
+  const m2 = s.match(/^(\d{1,2})-(\d{1,2})-(\d{4})/);
+  if (m2) {
+    const dd = m2[1].padStart(2, '0');
+    const mm = m2[2].padStart(2, '0');
+    return m2[3] + '-' + mm + '-' + dd;
+  }
+  // Intentar Date.parse como último recurso
+  const d = new Date(s);
+  if (!isNaN(d.getTime())) return fmtFecha(d);
+  return s;
+}
+
 function getFechaEspecial(fkey) {
   const list = (state.bootstrap && state.bootstrap.fechas_especiales) || [];
   return list.find(function(f){
-    // f.fecha puede venir como string YYYY-MM-DD o "MM-DD" recurrente
     if (!f.fecha) return false;
-    const fs = String(f.fecha).trim();
-    if (fs === fkey) return true;
-    // recurrente anual (MM-DD)
-    if (fs.length === 5 && fs[2] === '-') {
-      return fkey.endsWith(fs);
+    const norm = normalizarFecha(f.fecha);
+    // Match exacto YYYY-MM-DD
+    if (norm === fkey) return true;
+    // Recurrente anual: MM-DD (5 chars con guión en posición 2)
+    if (typeof f.fecha === 'string' && f.fecha.length === 5 && f.fecha[2] === '-') {
+      return fkey.endsWith(f.fecha);
     }
     return false;
   });
@@ -1740,8 +1774,8 @@ function pintarCalendario() {
 
     // Iconito de evento especial
     let iconoEvento = '';
-    if (fechaEsp && fechaEsp.tipo && fechaEsp.tipo !== 'actividad') {
-      const emo = fechaEsp.emoji || TIPO_EMOJI[String(fechaEsp.tipo).toLowerCase()] || '⭐';
+    if (fechaEsp && (fechaEsp.tipo || fechaEsp.emoji) && fechaEsp.tipo !== 'actividad') {
+      const emo = fechaEsp.emoji || TIPO_EMOJI[String(fechaEsp.tipo || '').toLowerCase()] || '⭐';
       iconoEvento = '<span class="cal-icon-evento">' + emo + '</span>';
     }
 
@@ -1861,8 +1895,16 @@ function pintarRincon() {
 }
 
 // ============================================================
-// BIBLIOTECA
+// BIBLIOTECA v0.8 — filtros, colecciones, edición manual, regenerar
 // ============================================================
+
+const ORDEN_OPCIONES = [
+  {value: 'reciente',  label: '📅 Más recientes primero'},
+  {value: 'antiguo',   label: '📅 Más antiguos primero'},
+  {value: 'valoracion', label: '⭐ Valoración (mejor → peor)'},
+  {value: 'megusto',   label: '😊 Me gustó primero'},
+  {value: 'alfabetico', label: '🔤 Alfabético'},
+];
 
 async function pintarSeccionBiblioteca() {
   $('#mainHeader').style.display = 'none';
@@ -1872,52 +1914,90 @@ async function pintarSeccionBiblioteca() {
         <div class="biblio-titulo">Mi biblioteca 💜</div>
         <div class="biblio-subtitulo">Mis historias, ideas y recuerdos favoritos.</div>
       </div>
+      <button id="btnAñadirLibro2" style="background: var(--amarillo); color: var(--text); font-family: var(--font-display); font-weight: 700; font-size: 13px; padding: 10px 16px; border-radius: var(--r-pill); box-shadow: var(--shadow-s);">+ Añadir libro</button>
     </div>
 
-    <div class="biblio-row-section">
-      <div class="biblio-section-title">📖 Últimos libros leídos</div>
-      <div class="libros-fila" id="librosUltimos"></div>
+    <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center;">
+      <select id="filtroBiblio" class="input-base" style="max-width: 220px;">
+        <option value="todos">📚 Todos los libros</option>
+        <option value="favoritos">💖 Favoritos</option>
+      </select>
+      <select id="ordenBiblio" class="input-base" style="max-width: 220px;">
+        ${ORDEN_OPCIONES.map(o => '<option value="' + o.value + '">' + o.label + '</option>').join('')}
+      </select>
+      <button id="btnNuevaColeccion" style="background: var(--card); border: 1px dashed var(--border); color: var(--text-soft); font-family: var(--font-hand); font-size: 13px; padding: 8px 14px; border-radius: var(--r-pill); margin-left: auto;">+ Crear colección</button>
     </div>
 
-    <div class="biblio-row-section">
-      <div class="biblio-section-title">💖 Mis favoritos</div>
-      <div class="libros-fila" id="librosFavoritos"></div>
-    </div>
+    <div id="librosGrid" class="libros-fila"></div>
   `;
 
+  // Cargar libros si no están en memoria
   if (!state.libros.length) {
     try { state.libros = await api('getBiblioteca') || []; } catch(_) { state.libros = []; }
   }
 
-  pintarLibrosUltimos();
-  pintarLibrosFavoritos();
+  poblarFiltroColecciones();
+  pintarLibrosFiltrados();
+
+  $('#btnAñadirLibro2').addEventListener('click', abrirModalAñadir);
+  $('#btnNuevaColeccion').addEventListener('click', crearColeccionPrompt);
+  $('#filtroBiblio').addEventListener('change', pintarLibrosFiltrados);
+  $('#ordenBiblio').addEventListener('change', pintarLibrosFiltrados);
 }
 
-function pintarLibrosUltimos() {
-  const cont = $('#librosUltimos');
-  if (!cont) return;
-  // Ordenar por fecha_terminado descendente, luego mostrar 4 + botón añadir
-  const ordenados = state.libros.slice().sort(function(a,b){
-    return (b.fecha_terminado || '').localeCompare(a.fecha_terminado || '');
-  });
-  const ultimos = ordenados.slice(0, 4);
-  const cards = ultimos.map(libroCardHtml).join('');
-  cont.innerHTML = cards + '<div class="libro-card libro-añadir" id="btnAñadirLibro"><div class="libro-añadir-plus">+</div><div>Añadir nuevo libro</div></div>';
-  $('#btnAñadirLibro').addEventListener('click', abrirModalAñadir);
-  cont.querySelectorAll('.libro-card:not(.libro-añadir)').forEach(function(el){
-    el.addEventListener('click', function(){ abrirFichaLibro(el.dataset.id); });
+function poblarFiltroColecciones() {
+  const sel = $('#filtroBiblio');
+  if (!sel) return;
+  const cols = (state.bootstrap && state.bootstrap.biblioteca_colecciones) || [];
+  cols.forEach(function(c){
+    if (!c.id) return;
+    const opt = document.createElement('option');
+    opt.value = 'col:' + c.id;
+    opt.textContent = (c.emoji ? c.emoji + ' ' : '📚 ') + c.nombre;
+    sel.appendChild(opt);
   });
 }
 
-function pintarLibrosFavoritos() {
-  const cont = $('#librosFavoritos');
+function pintarLibrosFiltrados() {
+  const cont = $('#librosGrid');
   if (!cont) return;
-  const favs = state.libros.filter(function(l){ return _truthy(l.favorito); })
-    .sort(function(a,b){ return (parseInt(a.orden_favorito)||999) - (parseInt(b.orden_favorito)||999); })
-    .slice(0, 4);
-  const cards = favs.map(libroCardHtml).join('');
-  cont.innerHTML = cards + '<div class="libro-card libro-añadir" style="min-height: 200px; display:flex; align-items:center; justify-content:center; opacity: 0.7;">Elige tus 4 favoritos<br>desde la ficha</div>';
-  cont.querySelectorAll('.libro-card:not(.libro-añadir)').forEach(function(el){
+  const filtro = $('#filtroBiblio').value;
+  const orden = $('#ordenBiblio').value;
+
+  let libros = state.libros.slice();
+
+  // Filtros
+  if (filtro === 'favoritos') {
+    libros = libros.filter(function(l){ return _truthy(l.favorito); });
+  } else if (filtro.indexOf('col:') === 0) {
+    const colId = filtro.slice(4);
+    libros = libros.filter(function(l){
+      const cs = String(l.colecciones || '').split(',').map(function(x){ return x.trim(); });
+      return cs.includes(colId);
+    });
+  }
+
+  // Orden
+  libros.sort(function(a, b){
+    if (orden === 'reciente')   return (b.fecha_terminado || '').localeCompare(a.fecha_terminado || '');
+    if (orden === 'antiguo')    return (a.fecha_terminado || '').localeCompare(b.fecha_terminado || '');
+    if (orden === 'valoracion') return (parseInt(b.estrellas) || 0) - (parseInt(a.estrellas) || 0);
+    if (orden === 'megusto')    {
+      const aS = a.me_gusto === 'si' ? 1 : 0;
+      const bS = b.me_gusto === 'si' ? 1 : 0;
+      return bS - aS;
+    }
+    if (orden === 'alfabetico') return String(a.titulo||'').localeCompare(String(b.titulo||''));
+    return 0;
+  });
+
+  if (!libros.length) {
+    cont.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-mute); font-family: var(--font-hand); font-size: 14px;">No hay libros en esta vista. ¡Añade uno!</div>';
+    return;
+  }
+
+  cont.innerHTML = libros.map(libroCardHtml).join('');
+  cont.querySelectorAll('.libro-card').forEach(function(el){
     el.addEventListener('click', function(){ abrirFichaLibro(el.dataset.id); });
   });
 }
@@ -1928,12 +2008,29 @@ function libroCardHtml(l) {
   const portada = l.portada_url
     ? '<img src="' + l.portada_url + '" alt="' + (l.titulo || '') + '" data-initial="' + ((l.titulo||'?')[0]) + '" data-bg="#FFD3B6" />'
     : '<div class="img-fallback">📖</div>';
+  const favBadge = _truthy(l.favorito) ? '<div style="position:absolute; top:6px; right:6px; font-size:14px;">💖</div>' : '';
   return '<div class="libro-card" data-id="' + l.id + '">'
+    + favBadge
     + '<div class="libro-portada">' + portada + '</div>'
     + '<div class="libro-titulo">' + (l.titulo || '') + '</div>'
     + '<div class="libro-autor">' + (l.autor || '') + '</div>'
     + starsHtml
     + '</div>';
+}
+
+async function crearColeccionPrompt() {
+  const nombre = prompt('Nombre de la nueva colección:');
+  if (!nombre || !nombre.trim()) return;
+  const emoji = prompt('Emoji (opcional, dejá vacío para 📚):') || '📚';
+  try {
+    await api('saveColeccion', { payload: { nombre: nombre.trim(), emoji: emoji.trim(), orden: '999' } });
+    // Recargar bootstrap para que aparezca
+    state.bootstrap = await api('getBootstrap');
+    toast('Colección creada ✨', 'success');
+    pintarSeccionBiblioteca();
+  } catch (err) {
+    toast('No se pudo crear: ' + err.message);
+  }
 }
 
 function abrirModalAñadir() {
@@ -1959,11 +2056,10 @@ async function buscarYAnadir() {
 
   $('#modalSearchResults').innerHTML = '<div style="text-align:center; padding: 14px; color: var(--text-mute); font-family: var(--font-hand);">Guardando…</div>';
 
-  // 1. Guardar el libro con lo que escribió Gina, marcado como pendiente
   const payload = {
     titulo: titulo,
     autor: autor,
-    editorial: extras, // los extras los guardamos como editorial (sirve para enriquecer)
+    editorial: extras,
     portada_url: '',
     anio: '',
     paginas: '',
@@ -1977,6 +2073,7 @@ async function buscarYAnadir() {
     comentario: '',
     personajes_favoritos_json: '[]',
     frases_destacadas_json: '[]',
+    colecciones: '',
     estado_enriquecimiento: 'pendiente',
   };
 
@@ -1989,28 +2086,22 @@ async function buscarYAnadir() {
     return;
   }
 
-  // 2. Cerrar modal, refrescar lista y abrir ficha (que mostrará "Buscando info...")
   cerrarModal();
   state.libros = await api('getBiblioteca') || [];
   toast('Libro guardado, buscando info... ✨', 'success');
   abrirFichaLibro(nuevoId);
-
-  // 3. Disparar enriquecimiento en background
   enriquecerEnBackground(nuevoId);
 }
 
 async function enriquecerEnBackground(id) {
   try {
     await api('enriquecerLibro', { id: id });
-    // Refrescar libros y la ficha si sigue abierta con este libro
     state.libros = await api('getBiblioteca') || [];
     if (state.libroActual && state.libroActual.id === id) {
       abrirFichaLibro(id);
     }
-    // Actualizar listas de biblioteca si está abierta
     if (state.seccionActiva === 'biblioteca') {
-      pintarLibrosUltimos();
-      pintarLibrosFavoritos();
+      pintarLibrosFiltrados();
     }
   } catch (err) {
     console.error('Error enriqueciendo:', err);
@@ -2025,7 +2116,6 @@ function abrirFichaLibro(id) {
   const estado = String(libro.estado_enriquecimiento || '').trim();
   const esPendiente = estado === 'pendiente';
   const esError = estado.indexOf('error') === 0;
-  const errorMsg = esError ? estado.replace(/^error:\s*/, '') : '';
 
   let portada;
   if (libro.portada_url) {
@@ -2035,14 +2125,8 @@ function abrirFichaLibro(id) {
       + '<div class="loader-dots"><span></span><span></span><span></span></div>'
       + '<div style="font-family: var(--font-hand); font-size: 13px; color: var(--text-soft);">Buscando info...</div>'
       + '</div>';
-  } else if (esError) {
-    portada = '<div class="img-fallback" style="flex-direction:column; gap: 8px; padding: 12px; text-align: center; font-size: 12px;">'
-      + '<div style="font-size: 28px;">📖</div>'
-      + '<div style="font-family: var(--font-hand); color: var(--coral); font-size: 11px;">No se encontró info</div>'
-      + '<button id="btnReintentar" style="background: var(--amarillo); color: var(--text); font-family: var(--font-display); font-weight: 700; padding: 6px 12px; border-radius: var(--r-pill); font-size: 12px; box-shadow: var(--shadow-s);">🔄 Reintentar</button>'
-      + '</div>';
   } else {
-    portada = '<div class="img-fallback">📖</div>';
+    portada = '<div class="img-fallback" style="font-size: 28px;">📖</div>';
   }
 
   let personajes = [];
@@ -2055,20 +2139,41 @@ function abrirFichaLibro(id) {
     return '<span class="ficha-star ' + (n <= stars ? 'active' : '') + '" data-n="' + n + '">★</span>';
   }).join('');
 
+  // Colecciones del libro
+  const coleccionesLibro = String(libro.colecciones || '').split(',').map(function(x){ return x.trim(); }).filter(Boolean);
+  const allColecciones = (state.bootstrap && state.bootstrap.biblioteca_colecciones) || [];
+  const colChips = coleccionesLibro.map(function(cid){
+    const c = allColecciones.find(function(x){ return x.id === cid; });
+    if (!c) return '';
+    return '<div class="ficha-chip">' + (c.emoji || '📚') + ' ' + c.nombre + '<span class="ficha-chip-remove" data-cid="' + cid + '">×</span></div>';
+  }).join('');
+
+  // Avisos según estado
+  let avisoEstado = '';
+  if (esPendiente) {
+    avisoEstado = '<div style="background: #FFF5E0; padding: 8px 12px; border-radius: 8px; font-family: var(--font-hand); font-size: 13px; color: var(--text-soft); margin-bottom: 12px;">⏳ Buscando info en Google Books...</div>';
+  } else if (esError) {
+    avisoEstado = '<div style="background: #FBEAEA; padding: 8px 12px; border-radius: 8px; font-family: var(--font-hand); font-size: 13px; color: var(--coral); margin-bottom: 12px;">⚠️ No se encontró info automáticamente. Podés editar los datos y regenerar.</div>';
+  }
+
   $('#fichaLibro').innerHTML = `
     <button class="ficha-back" id="fichaBack">← Volver</button>
     <div class="ficha-grid">
       <div>
         <div class="ficha-portada">${portada}</div>
-        <div style="margin-top: 12px;">
-          <label style="display: flex; align-items: center; gap: 6px; font-family: var(--font-hand); font-size: 14px; color: var(--text-soft); cursor: pointer;">
+        <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+          <button id="btnEditarLibro" style="background: var(--card); border: 1px solid var(--border); padding: 8px; border-radius: var(--r-pill); font-family: var(--font-display); font-weight: 600; font-size: 12px;">✏️ Editar info</button>
+          <button id="btnRegenerar" style="background: var(--card); border: 1px solid var(--border); padding: 8px; border-radius: var(--r-pill); font-family: var(--font-display); font-weight: 600; font-size: 12px;">🔄 Regenerar info</button>
+          <button id="btnCambiarPortada" style="background: var(--card); border: 1px solid var(--border); padding: 8px; border-radius: var(--r-pill); font-family: var(--font-display); font-weight: 600; font-size: 12px;">🖼️ Cambiar portada</button>
+          <label style="display: flex; align-items: center; gap: 6px; font-family: var(--font-hand); font-size: 14px; color: var(--text-soft); cursor: pointer; padding: 6px 0;">
             <input type="checkbox" id="fichaFavorito" ${_truthy(libro.favorito) ? 'checked' : ''}> 💖 Marcar como favorito
           </label>
+          <button id="fichaBorrar" style="margin-top: 4px; color: var(--coral); font-size: 12px; font-family: var(--font-ui);">Eliminar libro</button>
         </div>
-        <button id="fichaBorrar" style="margin-top: 16px; color: var(--coral); font-size: 12px; font-family: var(--font-ui);">Eliminar libro</button>
       </div>
 
       <div>
+        ${avisoEstado}
         <div class="ficha-titulo">${libro.titulo || ''}</div>
         <div class="ficha-autor">${libro.autor || ''}</div>
 
@@ -2077,9 +2182,16 @@ function abrirFichaLibro(id) {
           ${libro.paginas ? '<div class="ficha-datos-item"><span>📖</span> ' + libro.paginas + ' páginas</div>' : ''}
           ${libro.editorial ? '<div class="ficha-datos-item"><span>🏢</span> ' + libro.editorial + '</div>' : ''}
           ${libro.genero ? '<div class="ficha-datos-item"><span>📚</span> ' + libro.genero + '</div>' : ''}
+          <div class="ficha-datos-item"><span>✅</span> Terminado: <input type="date" id="fichaFechaTerminado" value="${libro.fecha_terminado || ''}" style="background: transparent; border: 1px dashed var(--border); border-radius: 6px; padding: 2px 6px; font-family: var(--font-ui); font-size: 13px; color: var(--text-soft);" /></div>
         </div>
 
         ${libro.sinopsis ? '<div style="font-family: var(--font-hand); font-size: 14px; color: var(--text-soft); margin-bottom: 16px; line-height: 1.4;">' + libro.sinopsis.slice(0, 300) + (libro.sinopsis.length > 300 ? '…' : '') + '</div>' : ''}
+
+        <div class="ficha-card" style="margin-bottom: 12px;">
+          <div class="ficha-card-title">📚 Colecciones</div>
+          <div class="ficha-chip-list" id="fichaColecciones">${colChips}</div>
+          <button class="ficha-add-btn" id="addAColeccion">+ Añadir a colección</button>
+        </div>
 
         <div class="ficha-cards">
           <div class="ficha-card">
@@ -2122,22 +2234,6 @@ function conectarFicha() {
   $('#fichaBack').addEventListener('click', function(){
     $('#fichaLibro').classList.remove('show');
   });
-
-  // Botón reintentar enriquecimiento
-  const btnReintentar = document.getElementById('btnReintentar');
-  if (btnReintentar) {
-    btnReintentar.addEventListener('click', async function(){
-      btnReintentar.disabled = true;
-      btnReintentar.textContent = 'Buscando...';
-      // Marcar como pendiente y mostrar spinner
-      state.libroActual.estado_enriquecimiento = 'pendiente';
-      try {
-        await api('saveLibro', { payload: state.libroActual });
-      } catch(_) {}
-      abrirFichaLibro(state.libroActual.id);
-      enriquecerEnBackground(state.libroActual.id);
-    });
-  }
   $('#fichaBorrar').addEventListener('click', async function(){
     if (!confirm('¿Eliminar este libro?')) return;
     try {
@@ -2145,8 +2241,36 @@ function conectarFicha() {
       state.libros = state.libros.filter(function(l){ return l.id !== state.libroActual.id; });
       $('#fichaLibro').classList.remove('show');
       toast('Libro eliminado');
-      pintarSeccionBiblioteca();
+      pintarLibrosFiltrados();
     } catch(err) { toast('Error al borrar'); }
+  });
+
+  // Editar info — abre modal de edición con todos los campos
+  $('#btnEditarLibro').addEventListener('click', function(){
+    abrirModalEditar();
+  });
+
+  // Regenerar info
+  $('#btnRegenerar').addEventListener('click', async function(){
+    if (!confirm('Volver a buscar info en Google Books? Se sobrescribirá portada, sinopsis y datos enriquecidos.')) return;
+    state.libroActual.estado_enriquecimiento = 'pendiente';
+    state.libroActual.portada_url = ''; // limpiar para que se vea el spinner
+    try { await api('saveLibro', { payload: state.libroActual }); } catch(_) {}
+    abrirFichaLibro(state.libroActual.id);
+    enriquecerEnBackground(state.libroActual.id);
+  });
+
+  // Cambiar portada
+  $('#btnCambiarPortada').addEventListener('click', async function(){
+    const url = prompt('Pegá la URL de la nueva portada (link a una imagen):', state.libroActual.portada_url || '');
+    if (url === null) return; // canceló
+    state.libroActual.portada_url = url.trim();
+    try {
+      await api('saveLibro', { payload: state.libroActual });
+      state.libros = await api('getBiblioteca') || [];
+      abrirFichaLibro(state.libroActual.id);
+      toast('Portada actualizada ✨', 'success');
+    } catch(err) { toast('No se pudo guardar'); }
   });
 
   // Estrellas
@@ -2183,7 +2307,71 @@ function conectarFicha() {
     });
   }
 
-  // Personajes y frases — añadir y quitar
+  // Fecha terminado
+  if ($('#fichaFechaTerminado')) {
+    $('#fichaFechaTerminado').addEventListener('change', function(){
+      state.libroActual.fecha_terminado = $('#fichaFechaTerminado').value;
+      guardarLibroDebounced();
+    });
+  }
+
+  // Añadir a colección
+  $('#addAColeccion').addEventListener('click', async function(){
+    const cols = (state.bootstrap && state.bootstrap.biblioteca_colecciones) || [];
+    const actuales = String(state.libroActual.colecciones || '').split(',').map(function(x){ return x.trim(); }).filter(Boolean);
+    const disponibles = cols.filter(function(c){ return c.id && !actuales.includes(c.id); });
+
+    if (!disponibles.length && !cols.length) {
+      if (confirm('No hay colecciones todavía. ¿Crear una nueva?')) {
+        await crearColeccionPrompt();
+        // Después de crear, reabrir ficha
+        abrirFichaLibro(state.libroActual.id);
+      }
+      return;
+    }
+
+    if (!disponibles.length) {
+      toast('Este libro ya está en todas las colecciones');
+      return;
+    }
+
+    const opciones = disponibles.map(function(c, i){ return (i+1) + ') ' + (c.emoji || '📚') + ' ' + c.nombre; }).join('\n');
+    const eleccion = prompt('Elegí una colección (escribí el número):\n\n' + opciones + '\n\n0) Crear nueva colección');
+    if (!eleccion) return;
+    const n = parseInt(eleccion);
+    if (n === 0) {
+      await crearColeccionPrompt();
+      abrirFichaLibro(state.libroActual.id);
+      return;
+    }
+    const elegida = disponibles[n - 1];
+    if (!elegida) return;
+    actuales.push(elegida.id);
+    state.libroActual.colecciones = actuales.join(',');
+    try {
+      await api('saveLibro', { payload: state.libroActual });
+      state.libros = await api('getBiblioteca') || [];
+      abrirFichaLibro(state.libroActual.id);
+      toast('Añadido a "' + elegida.nombre + '" ✨', 'success');
+    } catch(err) { toast('No se pudo guardar'); }
+  });
+
+  // Quitar de colección (× en chip de colección)
+  $$('#fichaColecciones .ficha-chip-remove').forEach(function(x){
+    x.addEventListener('click', async function(){
+      const cid = x.dataset.cid;
+      let actuales = String(state.libroActual.colecciones || '').split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+      actuales = actuales.filter(function(s){ return s !== cid; });
+      state.libroActual.colecciones = actuales.join(',');
+      try {
+        await api('saveLibro', { payload: state.libroActual });
+        state.libros = await api('getBiblioteca') || [];
+        abrirFichaLibro(state.libroActual.id);
+      } catch(err) { toast('No se pudo guardar'); }
+    });
+  });
+
+  // Personajes
   $('#addPersonaje').addEventListener('click', function(){
     const p = prompt('¿Qué personaje?');
     if (!p) return;
@@ -2202,7 +2390,6 @@ function conectarFicha() {
     abrirFichaLibro(state.libroActual.id);
     guardarLibroDebounced();
   });
-
   $$('#fichaPersonajes .ficha-chip-remove').forEach(function(x){
     x.addEventListener('click', function(){
       let lista = []; try { lista = JSON.parse(state.libroActual.personajes_favoritos_json || '[]'); } catch(_){}
@@ -2223,6 +2410,83 @@ function conectarFicha() {
   });
 }
 
+// Modal de edición manual del libro
+function abrirModalEditar() {
+  const l = state.libroActual;
+  // Reusamos #modalBg, cambiamos contenido
+  const modal = $('#modalBg .modal');
+  if (!modal) return;
+  modal.innerHTML = `
+    <span class="modal-close" id="modalCloseEditar">×</span>
+    <div class="modal-title">✏️ Editar libro</div>
+    <label class="field-label">Título</label>
+    <input type="text" class="modal-search-input" id="editTitulo" value="${(l.titulo||'').replace(/"/g, '&quot;')}" />
+    <label class="field-label">Autor</label>
+    <input type="text" class="modal-search-input" id="editAutor" value="${(l.autor||'').replace(/"/g, '&quot;')}" />
+    <label class="field-label">Editorial</label>
+    <input type="text" class="modal-search-input" id="editEditorial" value="${(l.editorial||'').replace(/"/g, '&quot;')}" />
+    <label class="field-label">Año</label>
+    <input type="text" class="modal-search-input" id="editAnio" value="${l.anio||''}" />
+    <label class="field-label">Páginas</label>
+    <input type="text" class="modal-search-input" id="editPaginas" value="${l.paginas||''}" />
+    <label class="field-label">Género</label>
+    <input type="text" class="modal-search-input" id="editGenero" value="${(l.genero||'').replace(/"/g, '&quot;')}" />
+    <label class="field-label">URL portada</label>
+    <input type="text" class="modal-search-input" id="editPortada" value="${(l.portada_url||'').replace(/"/g, '&quot;')}" />
+    <label class="field-label">Sinopsis</label>
+    <textarea class="modal-search-input" id="editSinopsis" style="min-height: 80px;">${l.sinopsis||''}</textarea>
+    <div style="display: flex; gap: 8px; margin-top: 12px;">
+      <button id="btnGuardarEdicion" style="flex:1; background: var(--amarillo); color: var(--text); font-family: var(--font-display); font-weight: 700; padding: 12px; border-radius: var(--r-input); box-shadow: var(--shadow-s);">💾 Guardar</button>
+    </div>
+  `;
+  $('#modalBg').classList.add('show');
+
+  $('#modalCloseEditar').addEventListener('click', cerrarModalEditar);
+  $('#btnGuardarEdicion').addEventListener('click', async function(){
+    state.libroActual.titulo    = $('#editTitulo').value.trim();
+    state.libroActual.autor     = $('#editAutor').value.trim();
+    state.libroActual.editorial = $('#editEditorial').value.trim();
+    state.libroActual.anio      = $('#editAnio').value.trim();
+    state.libroActual.paginas   = $('#editPaginas').value.trim();
+    state.libroActual.genero    = $('#editGenero').value.trim();
+    state.libroActual.portada_url = $('#editPortada').value.trim();
+    state.libroActual.sinopsis  = $('#editSinopsis').value.trim();
+    try {
+      await api('saveLibro', { payload: state.libroActual });
+      state.libros = await api('getBiblioteca') || [];
+      cerrarModalEditar();
+      abrirFichaLibro(state.libroActual.id);
+      toast('Cambios guardados ✨', 'success');
+    } catch(err) { toast('No se pudo guardar'); }
+  });
+}
+
+function cerrarModalEditar() {
+  $('#modalBg').classList.remove('show');
+  // Restaurar contenido original del modal (de añadir libro)
+  const modal = $('#modalBg .modal');
+  if (modal) {
+    modal.innerHTML = `
+      <span class="modal-close" id="modalClose">×</span>
+      <div class="modal-title">📚 Añadir libro</div>
+      <div style="font-family: var(--font-hand); font-size: 13px; color: var(--text-mute); margin-bottom: 12px;">Escribí los datos del libro y le damos a buscar. Si lo encuentra, se enriquece con portada y datos.</div>
+      <label class="field-label">Título</label>
+      <input type="text" class="modal-search-input" id="modalTitulo" placeholder="ej: El principito" />
+      <label class="field-label">Autor (opcional)</label>
+      <input type="text" class="modal-search-input" id="modalAutor" placeholder="ej: Antoine de Saint-Exupéry" />
+      <label class="field-label">Extras (opcional: ISBN, editorial...)</label>
+      <input type="text" class="modal-search-input" id="modalExtras" placeholder="ej: ISBN 9788424116545" />
+      <div style="display: flex; gap: 8px; margin-top: 8px;">
+        <button id="modalBuscar" style="flex:1; background: var(--amarillo); color: var(--text); font-family: var(--font-display); font-weight: 700; font-size: 14px; padding: 12px; border-radius: var(--r-input); box-shadow: var(--shadow-s);">🔍 Añadir libro</button>
+      </div>
+      <div class="modal-search-results" id="modalSearchResults" style="margin-top: 14px;"></div>
+    `;
+    // Reconectar listeners del modal de añadir
+    $('#modalClose').addEventListener('click', cerrarModal);
+    $('#modalBuscar').addEventListener('click', buscarYAnadir);
+  }
+}
+
 let libroSaveTimer = null;
 function guardarLibroDebounced() {
   clearTimeout(libroSaveTimer);
@@ -2232,7 +2496,6 @@ async function guardarLibro() {
   if (!state.libroActual) return;
   try {
     await api('saveLibro', { payload: state.libroActual });
-    // Actualizar la lista local
     const idx = state.libros.findIndex(function(l){ return l.id === state.libroActual.id; });
     if (idx >= 0) state.libros[idx] = state.libroActual;
     toast('Guardado ✨', 'success');
@@ -2240,6 +2503,7 @@ async function guardarLibro() {
     toast('No se pudo guardar 😢');
   }
 }
+
 
 // ============================================================
 // SECCIONES PLACEHOLDER
@@ -2345,6 +2609,30 @@ if ('serviceWorker' in navigator) {
   });
   navigator.serviceWorker.addEventListener('controllerchange', function(){
     toast('Nueva versión disponible — recargá', 'success');
+  });
+}
+
+// Botón refresh forzado: limpia SW + cachés + recarga sin caché
+const btnRefresh = document.getElementById('btnRefresh');
+if (btnRefresh) {
+  btnRefresh.addEventListener('click', async function(){
+    btnRefresh.textContent = '⏳';
+    try {
+      // Desregistrar todos los service workers
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        for (const r of regs) await r.unregister();
+      }
+      // Borrar todas las cachés
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(function(k){ return caches.delete(k); }));
+      }
+    } catch (e) { console.error(e); }
+    // Recargar con cache-buster
+    const url = new URL(window.location.href);
+    url.searchParams.set('_t', Date.now());
+    window.location.replace(url.toString());
   });
 }
 
