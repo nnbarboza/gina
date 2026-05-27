@@ -1175,7 +1175,8 @@ textarea.input-base {
 
     <div class="card">
       <div class="card-title">🎵 Canción del día</div>
-      <div class="spotify-empty">Próximamente. Pegá un link de Spotify en el Sheet.</div>
+      <div id="cancionContent"></div>
+      <button id="btnPlaylists" style="background: var(--card); border: 1px dashed var(--border); width: 100%; padding: 8px; margin-top: 10px; border-radius: var(--r-pill); font-family: var(--font-hand); font-size: 12px; color: var(--text-mute);">📻 Ver mis playlists →</button>
     </div>
   </aside>
 
@@ -1183,6 +1184,41 @@ textarea.input-base {
 
 <!-- Ficha de libro (pantalla completa) -->
 <div class="ficha-libro" id="fichaLibro"></div>
+
+<!-- Modal añadir canción -->
+<div class="modal-bg" id="modalCancionBg">
+  <div class="modal" style="position: relative;">
+    <span class="modal-close" id="modalCancionClose">×</span>
+    <div class="modal-title">🎵 Añadir canción</div>
+    <div style="font-family: var(--font-hand); font-size: 13px; color: var(--text-mute); margin-bottom: 12px;">Escribí el nombre y artista, o pegá un link de Spotify directo.</div>
+
+    <label class="field-label">Canción</label>
+    <input type="text" class="modal-search-input" id="cancionNombre" placeholder="ej: Headphones On" />
+    <label class="field-label">Artista (opcional)</label>
+    <input type="text" class="modal-search-input" id="cancionArtista" placeholder="ej: Addison Rae" />
+    <button id="btnBuscarCancion" style="width:100%; background: var(--amarillo); color: var(--text); font-family: var(--font-display); font-weight: 700; font-size: 14px; padding: 12px; border-radius: var(--r-input); box-shadow: var(--shadow-s); margin-top: 8px;">🔍 Buscar y añadir</button>
+
+    <div style="display: flex; align-items: center; gap: 8px; margin: 14px 0 8px;">
+      <div style="flex:1; height:1px; background: var(--border);"></div>
+      <span style="font-family: var(--font-hand); font-size: 11px; color: var(--text-mute);">o pegá link</span>
+      <div style="flex:1; height:1px; background: var(--border);"></div>
+    </div>
+    <input type="url" class="modal-search-input" id="cancionLink" placeholder="https://open.spotify.com/track/..." />
+    <button id="btnPegarLink" style="width:100%; background: var(--card); border: 1px solid var(--border); padding: 10px; border-radius: var(--r-input); font-family: var(--font-display); font-weight: 600; font-size: 13px; margin-top: 8px;">📋 Usar link directo</button>
+
+    <div class="modal-search-results" id="modalCancionResultados" style="margin-top: 14px;"></div>
+  </div>
+</div>
+
+<!-- Modal placeholder de playlists -->
+<div class="modal-bg" id="modalPlaylistsBg">
+  <div class="modal" style="position: relative; max-width: 400px; text-align: center;">
+    <span class="modal-close" id="modalPlaylistsClose">×</span>
+    <div style="font-size: 48px; margin: 8px 0;">📻</div>
+    <div class="modal-title">Mis playlists</div>
+    <p style="font-family: var(--font-hand); font-size: 15px; color: var(--text-soft); padding: 8px 0 16px;">Próximamente vas a poder ver y armar tus playlists de Spotify desde acá ✨</p>
+  </div>
+</div>
 
 <!-- Modal añadir libro -->
 <div class="modal-bg" id="modalBg">
@@ -1206,7 +1242,7 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.8.2
+  v0.8.3
 </div>
 
 <script>
@@ -2496,6 +2532,109 @@ async function guardarLibro() {
 
 
 // ============================================================
+// ============================================================
+// CANCIÓN DEL DÍA — Spotify
+// ============================================================
+
+function pintarCancionDelDia() {
+  const cont = $('#cancionContent');
+  if (!cont) return;
+  const id = state.diaActual && state.diaActual.cancion_spotify_id;
+  if (id) {
+    cont.innerHTML = '<iframe src="https://open.spotify.com/embed/track/' + id + '?utm_source=generator&theme=0" '
+      + 'width="100%" height="152" frameBorder="0" '
+      + 'allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" '
+      + 'loading="lazy" style="border-radius: 12px;"></iframe>'
+      + '<button id="btnCambiarCancion" style="width:100%; background: transparent; padding: 6px; margin-top: 4px; font-family: var(--font-hand); font-size: 12px; color: var(--text-mute);">cambiar canción</button>';
+    const btnCambiar = document.getElementById('btnCambiarCancion');
+    if (btnCambiar) btnCambiar.addEventListener('click', abrirModalCancion);
+  } else {
+    cont.innerHTML = '<button id="btnAñadirCancion" style="width:100%; background: var(--amarillo-soft); border: 1px dashed var(--amarillo); padding: 16px; border-radius: var(--r-input); font-family: var(--font-display); font-weight: 600; font-size: 13px; color: var(--text);">+ Añadir canción del día</button>';
+    const btn = document.getElementById('btnAñadirCancion');
+    if (btn) btn.addEventListener('click', abrirModalCancion);
+  }
+}
+
+function abrirModalCancion() {
+  $('#cancionNombre').value = '';
+  $('#cancionArtista').value = '';
+  $('#cancionLink').value = '';
+  $('#modalCancionResultados').innerHTML = '';
+  $('#modalCancionBg').classList.add('show');
+  setTimeout(function(){ $('#cancionNombre').focus(); }, 100);
+}
+function cerrarModalCancion() { $('#modalCancionBg').classList.remove('show'); }
+
+// Extrae el track ID de un link de Spotify (track/album/artist soporte solo track)
+function parseSpotifyLink(url) {
+  if (!url) return null;
+  const m = String(url).match(/spotify\.com\/(?:intl-[a-z]{2}\/)?track\/([a-zA-Z0-9]+)/);
+  return m ? m[1] : null;
+}
+
+async function buscarCancion() {
+  const nombre = $('#cancionNombre').value.trim();
+  const artista = $('#cancionArtista').value.trim();
+  if (!nombre) { toast('Escribí al menos el nombre de la canción'); return; }
+
+  const q = nombre + (artista ? ' ' + artista : '');
+  $('#modalCancionResultados').innerHTML = '<div style="text-align:center; padding: 14px; color: var(--text-mute); font-family: var(--font-hand);">Buscando…</div>';
+
+  try {
+    const results = await api('searchSpotify', { q: q }) || [];
+    if (!results.length) {
+      $('#modalCancionResultados').innerHTML = '<div style="text-align:center; padding: 14px; color: var(--text-mute); font-family: var(--font-hand);">No se encontró nada. Probá con otro nombre o pegá el link directo.</div>';
+      return;
+    }
+    $('#modalCancionResultados').innerHTML = '<div style="font-family: var(--font-display); font-weight:700; font-size:13px; margin-bottom:8px;">Elegí una:</div>'
+      + results.map(function(r){
+          const img = r.portada ? '<img src="' + r.portada + '" style="width: 44px; height: 44px; border-radius: 6px; object-fit: cover;" />' : '<div style="width:44px; height:44px; border-radius:6px; background: var(--peach); display:flex; align-items:center; justify-content:center;">🎵</div>';
+          return '<div class="cancion-result" data-id="' + r.track_id + '" style="display:flex; gap:10px; padding:8px; border-radius:10px; cursor:pointer; align-items:center; background: var(--bg);">'
+            + img
+            + '<div style="flex:1; min-width:0;">'
+              + '<div style="font-family: var(--font-display); font-weight:700; font-size:13px; line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + (r.nombre || '') + '</div>'
+              + '<div style="font-family: var(--font-hand); font-size:13px; color: var(--text-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + (r.artista || '') + '</div>'
+            + '</div>'
+          + '</div>';
+        }).join('');
+    // Pequeño spacer entre items
+    const items = $$('#modalCancionResultados .cancion-result');
+    items.forEach(function(el, i){
+      if (i > 0) el.style.marginTop = '6px';
+      el.addEventListener('click', function(){
+        guardarCancionId(el.dataset.id);
+      });
+    });
+  } catch (err) {
+    $('#modalCancionResultados').innerHTML = '<div style="text-align:center; padding: 14px; color: var(--coral); font-family: var(--font-hand);">Error: ' + err.message + '</div>';
+  }
+}
+
+async function usarLinkDirecto() {
+  const link = $('#cancionLink').value.trim();
+  if (!link) { toast('Pegá un link primero'); return; }
+  const id = parseSpotifyLink(link);
+  if (!id) { toast('El link no parece de una canción de Spotify'); return; }
+  await guardarCancionId(id);
+}
+
+async function guardarCancionId(trackId) {
+  if (!state.diaActual) state.diaActual = { fecha: state.fechaActual };
+  state.diaActual.cancion_spotify_id = trackId;
+  try {
+    const payload = recopilarDia();
+    payload.cancion_spotify_id = trackId;
+    await api('saveDia', { payload: payload });
+    cerrarModalCancion();
+    pintarCancionDelDia();
+    toast('Canción añadida ✨', 'success');
+  } catch (err) {
+    toast('No se pudo guardar 😢');
+  }
+}
+
+
+// ============================================================
 // SECCIONES PLACEHOLDER
 // ============================================================
 function pintarSeccionPlaceholder(titulo) {
@@ -2532,6 +2671,7 @@ async function cargarDia(fechaStr) {
 
   if (state.seccionActiva === 'hoy') pintarSeccionHoy();
   pintarCalendario();
+  pintarCancionDelDia();
 }
 
 async function bootstrap() {
@@ -2601,6 +2741,23 @@ if ('serviceWorker' in navigator) {
     toast('Nueva versión disponible — recargá', 'success');
   });
 }
+
+// Modal canción
+$('#modalCancionClose').addEventListener('click', cerrarModalCancion);
+$('#modalCancionBg').addEventListener('click', function(e){ if (e.target === $('#modalCancionBg')) cerrarModalCancion(); });
+$('#btnBuscarCancion').addEventListener('click', buscarCancion);
+$('#btnPegarLink').addEventListener('click', usarLinkDirecto);
+
+// Modal playlists (placeholder)
+$('#btnPlaylists').addEventListener('click', function(){
+  $('#modalPlaylistsBg').classList.add('show');
+});
+$('#modalPlaylistsClose').addEventListener('click', function(){
+  $('#modalPlaylistsBg').classList.remove('show');
+});
+$('#modalPlaylistsBg').addEventListener('click', function(e){
+  if (e.target === $('#modalPlaylistsBg')) $('#modalPlaylistsBg').classList.remove('show');
+});
 
 // Botón refresh forzado: limpia SW + cachés + recarga sin caché
 const btnRefresh = document.getElementById('btnRefresh');
