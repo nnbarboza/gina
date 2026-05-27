@@ -198,25 +198,21 @@ textarea { resize: none; }
 .header-greet h1 .sol { display: inline-block; vertical-align: -3px; margin-left: 4px; font-size: 22px; }
 .header-greet p { font-family: var(--font-ui); font-size: 13px; color: var(--text-soft); }
 
-/* Sticker washi tape — SOLO una cinta arriba (limpio) */
-.fecha-sticker {
-  position: relative;
-  background: #EBDFFB;
-  border-radius: 12px;
-  padding: 10px 16px;
+/* Fecha en formato orgánico, sin sticker */
+.fecha-organica {
   font-family: var(--font-hand);
-  font-size: 14px;
-  color: #553A7A;
+  font-size: 18px;
+  color: var(--text-soft);
   display: flex;
   align-items: center;
-  gap: 8px;
-  box-shadow: var(--shadow);
-  min-width: 175px;
+  padding-top: 4px;
 }
-.fecha-sticker svg { width: 16px; height: 16px; flex-shrink: 0; }
-.fecha-sticker .fecha-texto { display: flex; flex-direction: column; line-height: 1.15; }
-.fecha-sticker .fecha-larga { font-size: 13px; font-weight: 700; }
-.fecha-sticker .fecha-dia { font-size: 12px; opacity: 0.75; }
+.fecha-organica .fecha-larga {
+  text-transform: lowercase;
+}
+.fecha-organica .fecha-larga::first-letter {
+  text-transform: uppercase;
+}
 
 /* Tarjeta */
 .card {
@@ -663,6 +659,7 @@ textarea.input-base {
   cursor: pointer;
   position: relative;
   transition: background 0.15s;
+  padding: 2px 0;
 }
 .cal-day:hover { background: var(--bg); }
 .cal-day.empty { cursor: default; visibility: hidden; }
@@ -674,13 +671,11 @@ textarea.input-base {
   box-shadow: var(--shadow-s);
 }
 .cal-day.selected { box-shadow: inset 0 0 0 2px var(--coral); }
-.cal-num { line-height: 1; }
+.cal-num { line-height: 1; font-size: 11px; }
 .cal-icon-evento {
-  position: absolute;
-  top: 1px;
-  right: 2px;
-  font-size: 9px;
+  font-size: 13px;
   line-height: 1;
+  margin-bottom: 1px;
 }
 .cal-dot { width: 5px; height: 5px; border-radius: 50%; margin-top: 2px; background: transparent; }
 .cal-actividad-emoji { font-size: 11px; margin-top: 1px; }
@@ -1129,12 +1124,8 @@ textarea.input-base {
         <h1>¡Hola Gina! <span class="sol">☀️</span></h1>
         <p>¿Cómo está tu pequeño universo hoy?</p>
       </div>
-      <div class="fecha-sticker" id="fechaSticker">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#553A7A" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-        <div class="fecha-texto">
-          <span class="fecha-larga" id="fechaLarga">—</span>
-          <span class="fecha-dia" id="fechaDia">—</span>
-        </div>
+      <div class="fecha-organica" id="fechaSticker">
+        <span class="fecha-larga" id="fechaLarga">—</span>
       </div>
     </div>
     <div id="seccionContenido"></div>
@@ -1173,7 +1164,6 @@ textarea.input-base {
         <div class="cal-leyenda-item"><span class="emoji">🏖️</span> vacaciones</div>
         <div class="cal-leyenda-item"><span class="emoji">✈️</span> viaje</div>
         <div class="cal-leyenda-item"><span class="emoji">👯</span> amigas</div>
-        <div class="cal-leyenda-item" style="grid-column: 1/-1;"><span class="cal-leyenda-conmigo">conmigo</span></div>
       </div>
     </div>
 
@@ -1216,7 +1206,7 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.8.1
+  v0.8.2
 </div>
 
 <script>
@@ -2529,8 +2519,8 @@ function cambiarSeccion(s) {
 async function cargarDia(fechaStr) {
   state.fechaActual = fechaStr;
   const f = new Date(fechaStr + 'T00:00:00');
-  $('#fechaLarga').textContent = fechaLarga(f);
-  $('#fechaDia').textContent = fechaDiaSemana(f);
+  $('#fechaLarga').textContent = fechaDiaSemana(f) + ' ' + fechaLarga(f);
+  // fechaDia ya no se usa (la fila combinada)
 
   try {
     const d = await api('getDia', { fecha: fechaStr });
