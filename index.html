@@ -702,19 +702,19 @@ textarea.input-base {
 .resumen .resumen-line span:first-child { font-family: var(--font-hand); color: var(--text-soft); font-size: 13px; }
 .resumen .resumen-line .resumen-valor { font-family: var(--font-display); font-weight: 700; font-size: 14px; }
 .spotify-empty { background: var(--bg); border-radius: var(--r-input); padding: 10px; text-align: center; font-family: var(--font-hand); font-size: 12px; color: var(--text-mute); }
-/* Wrap del iframe de Spotify: lo renderizamos a 320px y lo escalamos al 70% para que entre en el sidebar (~224px) sin scroll */
+/* Wrap del iframe de Spotify: renderiza a 360px y escala a 62% para entrar en 232px sin scroll */
 .spotify-wrap {
   width: 100%;
-  height: 107px; /* 152 * 0.70 */
+  height: 94px; /* 152 * 0.62 */
   overflow: hidden;
   border-radius: 12px;
 }
 .spotify-iframe {
-  width: 320px;
+  width: 360px;
   height: 152px;
   border-radius: 12px;
   display: block;
-  transform: scale(0.70);
+  transform: scale(0.62);
   transform-origin: top left;
 }
 
@@ -1088,6 +1088,104 @@ textarea.input-base {
   background: var(--peach);
 }
 
+/* ============================================================
+   CHARLAR v0.9 — sección conversacional, sin registro
+   ============================================================ */
+.charlar-wrap { display: flex; flex-direction: column; align-items: center; }
+.charlar-header { text-align: center; margin-bottom: 14px; }
+.charlar-header h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 30px;
+  color: var(--text);
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.charlar-bubble {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--lavanda);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 13px; letter-spacing: 1px; font-weight: 700;
+  box-shadow: var(--shadow-s);
+}
+.charlar-header p {
+  font-family: var(--font-hand);
+  font-size: 16px; color: var(--text-mute); margin-top: 2px;
+}
+.charlar-card {
+  position: relative;
+  width: 100%; max-width: 640px;
+  background: linear-gradient(160deg, #F3ECFB 0%, #FBF7FF 55%, #FFFDF9 100%);
+  border: 1.5px solid #E7DCF5;
+  border-radius: 28px;
+  box-shadow: var(--shadow-l);
+  padding: 30px 34px 36px;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+.charlar-cat {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: #EADFF7; color: #7A5EA8;
+  font-family: var(--font-ui); font-weight: 700;
+  font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 7px 16px; border-radius: var(--r-pill);
+  margin-bottom: 18px;
+}
+.charlar-tema {
+  font-family: var(--font-hand);
+  font-size: 38px; line-height: 1.15;
+  color: var(--text);
+  max-width: 470px;
+  margin-bottom: 22px;
+}
+.charlar-polaroid {
+  position: relative;
+  background: #fff;
+  padding: 12px 12px 14px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(120,95,160,0.18);
+  transform: rotate(-2deg);
+}
+.charlar-polaroid::before {
+  content: '';
+  position: absolute; top: -13px; left: 50%;
+  transform: translateX(-50%) rotate(2deg);
+  width: 72px; height: 26px;
+  background: rgba(200,182,226,0.6);
+  border-radius: 2px;
+}
+.charlar-pf {
+  width: 280px; height: 200px;
+  border-radius: 4px; overflow: hidden;
+  background: var(--border-soft);
+  line-height: 0;
+}
+.charlar-pf img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.charlar-polaroid .cap {
+  font-family: var(--font-hand);
+  font-size: 16px; color: var(--text-soft);
+  margin-top: 9px;
+}
+.charlar-otra {
+  margin-top: 26px;
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--lavanda); color: #4A3A66;
+  font-family: var(--font-display); font-weight: 700; font-size: 16px;
+  padding: 14px 32px; border-radius: var(--r-pill);
+  box-shadow: 0 4px 12px rgba(160,140,200,0.35);
+  transition: transform .12s ease;
+}
+.charlar-otra:active { transform: scale(0.96); }
+.charlar-otra svg { width: 20px; height: 20px; }
+.charlar-deco { position: absolute; pointer-events: none; user-select: none; }
+.charlar-deco.star    { top: 26px;  left: 28px;  font-size: 26px; transform: rotate(-12deg); }
+.charlar-deco.heart   { top: 24px;  right: 30px; font-size: 24px; transform: rotate(10deg); }
+.charlar-deco.flower  { bottom: 92px; right: 32px; font-size: 24px; transform: rotate(8deg); }
+.charlar-empty {
+  font-family: var(--font-hand); font-size: 18px; color: var(--text-mute);
+  padding: 40px 20px; text-align: center; line-height: 1.6;
+}
+
 .placeholder-seccion {
   background: var(--card);
   border: 1.5px dashed var(--border);
@@ -1188,7 +1286,10 @@ textarea.input-base {
     </div>
 
     <div class="card">
-      <div class="card-title">🎵 Canción del día</div>
+      <div class="card-title" style="display: flex; align-items: center; gap: 6px;">
+        🎵 Canción del día
+        <button id="btnCambiarCancionHeader" style="margin-left: auto; background: transparent; padding: 2px 6px; font-size: 14px; color: var(--text-mute); display: none;" title="Cambiar canción">🔄</button>
+      </div>
       <div id="cancionContent"></div>
       <button id="btnPlaylists" style="background: var(--card); border: 1px dashed var(--border); width: 100%; padding: 8px; margin-top: 10px; border-radius: var(--r-pill); font-family: var(--font-hand); font-size: 12px; color: var(--text-mute);">📻 Ver mis playlists →</button>
     </div>
@@ -1256,7 +1357,7 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.8.6
+  v0.9.0
 </div>
 
 <script>
@@ -1274,6 +1375,7 @@ const state = {
   saving: false,
   libros: [],
   libroActual: null,
+  charlarActual: null,
 };
 
 function $(s) { return document.querySelector(s); }
@@ -2554,6 +2656,7 @@ function pintarCancionDelDia() {
   const cont = $('#cancionContent');
   if (!cont) return;
   const id = state.diaActual && state.diaActual.cancion_spotify_id;
+  const btnHeader = document.getElementById('btnCambiarCancionHeader');
   if (id) {
     cont.innerHTML = ''
       + '<div class="spotify-wrap">'
@@ -2561,15 +2664,16 @@ function pintarCancionDelDia() {
           + 'frameBorder="0" '
           + 'allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" '
           + 'loading="lazy"></iframe>'
-      + '</div>'
-      + '<button id="btnCambiarCancion" style="width:100%; background: transparent; padding: 6px; margin-top: 4px; font-family: var(--font-hand); font-size: 12px; color: var(--text-mute);">cambiar canción</button>';
-
-    const btnCambiar = document.getElementById('btnCambiarCancion');
-    if (btnCambiar) btnCambiar.addEventListener('click', abrirModalCancion);
+      + '</div>';
+    if (btnHeader) {
+      btnHeader.style.display = 'inline-block';
+      btnHeader.onclick = abrirModalCancion;
+    }
   } else {
     cont.innerHTML = '<button id="btnAñadirCancion" style="width:100%; background: var(--amarillo-soft); border: 1px dashed var(--amarillo); padding: 16px; border-radius: var(--r-input); font-family: var(--font-display); font-weight: 600; font-size: 13px; color: var(--text);">+ Añadir canción del día</button>';
     const btn = document.getElementById('btnAñadirCancion');
     if (btn) btn.addEventListener('click', abrirModalCancion);
+    if (btnHeader) btnHeader.style.display = 'none';
   }
 }
 
@@ -2653,6 +2757,135 @@ async function guardarCancionId(trackId) {
 
 
 // ============================================================
+// SECCIÓN CHARLAR v0.9 — disparadores rotativos, sin registro
+// ============================================================
+const EMOJI_CAT = [
+  { k: ['amistad', 'amig'],                 e: '🌈' },
+  { k: ['absurd', 'divert', 'tonta', 'rara', 'rar'], e: '🤯' },
+  { k: ['papa', 'cuando papa'],             e: '🧒' },
+  { k: ['profund', 'importante'],           e: '💭' },
+  { k: ['curios'],                          e: '🔍' },
+  { k: ['emocion', 'sentim'],               e: '💜' },
+  { k: ['familia'],                         e: '🏡' },
+  { k: ['cole', 'escuela'],                 e: '🎒' },
+];
+
+function _norm(s) {
+  return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function _esc(s) {
+  return String(s || '').replace(/[&<>"']/g, function(c){
+    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+  });
+}
+
+function emojiCategoria(cat) {
+  const n = _norm(cat);
+  for (let i = 0; i < EMOJI_CAT.length; i++) {
+    if (EMOJI_CAT[i].k.some(function(w){ return n.indexOf(w) >= 0; })) return EMOJI_CAT[i].e;
+  }
+  return '💬';
+}
+
+function getPromptsCharlar() {
+  const list = (state.bootstrap && state.bootstrap.prompts_charlar) || [];
+  return list.filter(function(p){
+    return _truthy(p.activa) && String(p.tema || p.pregunta || '').trim();
+  });
+}
+
+function edadActual() {
+  const p = (state.bootstrap && state.bootstrap.perfil) || {};
+  if (!p.fecha_cumple) return null;
+  const c = new Date(p.fecha_cumple);
+  if (isNaN(c.getTime())) return null;
+  const hoy = new Date();
+  let e = hoy.getFullYear() - c.getFullYear();
+  const m = hoy.getMonth() - c.getMonth();
+  if (m < 0 || (m === 0 && hoy.getDate() < c.getDate())) e--;
+  return e >= 0 ? e : null;
+}
+
+function pintarSeccionCharlar() {
+  $('#mainHeader').style.display = 'none';
+  $('#seccionContenido').innerHTML = `
+    <div class="charlar-wrap">
+      <div class="charlar-header">
+        <h1><span class="charlar-bubble">•••</span> Charlar</h1>
+        <p>Un momento para hablar juntos 💜</p>
+      </div>
+      <div class="charlar-card" id="charlarCard"></div>
+    </div>
+  `;
+  mostrarTemaCharlar();
+}
+
+function mostrarTemaCharlar() {
+  const card = $('#charlarCard');
+  if (!card) return;
+  const prompts = getPromptsCharlar();
+
+  if (!prompts.length) {
+    card.innerHTML = '<div class="charlar-empty">Todavía no hay temas para charlar.<br>'
+      + 'Añadilos en la pestaña <b>Prompts_Charlar</b> del Sheet ✨</div>';
+    return;
+  }
+
+  // Elegir uno al azar entre las activas, evitando repetir el anterior
+  let elegido;
+  if (prompts.length === 1) {
+    elegido = prompts[0];
+  } else {
+    do {
+      elegido = prompts[Math.floor(Math.random() * prompts.length)];
+    } while (elegido === state.charlarActual);
+  }
+  state.charlarActual = elegido;
+
+  const tema = String(elegido.tema || elegido.pregunta || '').trim();
+  const cat  = String(elegido.categoria || '').trim();
+  const foto = String(elegido.foto || '').trim();
+
+  const perfil = (state.bootstrap && state.bootstrap.perfil) || {};
+  const nombre = perfil.nombre || 'Georgin';
+  const edad = edadActual();
+  const cap = (edad != null ? nombre + ', ' + edad + ' años' : nombre);
+
+  const catHtml = cat
+    ? '<div class="charlar-cat">' + emojiCategoria(cat) + ' ' + _esc(cat) + '</div>'
+    : '';
+
+  const fotoHtml = foto
+    ? '<div class="charlar-polaroid">'
+        + '<div class="charlar-pf"><img src="' + _esc(foto) + '" alt="' + _esc(cap) + '" '
+        + 'data-initial="' + _esc(nombre.slice(0,1)) + '" data-bg="#E7DCF5" /></div>'
+        + '<div class="cap">' + _esc(cap) + ' 💜</div>'
+      + '</div>'
+    : '';
+
+  card.innerHTML =
+    '<span class="charlar-deco star">⭐</span>'
+    + '<span class="charlar-deco heart">💗</span>'
+    + '<span class="charlar-deco flower">🌸</span>'
+    + catHtml
+    + '<div class="charlar-tema">' + _esc(tema) + '</div>'
+    + fotoHtml
+    + '<button class="charlar-otra" id="btnOtraPregunta">'
+      + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+      + '<rect x="3" y="3" width="18" height="18" rx="4"/>'
+      + '<circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/>'
+      + '<circle cx="15.5" cy="8.5" r="1.3" fill="currentColor"/>'
+      + '<circle cx="12" cy="12" r="1.3" fill="currentColor"/>'
+      + '<circle cx="8.5" cy="15.5" r="1.3" fill="currentColor"/>'
+      + '<circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/></svg>'
+      + 'Otra pregunta'
+    + '</button>';
+
+  $('#btnOtraPregunta').addEventListener('click', mostrarTemaCharlar);
+}
+
+// ============================================================
 // SECCIONES PLACEHOLDER
 // ============================================================
 function pintarSeccionPlaceholder(titulo) {
@@ -2668,7 +2901,7 @@ function cambiarSeccion(s) {
   if (s === 'hoy') pintarSeccionHoy();
   else if (s === 'biblioteca') pintarSeccionBiblioteca();
   else if (s === 'yo-soy') pintarSeccionPlaceholder('Yo soy');
-  else if (s === 'charlar') pintarSeccionPlaceholder('Charlar');
+  else if (s === 'charlar') pintarSeccionCharlar();
   else if (s === 'retos') pintarSeccionPlaceholder('Retos');
   else if (s === 'capsula') pintarSeccionPlaceholder('Cápsula');
 }
