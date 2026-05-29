@@ -1242,7 +1242,7 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.8.3
+  v0.8.4
 </div>
 
 <script>
@@ -2541,13 +2541,42 @@ function pintarCancionDelDia() {
   if (!cont) return;
   const id = state.diaActual && state.diaActual.cancion_spotify_id;
   if (id) {
-    cont.innerHTML = '<iframe src="https://open.spotify.com/embed/track/' + id + '?utm_source=generator&theme=0" '
-      + 'width="100%" height="152" frameBorder="0" '
-      + 'allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" '
-      + 'loading="lazy" style="border-radius: 12px;"></iframe>'
+    // Card custom: portada + info + reproductor compacto (80px de alto, sin portada duplicada)
+    cont.innerHTML = ''
+      + '<div style="position: relative; width: 100%; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--bg); margin-bottom: 8px;">'
+        + '<img id="cancionPortada" src="" alt="portada" style="width:100%; height:100%; object-fit: cover; display:block;" onerror="this.style.display=\'none\'" />'
+      + '</div>'
+      + '<div id="cancionInfo" style="margin-bottom: 8px; line-height: 1.2;">'
+        + '<div id="cancionNombreShow" style="font-family: var(--font-display); font-weight: 700; font-size: 13px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></div>'
+        + '<div id="cancionArtistaShow" style="font-family: var(--font-hand); font-size: 13px; color: var(--text-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></div>'
+      + '</div>'
+      + '<iframe src="https://open.spotify.com/embed/track/' + id + '?utm_source=generator&theme=0" '
+        + 'width="100%" height="80" frameBorder="0" '
+        + 'allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" '
+        + 'loading="lazy" style="border-radius: 12px; display: block;"></iframe>'
       + '<button id="btnCambiarCancion" style="width:100%; background: transparent; padding: 6px; margin-top: 4px; font-family: var(--font-hand); font-size: 12px; color: var(--text-mute);">cambiar canción</button>';
+
     const btnCambiar = document.getElementById('btnCambiarCancion');
     if (btnCambiar) btnCambiar.addEventListener('click', abrirModalCancion);
+
+    // Cargar info adicional (portada + nombre + artista) desde Spotify via oEmbed (no necesita auth)
+    fetch('https://open.spotify.com/oembed?url=' + encodeURIComponent('https://open.spotify.com/track/' + id))
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        if (j && j.thumbnail_url) {
+          const img = document.getElementById('cancionPortada');
+          if (img) { img.src = j.thumbnail_url; img.style.display = 'block'; }
+        }
+        if (j && j.title) {
+          // El oEmbed devuelve "Nombre · Artista" o solo "Nombre"
+          const parts = String(j.title).split(' · ');
+          const nombreEl = document.getElementById('cancionNombreShow');
+          const artistaEl = document.getElementById('cancionArtistaShow');
+          if (nombreEl) nombreEl.textContent = parts[0] || j.title;
+          if (artistaEl) artistaEl.textContent = parts[1] || '';
+        }
+      })
+      .catch(function(){ /* sin info adicional, no pasa nada */ });
   } else {
     cont.innerHTML = '<button id="btnAñadirCancion" style="width:100%; background: var(--amarillo-soft); border: 1px dashed var(--amarillo); padding: 16px; border-radius: var(--r-input); font-family: var(--font-display); font-weight: 600; font-size: 13px; color: var(--text);">+ Añadir canción del día</button>';
     const btn = document.getElementById('btnAñadirCancion');
