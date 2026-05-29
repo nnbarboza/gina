@@ -702,10 +702,11 @@ textarea.input-base {
 .resumen .resumen-line span:first-child { font-family: var(--font-hand); color: var(--text-soft); font-size: 13px; }
 .resumen .resumen-line .resumen-valor { font-family: var(--font-display); font-weight: 700; font-size: 14px; }
 .spotify-empty { background: var(--bg); border-radius: var(--r-input); padding: 10px; text-align: center; font-family: var(--font-hand); font-size: 12px; color: var(--text-mute); }
-/* Wrap del iframe de Spotify: renderiza a 360px y escala a 62% para entrar en 232px sin scroll */
+/* Wrap del iframe de Spotify: el iframe se renderiza a 360px (ancho que Spotify
+   maneja sin recortar internamente) y se escala en runtime para entrar exacto
+   en el ancho real de la columna. Ver ajustarEscalaSpotify(). */
 .spotify-wrap {
   width: 100%;
-  height: 94px; /* 152 * 0.62 */
   overflow: hidden;
   border-radius: 12px;
 }
@@ -714,7 +715,7 @@ textarea.input-base {
   height: 152px;
   border-radius: 12px;
   display: block;
-  transform: scale(0.62);
+  transform: scale(0.62); /* fallback; se recalcula en runtime */
   transform-origin: top left;
 }
 
@@ -1357,7 +1358,7 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.9.0
+  v0.9.1
 </div>
 
 <script>
@@ -2669,12 +2670,31 @@ function pintarCancionDelDia() {
       btnHeader.style.display = 'inline-block';
       btnHeader.onclick = abrirModalCancion;
     }
+    ajustarEscalaSpotify(cont.querySelector('.spotify-wrap'), cont.querySelector('.spotify-iframe'));
   } else {
     cont.innerHTML = '<button id="btnAñadirCancion" style="width:100%; background: var(--amarillo-soft); border: 1px dashed var(--amarillo); padding: 16px; border-radius: var(--r-input); font-family: var(--font-display); font-weight: 600; font-size: 13px; color: var(--text);">+ Añadir canción del día</button>';
     const btn = document.getElementById('btnAñadirCancion');
     if (btn) btn.addEventListener('click', abrirModalCancion);
     if (btnHeader) btnHeader.style.display = 'none';
   }
+}
+
+// Ajusta la escala del iframe de Spotify para que 360px entren EXACTO en el
+// ancho real de la columna (mide en runtime, no adivina). Reintenta si aún no
+// hay layout (width 0).
+function ajustarEscalaSpotify(wrap, iframe) {
+  if (!wrap || !iframe) return;
+  const BASE_W = 360, BASE_H = 152;
+  let intentos = 0;
+  const aplicar = function() {
+    const w = wrap.clientWidth;
+    if (!w && intentos < 30) { intentos++; requestAnimationFrame(aplicar); return; }
+    if (!w) return;
+    const escala = w / BASE_W;
+    iframe.style.transform = 'scale(' + escala + ')';
+    wrap.style.height = (BASE_H * escala) + 'px';
+  };
+  requestAnimationFrame(aplicar);
 }
 
 function abrirModalCancion() {
@@ -2850,7 +2870,9 @@ function mostrarTemaCharlar() {
   const perfil = (state.bootstrap && state.bootstrap.perfil) || {};
   const nombre = perfil.nombre || 'Georgin';
   const edad = edadActual();
-  const cap = (edad != null ? nombre + ', ' + edad + ' años' : nombre);
+  const tituloFoto = String(elegido.titulo || '').trim();
+  const capAuto = (edad != null ? (nombre + ', ' + edad + ' años') : nombre) + ' 💜';
+  const cap = tituloFoto || capAuto;
 
   const catHtml = cat
     ? '<div class="charlar-cat">' + emojiCategoria(cat) + ' ' + _esc(cat) + '</div>'
@@ -2860,7 +2882,7 @@ function mostrarTemaCharlar() {
     ? '<div class="charlar-polaroid">'
         + '<div class="charlar-pf"><img src="' + _esc(foto) + '" alt="' + _esc(cap) + '" '
         + 'data-initial="' + _esc(nombre.slice(0,1)) + '" data-bg="#E7DCF5" /></div>'
-        + '<div class="cap">' + _esc(cap) + ' 💜</div>'
+        + '<div class="cap">' + _esc(cap) + '</div>'
       + '</div>'
     : '';
 
