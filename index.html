@@ -186,7 +186,15 @@ textarea { resize: none; }
   padding: 4px 4px 0;
   position: relative;
 }
-.header-greet { min-width: 0; flex: 1; }
+.header-greet { min-width: 0; flex: 1; display: flex; align-items: center; gap: 14px; }
+.header-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--peach); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; box-shadow: 0 0 0 3px var(--amarillo-soft);
+}
+.header-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.header-avatar .inicial { font-family: var(--font-display); font-weight: 700; font-size: 22px; color: var(--text); }
 .header-greet h1 {
   font-family: var(--font-display);
   font-weight: 700;
@@ -701,6 +709,37 @@ textarea.input-base {
 .resumen .resumen-line { display: flex; justify-content: space-between; align-items: center; padding: 2px 0; }
 .resumen .resumen-line span:first-child { font-family: var(--font-hand); color: var(--text-soft); font-size: 13px; }
 .resumen .resumen-line .resumen-valor { font-family: var(--font-display); font-weight: 700; font-size: 14px; }
+
+/* Resumen compacto (columna derecha) */
+.resumen-card { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.resumen-card .card-title { display: flex; align-items: center; gap: 6px; }
+.res-switch { display: flex; gap: 3px; background: var(--bg-darker); padding: 3px; border-radius: var(--r-pill); }
+.res-switch button { flex: 1; font-family: var(--font-ui); font-weight: 700; font-size: 11px; padding: 5px 4px; border-radius: var(--r-pill); color: var(--text-soft); background: transparent; }
+.res-switch button.active { background: var(--lavanda); color: #4A3A66; box-shadow: var(--shadow-s); }
+.res-nav { display: flex; align-items: center; justify-content: space-between; }
+.res-nav button { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-soft); }
+.res-nav button:hover { background: var(--bg); }
+.res-nav .periodo { font-family: var(--font-ui); font-weight: 700; font-size: 12px; color: var(--text); text-align: center; }
+.res-paginas { background: #F5EFFB; border-radius: var(--r-input); padding: 10px 12px; }
+.res-paginas .lbl { font-family: var(--font-hand); font-size: 12px; color: var(--text-soft); }
+.res-paginas .val { font-family: var(--font-display); font-weight: 700; font-size: 20px; color: #7A5EA8; line-height: 1; margin: 2px 0 6px; }
+.res-bar { height: 7px; background: var(--bg-darker); border-radius: 4px; overflow: hidden; }
+.res-bar i { display: block; height: 100%; background: var(--lavanda); border-radius: 4px; }
+.res-emo-titulo { font-family: var(--font-hand); font-size: 13px; color: var(--text-soft); }
+.res-emo-bars { display: flex; align-items: flex-end; gap: 5px; height: 64px; }
+.res-emo-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px; min-width: 0; }
+.res-emo-col .n { font-family: var(--font-display); font-weight: 700; font-size: 11px; color: var(--text-soft); }
+.res-emo-col .bar { width: 100%; border-radius: 5px 5px 3px 3px; min-height: 6px; }
+.res-emo-col .face { width: 18px; height: 18px; border-radius: 50%; overflow: hidden; margin-top: 1px; }
+.res-emo-col .face img { width: 100%; height: 100%; object-fit: cover; }
+.res-emo-pie { font-family: var(--font-hand); font-size: 11px; color: var(--text-mute); text-align: center; line-height: 1.3; }
+.res-counters { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.res-counter { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-input); padding: 9px 10px; text-align: center; }
+.res-counter.clickable { cursor: pointer; }
+.res-counter.clickable:active { transform: scale(0.97); }
+.res-counter .ico { font-size: 18px; }
+.res-counter .num { font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--text); line-height: 1; margin: 2px 0; }
+.res-counter .lbl { font-family: var(--font-hand); font-size: 10px; color: var(--text-soft); line-height: 1.2; }
 .spotify-empty { background: var(--bg); border-radius: var(--r-input); padding: 10px; text-align: center; font-family: var(--font-hand); font-size: 12px; color: var(--text-mute); }
 /* Wrap del iframe de Spotify: el iframe se renderiza a 360px (ancho que Spotify
    maneja sin recortar internamente) y se escala en runtime para entrar exacto
@@ -1476,8 +1515,11 @@ textarea.input-base {
   <main class="main" id="main">
     <div class="header" id="mainHeader">
       <div class="header-greet">
-        <h1>¡Hola Gina! <span class="sol">☀️</span></h1>
-        <p>¿Cómo está tu pequeño universo hoy?</p>
+        <div class="header-avatar" id="headerAvatar"><span class="inicial">G</span></div>
+        <div>
+          <h1>¡Hola Gina! <span class="sol">☀️</span></h1>
+          <p>¿Cómo está tu pequeño universo hoy?</p>
+        </div>
       </div>
       <div class="fecha-organica" id="fechaSticker">
         <span class="fecha-larga" id="fechaLarga">—</span>
@@ -1488,17 +1530,6 @@ textarea.input-base {
 
   <!-- SIDEBAR DERECHO -->
   <aside class="sidebar-right">
-    <div class="card perfil-card" id="perfilCard" style="cursor:pointer;" title="Ir a Yo soy">
-      <div class="perfil-avatar" id="perfilAvatar">
-        <div class="avatar-inner"><span class="inicial">G</span></div>
-      </div>
-      <div class="perfil-info">
-        <span class="perfil-cumple-label">Faltan</span>
-        <span class="perfil-cumple-dias" id="diasCumple">—</span>
-        <span class="perfil-cumple-bottom">días para tu cumple 🎂</span>
-      </div>
-    </div>
-
     <div id="sidebarHoy">
     <div class="card calendario-card">
       <div class="calendario-header">
@@ -1521,11 +1552,7 @@ textarea.input-base {
       </div>
     </div>
 
-    <div class="card resumen">
-      <div class="card-title">📊 Esta semana</div>
-      <div class="resumen-line"><span>páginas escritas</span><span class="resumen-valor" id="resumenPaginas">0 / 7</span></div>
-      <div class="resumen-line"><span>emoción favorita</span><span class="resumen-valor" id="resumenEmocion">—</span></div>
-    </div>
+    <div class="card resumen-card" id="resumenCard"></div>
     </div><!-- /sidebarHoy -->
 
     <div id="sidebarYoSoy" style="display:none;">
@@ -1624,7 +1651,7 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.12.0
+  v0.13.0
 </div>
 
 <script>
@@ -1647,6 +1674,8 @@ const state = {
   retosVerTodos: false,
   capFiltro: 'todas',
   capTipoSel: 'mensaje',
+  resumenModo: 'semana',
+  resumenRef: null,
 };
 
 function $(s) { return document.querySelector(s); }
@@ -2073,7 +2102,10 @@ async function guardar() {
       state.diaActual = Object.assign({}, state.diaActual, payload, { id: res.id });
       toast('Guardado ✨', 'success');
       const idx = state.diasCalendario.findIndex(function(d){ return d.fecha === payload.fecha; });
-      const calItem = { fecha: payload.fecha, emocion: payload.emocion, actividad: payload.actividad_categoria };
+      const nB = (payload.algo_bueno_1 && payload.algo_bueno_1.trim() ? 1 : 0)
+               + (payload.algo_bueno_2 && payload.algo_bueno_2.trim() ? 1 : 0)
+               + (payload.algo_bueno_3 && payload.algo_bueno_3.trim() ? 1 : 0);
+      const calItem = { fecha: payload.fecha, emocion: payload.emocion, actividad: payload.actividad_categoria, n_buenas: nB, tiene_aprendi: (payload.aprendi && payload.aprendi.trim() ? 1 : 0) };
       if (idx >= 0) state.diasCalendario[idx] = calItem;
       else state.diasCalendario.push(calItem);
       pintarCalendario();
@@ -2229,47 +2261,170 @@ function pintarCalendario() {
   };
 }
 
-function pintarResumenSemana() {
-  const hoy = new Date();
-  const lunes = new Date(hoy);
-  lunes.setDate(hoy.getDate() - ((hoy.getDay() + 6) % 7));
-  const semana = [];
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(lunes);
-    d.setDate(lunes.getDate() + i);
-    if (d <= hoy) semana.push(fmtFecha(d));
-  }
-  const escritos = state.diasCalendario.filter(function(d){ return semana.includes(d.fecha); });
-  $('#resumenPaginas').textContent = escritos.length + ' / 7';
+// ============================================================
+// RESUMEN (columna derecha) — semana / mes / año
+// ============================================================
 
+function rangoPeriodo(modo, ref) {
+  // devuelve {desde, hasta, total, label} para el período que contiene a ref
+  const r = new Date(ref);
+  if (modo === 'semana') {
+    const lunes = new Date(r);
+    lunes.setDate(r.getDate() - ((r.getDay() + 6) % 7));
+    lunes.setHours(0,0,0,0);
+    const dom = new Date(lunes); dom.setDate(lunes.getDate() + 6);
+    const m1 = MESES[lunes.getMonth()].slice(0,3);
+    const m2 = MESES[dom.getMonth()].slice(0,3);
+    const label = lunes.getMonth() === dom.getMonth()
+      ? lunes.getDate() + ' – ' + dom.getDate() + ' ' + m1 + ' ' + dom.getFullYear()
+      : lunes.getDate() + ' ' + m1 + ' – ' + dom.getDate() + ' ' + m2 + ' ' + dom.getFullYear();
+    return { desde: lunes, hasta: dom, total: 7, label: label };
+  }
+  if (modo === 'mes') {
+    const desde = new Date(r.getFullYear(), r.getMonth(), 1);
+    const hasta = new Date(r.getFullYear(), r.getMonth() + 1, 0);
+    return { desde: desde, hasta: hasta, total: hasta.getDate(), label: MESES[r.getMonth()] + ' ' + r.getFullYear() };
+  }
+  // año
+  const desde = new Date(r.getFullYear(), 0, 1);
+  const hasta = new Date(r.getFullYear(), 11, 31);
+  const bisiesto = (r.getFullYear() % 4 === 0 && r.getFullYear() % 100 !== 0) || (r.getFullYear() % 400 === 0);
+  return { desde: desde, hasta: hasta, total: bisiesto ? 366 : 365, label: String(r.getFullYear()) };
+}
+
+function navegarResumen(modo, ref, dir) {
+  const r = new Date(ref);
+  if (modo === 'semana') r.setDate(r.getDate() + dir * 7);
+  else if (modo === 'mes') r.setMonth(r.getMonth() + dir);
+  else r.setFullYear(r.getFullYear() + dir);
+  return r;
+}
+
+function diasEnRango(desde, hasta) {
+  const dd = fmtFecha(desde), hh = fmtFecha(hasta);
+  return state.diasCalendario.filter(function(d){
+    return d.fecha && d.fecha >= dd && d.fecha <= hh;
+  });
+}
+
+function pintarResumenSemana() {
+  const cont = $('#resumenCard');
+  if (!cont) return;
+  state.resumenModo = state.resumenModo || 'semana';
+  state.resumenRef = state.resumenRef || new Date();
+  const modo = state.resumenModo;
+  const rango = rangoPeriodo(modo, state.resumenRef);
+  const dias = diasEnRango(rango.desde, rango.hasta);
+
+  // Páginas (días con registro / total período)
+  const escritos = dias.length;
+  const pct = Math.min(100, Math.round((escritos / rango.total) * 100));
+
+  // Emociones (top 6, contando repeticiones)
   const counts = {};
-  escritos.forEach(function(d){
+  dias.forEach(function(d){
     parseEmociones(d.emocion).forEach(function(slug){ counts[slug] = (counts[slug] || 0) + 1; });
   });
-  const top = Object.entries(counts).sort(function(a,b){ return b[1] - a[1]; })[0];
-  if (top) {
-    const e = getEmocionByslug(top[0]);
-    $('#resumenEmocion').textContent = e ? e.label : top[0];
+  const top = Object.entries(counts).sort(function(a,b){ return b[1] - a[1]; }).slice(0, 6);
+  const maxN = top.length ? top[0][1] : 1;
+
+  // Contadores
+  let nBuenas = 0, nAprend = 0;
+  dias.forEach(function(d){
+    nBuenas += parseInt(d.n_buenas, 10) || 0;
+    if (_truthy(d.tiene_aprendi)) nAprend += 1;
+  });
+  // Cápsulas creadas en el período
+  const dd = fmtFecha(rango.desde), hh = fmtFecha(rango.hasta);
+  const nCaps = ((state.bootstrap && state.bootstrap.capsula) || []).filter(function(c){
+    const f = String(c.fecha_creacion || '');
+    return f >= dd && f <= hh;
+  }).length;
+  // Retos conseguidos en el período
+  const nRetos = ((state.bootstrap && state.bootstrap.retos_historial) || []).filter(function(rt){
+    const f = String(rt.fecha || '');
+    return _truthy(rt.conseguido) && f >= dd && f <= hh;
+  }).length;
+
+  const switchHtml = ['semana','mes','año'].map(function(m){
+    const val = (m === 'año') ? 'anio' : m;
+    return '<button data-modo="' + val + '" class="' + (modo === val ? 'active' : '') + '">'
+      + m.charAt(0).toUpperCase() + m.slice(1) + '</button>';
+  }).join('');
+
+  let emoBars;
+  if (!top.length) {
+    emoBars = '<div class="res-emo-pie">Todavía no hay emociones registradas.</div>';
   } else {
-    $('#resumenEmocion').textContent = '—';
+    emoBars = '<div class="res-emo-bars">' + top.map(function(pair){
+      const slug = pair[0], n = pair[1];
+      const e = getEmocionByslug(slug) || {};
+      const color = e.color || '#C9C2B8';
+      const h = Math.max(12, Math.round((n / maxN) * 46));
+      const face = (e.imagen && e.imagen.length > 3)
+        ? '<div class="face"><img src="img/emociones/' + _esc(e.imagen) + '" alt="' + _esc(e.label||'') + '"></div>'
+        : '';
+      return '<div class="res-emo-col"><span class="n">' + n + '</span>'
+        + '<div class="bar" style="height:' + h + 'px; background:' + color + ';"></div>'
+        + face + '</div>';
+    }).join('') + '</div>'
+    + '<div class="res-emo-pie">Cada emoción es válida.<br>Seguí escuchándote. 💜</div>';
   }
+
+  cont.innerHTML =
+    '<div class="card-title">📊 Resumen</div>'
+    + '<div class="res-switch" id="resSwitch">' + switchHtml + '</div>'
+    + '<div class="res-nav" id="resNav">'
+      + '<button data-dir="-1"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>'
+      + '<span class="periodo">' + rango.label + '</span>'
+      + '<button data-dir="1"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>'
+    + '</div>'
+    + '<div class="res-paginas"><span class="lbl">Páginas completadas</span>'
+      + '<div class="val">' + escritos + ' / ' + rango.total + '</div>'
+      + '<div class="res-bar"><i style="width:' + pct + '%;"></i></div></div>'
+    + '<div><div class="res-emo-titulo">Mis emociones 💜</div>' + emoBars + '</div>'
+    + '<div class="res-counters">'
+      + '<div class="res-counter"><div class="ico">⭐</div><div class="num">' + nBuenas + '</div><div class="lbl">Cosas buenas</div></div>'
+      + '<div class="res-counter"><div class="ico">🌱</div><div class="num">' + nAprend + '</div><div class="lbl">Aprendizajes</div></div>'
+      + '<div class="res-counter clickable" data-goto="capsula"><div class="ico">🫙</div><div class="num">' + nCaps + '</div><div class="lbl">Cápsulas</div></div>'
+      + '<div class="res-counter clickable" data-goto="retos"><div class="ico">🏆</div><div class="num">' + nRetos + '</div><div class="lbl">Retos logrados</div></div>'
+    + '</div>';
+
+  $('#resSwitch').addEventListener('click', function(e){
+    const b = e.target.closest('button');
+    if (!b) return;
+    state.resumenModo = b.dataset.modo;
+    state.resumenRef = new Date();
+    pintarResumenSemana();
+  });
+  $('#resNav').addEventListener('click', function(e){
+    const b = e.target.closest('button');
+    if (!b) return;
+    state.resumenRef = navegarResumen(state.resumenModo, state.resumenRef, parseInt(b.dataset.dir, 10));
+    pintarResumenSemana();
+  });
+  cont.querySelectorAll('.res-counter.clickable').forEach(function(c){
+    c.addEventListener('click', function(){ cambiarSeccion(c.dataset.goto); });
+  });
 }
 
 function pintarPerfil() {
   const p = (state.bootstrap && state.bootstrap.perfil) || {};
-  const av = $('#perfilAvatar');
-  if (p.avatar_url && p.avatar_url.length > 4) {
-    av.innerHTML = '<div class="avatar-inner"><img src="' + p.avatar_url + '" alt="Gina" data-initial="G" data-bg="#FFD3B6" /></div>';
+  const av = $('#headerAvatar');
+  if (av && p.avatar_url && p.avatar_url.length > 4) {
+    av.innerHTML = '<img src="' + p.avatar_url + '" alt="Gina" data-initial="G" data-bg="#FFD3B6" />';
   }
-  if (p.fecha_cumple) {
+  // El contador de cumple ahora vive solo en "Yo soy"
+  const dc = $('#diasCumple');
+  if (dc && p.fecha_cumple) {
     const hoy = new Date();
     const cumple = new Date(p.fecha_cumple);
     cumple.setFullYear(hoy.getFullYear());
     if (cumple < hoy) cumple.setFullYear(hoy.getFullYear() + 1);
     const dias = Math.ceil((cumple - hoy) / (1000 * 60 * 60 * 24));
-    $('#diasCumple').textContent = dias;
-  } else {
-    $('#diasCumple').textContent = '—';
+    dc.textContent = dias;
+  } else if (dc) {
+    dc.textContent = '—';
   }
 }
 
@@ -4086,9 +4241,12 @@ $('#nav').addEventListener('click', function(e){
   if (!b) return;
   cambiarSeccion(b.dataset.section);
 });
-$('#perfilCard').addEventListener('click', function(){
-  cambiarSeccion('yo-soy');
-});
+const _headerAv = $('#headerAvatar');
+if (_headerAv) {
+  _headerAv.style.cursor = 'pointer';
+  _headerAv.title = 'Ir a Yo soy';
+  _headerAv.addEventListener('click', function(){ cambiarSeccion('yo-soy'); });
+}
 $('#calPrev').addEventListener('click', function(){
   state.calendarioMes = new Date(state.calendarioMes.getFullYear(), state.calendarioMes.getMonth() - 1, 1);
   pintarCalendario();
