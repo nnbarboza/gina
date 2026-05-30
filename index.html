@@ -1272,6 +1272,95 @@ textarea.input-base {
 .regla-punto .fecha-lbl { font-family: var(--font-ui); font-size: 10px; color: var(--text-mute); }
 .medicion-empty { font-family: var(--font-hand); font-size: 13px; color: var(--text-mute); text-align: center; padding: 16px 8px; line-height: 1.5; }
 
+/* ============================================================
+   RETOS v0.11 — reto de la semana + histórico
+   ============================================================ */
+.retos-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+.retos-titulo { font-family: var(--font-display); font-weight: 700; font-size: 28px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.retos-sub { font-family: var(--font-hand); font-size: 15px; color: var(--text-mute); }
+
+.reto-semana-card {
+  position: relative;
+  background: linear-gradient(160deg, #F3ECFB 0%, #FBF7FF 55%, #FFFDF9 100%);
+  border: 1.5px solid #E7DCF5;
+  border-radius: 26px;
+  box-shadow: var(--shadow-l);
+  padding: 26px 30px 24px;
+  margin-bottom: 26px;
+  overflow: hidden;
+}
+.reto-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: #EADFF7; color: #7A5EA8;
+  font-family: var(--font-ui); font-weight: 700; font-size: 13px;
+  padding: 7px 16px; border-radius: var(--r-pill);
+}
+.reto-cuerpo { text-align: center; padding: 6px 0 4px; }
+.reto-titulo-grande {
+  font-family: var(--font-hand);
+  font-size: 38px; line-height: 1.1; color: var(--text);
+  margin: 14px 0 10px;
+}
+.reto-subtitulo { font-family: var(--font-hand); font-size: 17px; color: var(--text-soft); max-width: 460px; margin: 0 auto 20px; line-height: 1.4; }
+.reto-dias-nota {
+  position: absolute; top: 24px; right: 26px;
+  background: var(--amarillo-soft); border: 1.5px solid var(--amarillo);
+  border-radius: 12px; padding: 10px 16px; text-align: center;
+  transform: rotate(3deg); box-shadow: var(--shadow-s);
+}
+.reto-dias-nota .lbl { font-family: var(--font-hand); font-size: 13px; color: var(--text-soft); display: block; }
+.reto-dias-nota .num { font-family: var(--font-display); font-weight: 700; font-size: 28px; color: var(--text); line-height: 1; }
+.btn-conseguir {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--lavanda); color: #4A3A66;
+  font-family: var(--font-display); font-weight: 700; font-size: 17px;
+  padding: 14px 34px; border-radius: var(--r-pill);
+  box-shadow: 0 4px 12px rgba(160,140,200,0.35);
+  transition: transform .12s ease;
+}
+.btn-conseguir:active { transform: scale(0.96); }
+.btn-conseguir.hecho { background: var(--mint); color: #3D6B33; box-shadow: none; }
+.reto-detalles {
+  display: flex; align-items: stretch; gap: 0;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-input); padding: 14px 10px; margin-top: 22px;
+}
+.reto-detalle { flex: 1; display: flex; align-items: center; gap: 10px; padding: 0 14px; }
+.reto-detalle + .reto-detalle { border-left: 1px dotted var(--border); }
+.reto-detalle .ico { font-size: 22px; flex-shrink: 0; }
+.reto-detalle .t { font-family: var(--font-ui); font-weight: 700; font-size: 13px; color: var(--text); }
+.reto-detalle .d { font-family: var(--font-hand); font-size: 13px; color: var(--text-mute); }
+.reto-empty { text-align: center; padding: 30px 20px; font-family: var(--font-hand); font-size: 18px; color: var(--text-mute); line-height: 1.5; }
+
+/* Histórico */
+.hist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+.hist-titulo { font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--text); }
+.hist-filtros { display: flex; gap: 4px; background: var(--bg-darker); padding: 4px; border-radius: var(--r-pill); }
+.hist-filtros button {
+  font-family: var(--font-ui); font-weight: 700; font-size: 13px;
+  padding: 6px 14px; border-radius: var(--r-pill); color: var(--text-soft);
+  background: transparent;
+}
+.hist-filtros button.active { background: var(--lavanda); color: #4A3A66; box-shadow: var(--shadow-s); }
+.hist-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.hist-grid.todos { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.hist-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-input); padding: 16px 12px; text-align: center;
+}
+.hist-card .ico { font-size: 32px; line-height: 1; }
+.hist-card .titulo { font-family: var(--font-hand); font-size: 15px; color: var(--text); margin: 8px 0; line-height: 1.25; min-height: 38px; }
+.hist-estado { display: inline-block; font-family: var(--font-ui); font-weight: 700; font-size: 12px; padding: 4px 12px; border-radius: var(--r-pill); }
+.hist-estado.si { background: #E4F1DC; color: #4D7A3A; }
+.hist-estado.no { background: #FBE0E0; color: #B85C5C; }
+.hist-card .fecha { font-family: var(--font-ui); font-size: 11px; color: var(--text-mute); margin: 8px 0 6px; }
+.hist-card .estrella { font-size: 18px; }
+.hist-vertodos {
+  background: var(--card); border: 1px dashed var(--border); color: var(--text-soft);
+  font-family: var(--font-hand); font-size: 14px;
+  padding: 8px 18px; border-radius: var(--r-pill);
+}
+
 .placeholder-seccion {
   background: var(--card);
   border: 1.5px dashed var(--border);
@@ -1450,7 +1539,7 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.10.0
+  v0.11.0
 </div>
 
 <script>
@@ -1469,6 +1558,8 @@ const state = {
   libros: [],
   libroActual: null,
   charlarActual: null,
+  retosFiltro: 'todos',
+  retosVerTodos: false,
 };
 
 function $(s) { return document.querySelector(s); }
@@ -3263,6 +3354,228 @@ function pintarMedicion() {
 }
 
 // ============================================================
+// SECCIÓN RETOS v0.11 — reto de la semana + histórico
+// ============================================================
+
+// Detalles fijos del reto (icono + título fijos; el texto sale del Sheet)
+const RETO_DETALLES_FIJOS = [
+  { ico: '🎯', t: 'Te reta',        campo: 'detalle_1' },
+  { ico: '🧠', t: 'Despierta',      campo: 'detalle_2' },
+  { ico: '🙂', t: 'Te hace sentir', campo: 'detalle_3' },
+];
+
+// Número de semana ISO 8601 (lunes = inicio). Coincide con el backend.
+function semanaISO(d) {
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = (date.getUTCDay() + 6) % 7; // lunes=0
+  date.setUTCDate(date.getUTCDate() - dayNum + 3); // jueves de esta semana
+  const firstThursday = new Date(Date.UTC(date.getUTCFullYear(), 0, 4));
+  const firstDayNum = (firstThursday.getUTCDay() + 6) % 7;
+  firstThursday.setUTCDate(firstThursday.getUTCDate() - firstDayNum + 3);
+  const semana = 1 + Math.round((date - firstThursday) / (7 * 24 * 3600 * 1000));
+  return { anio: date.getUTCFullYear(), semana: semana };
+}
+
+// Días que faltan para terminar la semana ISO actual (hasta el domingo incl.)
+function diasRestantesSemana(d) {
+  const dayNum = (d.getDay() + 6) % 7; // lunes=0 ... domingo=6
+  return 7 - dayNum; // lunes→7, domingo→1
+}
+
+function getRetoSemana(anio, semana) {
+  const cat = (state.bootstrap && state.bootstrap.retos_catalogo) || [];
+  return cat.find(function(r){
+    return _truthy(r.activo)
+      && parseInt(r.anio, 10) === anio
+      && parseInt(r.semana, 10) === semana;
+  }) || null;
+}
+
+function getHistorialRetos() {
+  // registros de la pestaña Retos, cruzados con el catálogo por anio+semana
+  const regs = (state.bootstrap && state.bootstrap.retos_historial) || [];
+  const cat = (state.bootstrap && state.bootstrap.retos_catalogo) || [];
+  return regs.map(function(reg){
+    const anio = parseInt(reg.anio, 10);
+    const semana = parseInt(reg.semana, 10);
+    const def = cat.find(function(r){ return parseInt(r.anio,10)===anio && parseInt(r.semana,10)===semana; }) || {};
+    return {
+      anio: anio, semana: semana,
+      titulo: def.titulo || reg.titulo || 'Reto',
+      icono: def.icono || '⭐',
+      conseguido: _truthy(reg.conseguido),
+      fecha: reg.fecha || '',
+    };
+  }).sort(function(a, b){
+    // más reciente primero
+    if (a.anio !== b.anio) return b.anio - a.anio;
+    return b.semana - a.semana;
+  });
+}
+
+function pintarSeccionRetos() {
+  $('#mainHeader').style.display = 'none';
+  state.retosFiltro = state.retosFiltro || 'todos';
+  state.retosVerTodos = false;
+  $('#seccionContenido').innerHTML = `
+    <div class="retos-header">
+      <div>
+        <div class="retos-titulo">Retos ⭐</div>
+        <div class="retos-sub">Pequeños desafíos, grandes aventuras.</div>
+      </div>
+    </div>
+    <div id="retoSemanaCont"></div>
+    <div class="hist-header">
+      <div class="hist-titulo">Histórico de retos</div>
+      <div class="hist-filtros" id="histFiltros">
+        <button data-f="todos" class="active">Todos</button>
+        <button data-f="si">Conseguidos</button>
+        <button data-f="no">No conseguidos</button>
+      </div>
+    </div>
+    <div id="histGrid" class="hist-grid"></div>
+    <div style="text-align:center; margin-top:14px;">
+      <button class="hist-vertodos" id="btnVerTodosRetos">Ver todos →</button>
+    </div>
+  `;
+
+  pintarRetoSemana();
+  pintarHistorialRetos();
+
+  $('#histFiltros').addEventListener('click', function(e){
+    const b = e.target.closest('button');
+    if (!b) return;
+    state.retosFiltro = b.dataset.f;
+    $$('#histFiltros button').forEach(function(x){ x.classList.toggle('active', x === b); });
+    pintarHistorialRetos();
+  });
+  $('#btnVerTodosRetos').addEventListener('click', function(){
+    state.retosVerTodos = !state.retosVerTodos;
+    $('#btnVerTodosRetos').textContent = state.retosVerTodos ? 'Ver menos ←' : 'Ver todos →';
+    pintarHistorialRetos();
+  });
+}
+
+function pintarRetoSemana() {
+  const cont = $('#retoSemanaCont');
+  if (!cont) return;
+  const hoy = new Date();
+  const sem = semanaISO(hoy);
+  const reto = getRetoSemana(sem.anio, sem.semana);
+
+  if (!reto) {
+    cont.innerHTML = '<div class="reto-semana-card"><div class="reto-empty">'
+      + 'Esta semana todavía no tiene reto.<br>'
+      + 'Añadilo en la pestaña <b>Retos_Catalogo</b> del Sheet '
+      + '(año ' + sem.anio + ', semana ' + sem.semana + ') ✨</div></div>';
+    return;
+  }
+
+  // ¿ya está marcado como conseguido en el historial?
+  const hist = (state.bootstrap && state.bootstrap.retos_historial) || [];
+  const yaHecho = hist.some(function(h){
+    return parseInt(h.anio,10) === sem.anio && parseInt(h.semana,10) === sem.semana && _truthy(h.conseguido);
+  });
+
+  const dias = diasRestantesSemana(hoy);
+  const detalles = RETO_DETALLES_FIJOS.map(function(det){
+    const texto = String(reto[det.campo] || '').trim();
+    if (!texto) return '';
+    return '<div class="reto-detalle"><span class="ico">' + det.ico + '</span>'
+      + '<div><div class="t">' + det.t + '</div><div class="d">' + _esc(texto) + '</div></div></div>';
+  }).filter(Boolean).join('');
+
+  cont.innerHTML =
+    '<div class="reto-semana-card">'
+    + '<div class="reto-dias-nota"><span class="lbl">Quedan</span>'
+      + '<span class="num">' + dias + '</span><span class="lbl">' + (dias === 1 ? 'día' : 'días') + '</span></div>'
+    + '<div style="text-align:center;"><span class="reto-pill">📅 Reto de la semana</span></div>'
+    + '<div class="reto-cuerpo">'
+      + '<div class="reto-titulo-grande">' + _esc(reto.titulo || '') + '</div>'
+      + (reto.subtitulo ? '<div class="reto-subtitulo">' + _esc(reto.subtitulo) + '</div>' : '')
+      + '<button class="btn-conseguir' + (yaHecho ? ' hecho' : '') + '" id="btnConseguir">'
+        + (yaHecho ? '✓ ¡Conseguido!' : '✓ ¡Lo conseguí!')
+      + '</button>'
+    + '</div>'
+    + (detalles ? '<div class="reto-detalles">' + detalles + '</div>' : '')
+    + '</div>';
+
+  if (!yaHecho) {
+    $('#btnConseguir').addEventListener('click', function(){
+      marcarRetoConseguido(sem.anio, sem.semana);
+    });
+  }
+}
+
+async function marcarRetoConseguido(anio, semana) {
+  const hoy = new Date();
+  const fechaStr = hoy.getFullYear() + '-' + String(hoy.getMonth()+1).padStart(2,'0') + '-' + String(hoy.getDate()).padStart(2,'0');
+
+  // actualizar memoria
+  if (!state.bootstrap.retos_historial) state.bootstrap.retos_historial = [];
+  const hist = state.bootstrap.retos_historial;
+  const ex = hist.find(function(h){ return parseInt(h.anio,10)===anio && parseInt(h.semana,10)===semana; });
+  if (ex) { ex.conseguido = 'sí'; ex.fecha = fechaStr; }
+  else hist.push({ anio: anio, semana: semana, conseguido: 'sí', fecha: fechaStr });
+
+  toast('¡Conseguido! 🌟');
+  pintarRetoSemana();
+  pintarHistorialRetos();
+
+  try {
+    await api('saveReto', { anio: anio, semana: semana, conseguido: 'sí', fecha: fechaStr });
+  } catch (err) {
+    toast('No se pudo guardar');
+  }
+}
+
+function pintarHistorialRetos() {
+  const cont = $('#histGrid');
+  if (!cont) return;
+  const sem = semanaISO(new Date());
+  let hist = getHistorialRetos().filter(function(h){
+    // no mostrar el de la semana actual en el histórico
+    return !(h.anio === sem.anio && h.semana === sem.semana);
+  });
+
+  if (state.retosFiltro === 'si') hist = hist.filter(function(h){ return h.conseguido; });
+  else if (state.retosFiltro === 'no') hist = hist.filter(function(h){ return !h.conseguido; });
+
+  if (!hist.length) {
+    cont.className = 'hist-grid';
+    cont.innerHTML = '<div class="reto-empty" style="grid-column:1/-1;">Todavía no hay retos en el histórico.</div>';
+    $('#btnVerTodosRetos').style.display = 'none';
+    return;
+  }
+
+  const TOPE = 5;
+  const hayMas = hist.length > TOPE;
+  const mostrar = state.retosVerTodos ? hist : hist.slice(0, TOPE);
+  cont.className = 'hist-grid' + (state.retosVerTodos ? ' todos' : '');
+
+  cont.innerHTML = mostrar.map(function(h){
+    return '<div class="hist-card">'
+      + '<div class="ico">' + _esc(h.icono) + '</div>'
+      + '<div class="titulo">' + _esc(h.titulo) + '</div>'
+      + '<div class="hist-estado ' + (h.conseguido ? 'si' : 'no') + '">'
+        + (h.conseguido ? '¡Conseguido!' : 'No conseguido') + '</div>'
+      + '<div class="fecha">' + _esc(formatoFechaHist(h.fecha) || ('sem ' + h.semana)) + '</div>'
+      + '<div class="estrella">' + (h.conseguido ? '⭐' : '☆') + '</div>'
+      + '</div>';
+  }).join('');
+
+  $('#btnVerTodosRetos').style.display = hayMas ? '' : 'none';
+}
+
+function formatoFechaHist(f) {
+  if (!f) return '';
+  const d = new Date(f + (f.length === 10 ? 'T00:00:00' : ''));
+  if (isNaN(d.getTime())) return f;
+  const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return d.getDate() + ' ' + meses[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+// ============================================================
 // SECCIONES PLACEHOLDER
 // ============================================================
 function pintarSeccionPlaceholder(titulo) {
@@ -3279,7 +3592,7 @@ function cambiarSeccion(s) {
   else if (s === 'biblioteca') { toggleSidebar('hoy'); pintarSeccionBiblioteca(); }
   else if (s === 'yo-soy') pintarSeccionYoSoy();
   else if (s === 'charlar') { toggleSidebar('hoy'); pintarSeccionCharlar(); }
-  else if (s === 'retos') { toggleSidebar('hoy'); pintarSeccionPlaceholder('Retos'); }
+  else if (s === 'retos') { toggleSidebar('hoy'); pintarSeccionRetos(); }
   else if (s === 'capsula') { toggleSidebar('hoy'); pintarSeccionPlaceholder('Cápsula'); }
 }
 
