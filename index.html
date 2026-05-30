@@ -173,18 +173,22 @@ textarea { resize: none; }
   width: 100%;
   min-width: 0;
   position: relative;
+  min-height: calc(100vh - 24px);
 }
-#seccionContenido { display: flex; flex-direction: column; gap: 12px; }
+#seccionContenido { display: flex; flex-direction: column; gap: 12px; flex: 1; min-height: 0; }
+/* La última card de Hoy se estira hasta el fondo del viewport */
+#seccionContenido > .card.estira-fondo { flex: 1; }
 
 /* Header con washi tape */
 .header {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: start;
+  align-items: center;
   gap: 12px;
   padding: 4px 4px 0;
   position: relative;
+  min-height: 64px;
 }
 .header-greet { min-width: 0; flex: 1; display: flex; align-items: center; gap: 14px; }
 .header-avatar {
@@ -205,6 +209,22 @@ textarea { resize: none; }
 }
 .header-greet h1 .sol { display: inline-block; vertical-align: -3px; margin-left: 4px; font-size: 22px; }
 .header-greet p { font-family: var(--font-ui); font-size: 13px; color: var(--text-soft); }
+
+/* Fecha en franja superior del sidebar derecho (alineada con el header del main) */
+.fecha-sidebar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 64px;
+  padding: 4px 6px 0;
+}
+.fecha-sidebar .fecha-larga {
+  font-family: var(--font-hand);
+  font-size: 16px;
+  color: var(--text-soft);
+  text-align: right;
+  line-height: 1.2;
+}
 
 /* Fecha en formato orgánico, sin sticker */
 .fecha-organica {
@@ -589,6 +609,7 @@ textarea.input-base {
    ============================================================ */
 
 .sidebar-right { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+#sidebarHoy { display: flex; flex-direction: column; gap: 10px; }
 
 .perfil-card { display: grid; grid-template-columns: 48px 1fr; gap: 10px; align-items: center; padding: 12px; }
 .perfil-avatar {
@@ -725,14 +746,18 @@ textarea.input-base {
 .res-paginas .val { font-family: var(--font-display); font-weight: 700; font-size: 20px; color: #7A5EA8; line-height: 1; margin: 2px 0 6px; }
 .res-bar { height: 7px; background: var(--bg-darker); border-radius: 4px; overflow: hidden; }
 .res-bar i { display: block; height: 100%; background: var(--lavanda); border-radius: 4px; }
-.res-emo-titulo { font-family: var(--font-hand); font-size: 13px; color: var(--text-soft); }
-.res-emo-bars { display: flex; align-items: flex-end; gap: 5px; height: 64px; }
-.res-emo-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px; min-width: 0; }
-.res-emo-col .n { font-family: var(--font-display); font-weight: 700; font-size: 11px; color: var(--text-soft); }
-.res-emo-col .bar { width: 100%; border-radius: 5px 5px 3px 3px; min-height: 6px; }
-.res-emo-col .face { width: 18px; height: 18px; border-radius: 50%; overflow: hidden; margin-top: 1px; }
+.res-emo-titulo { font-family: var(--font-hand); font-size: 13px; color: var(--text-soft); margin-bottom: 6px; }
+.res-emo-bars { display: flex; align-items: flex-end; gap: 5px; height: 96px; padding-top: 16px; }
+.res-emo-col { flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px; min-width: 0; position: relative; }
+.res-emo-col .n { font-family: var(--font-display); font-weight: 700; font-size: 11px; color: var(--text-soft); line-height: 1; }
+.res-emo-col .bar {
+  width: 100%; max-width: 26px; border-radius: 6px 6px 4px 4px; min-height: 14px;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding-top: 3px;
+}
+.res-emo-col .face { width: 16px; height: 16px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: rgba(255,255,255,0.5); }
 .res-emo-col .face img { width: 100%; height: 100%; object-fit: cover; }
-.res-emo-pie { font-family: var(--font-hand); font-size: 11px; color: var(--text-mute); text-align: center; line-height: 1.3; }
+.res-emo-pie { font-family: var(--font-hand); font-size: 11px; color: var(--text-mute); text-align: center; line-height: 1.3; margin-top: 4px; }
 .res-counters { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
 .res-counter { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-input); padding: 9px 10px; text-align: center; }
 .res-counter.clickable { cursor: pointer; }
@@ -1521,15 +1546,15 @@ textarea.input-base {
           <p>¿Cómo está tu pequeño universo hoy?</p>
         </div>
       </div>
-      <div class="fecha-organica" id="fechaSticker">
-        <span class="fecha-larga" id="fechaLarga">—</span>
-      </div>
     </div>
     <div id="seccionContenido"></div>
   </main>
 
   <!-- SIDEBAR DERECHO -->
   <aside class="sidebar-right">
+    <div class="fecha-sidebar" id="fechaSticker">
+      <span class="fecha-larga" id="fechaLarga">—</span>
+    </div>
     <div id="sidebarHoy">
     <div class="card calendario-card">
       <div class="calendario-header">
@@ -1651,7 +1676,7 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.13.0
+  v0.13.1
 </div>
 
 <script>
@@ -1836,7 +1861,7 @@ function pintarSeccionHoy() {
       </div>
     </div>
 
-    <div class="card">
+    <div class="card estira-fondo">
       <div class="card-title">✓ Cosas que hice <span id="cosasContador" style="font-family: var(--font-hand); font-weight: normal; color: var(--text-mute); font-size: 12px; margin-left: auto;"></span></div>
       <div class="cosas-grid" id="cosasGrid"></div>
     </div>
@@ -2302,9 +2327,15 @@ function navegarResumen(modo, ref, dir) {
 
 function diasEnRango(desde, hasta) {
   const dd = fmtFecha(desde), hh = fmtFecha(hasta);
-  return state.diasCalendario.filter(function(d){
-    return d.fecha && d.fecha >= dd && d.fecha <= hh;
+  const vistos = {};
+  const out = [];
+  state.diasCalendario.forEach(function(d){
+    if (!d.fecha || d.fecha < dd || d.fecha > hh) return;
+    if (vistos[d.fecha]) return; // evitar duplicados
+    vistos[d.fecha] = true;
+    out.push(d);
   });
+  return out;
 }
 
 function pintarResumenSemana() {
@@ -2360,15 +2391,17 @@ function pintarResumenSemana() {
       const slug = pair[0], n = pair[1];
       const e = getEmocionByslug(slug) || {};
       const color = e.color || '#C9C2B8';
-      const h = Math.max(12, Math.round((n / maxN) * 46));
+      // altura proporcional al máximo del período (adaptable), tope 100%
+      const h = Math.max(22, Math.round((n / maxN) * 100));
       const face = (e.imagen && e.imagen.length > 3)
-        ? '<div class="face"><img src="img/emociones/' + _esc(e.imagen) + '" alt="' + _esc(e.label||'') + '"></div>'
+        ? '<span class="face"><img src="img/emociones/' + _esc(e.imagen) + '" alt="' + _esc(e.label||'') + '"></span>'
         : '';
-      return '<div class="res-emo-col"><span class="n">' + n + '</span>'
-        + '<div class="bar" style="height:' + h + 'px; background:' + color + ';"></div>'
-        + face + '</div>';
+      return '<div class="res-emo-col">'
+        + '<span class="n">' + n + '</span>'
+        + '<div class="bar" style="height:' + h + '%; background:' + color + ';">' + face + '</div>'
+        + '</div>';
     }).join('') + '</div>'
-    + '<div class="res-emo-pie">Cada emoción es válida.<br>Seguí escuchándote. 💜</div>';
+    + '<div class="res-emo-pie">Cada emoción es válida. Seguí escuchándote.</div>';
   }
 
   cont.innerHTML =
@@ -2382,7 +2415,7 @@ function pintarResumenSemana() {
     + '<div class="res-paginas"><span class="lbl">Páginas completadas</span>'
       + '<div class="val">' + escritos + ' / ' + rango.total + '</div>'
       + '<div class="res-bar"><i style="width:' + pct + '%;"></i></div></div>'
-    + '<div><div class="res-emo-titulo">Mis emociones 💜</div>' + emoBars + '</div>'
+    + '<div><div class="res-emo-titulo">Mis emociones</div>' + emoBars + '</div>'
     + '<div class="res-counters">'
       + '<div class="res-counter"><div class="ico">⭐</div><div class="num">' + nBuenas + '</div><div class="lbl">Cosas buenas</div></div>'
       + '<div class="res-counter"><div class="ico">🌱</div><div class="num">' + nAprend + '</div><div class="lbl">Aprendizajes</div></div>'
