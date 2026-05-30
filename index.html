@@ -1361,6 +1361,74 @@ textarea.input-base {
   padding: 8px 18px; border-radius: var(--r-pill);
 }
 
+/* ============================================================
+   CÁPSULA v0.12 — guardar para el futuro
+   ============================================================ */
+.cap-header { margin-bottom: 16px; }
+.cap-titulo { font-family: var(--font-display); font-weight: 700; font-size: 28px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.cap-sub { font-family: var(--font-hand); font-size: 15px; color: var(--text-mute); }
+
+.cap-tipos { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 26px; }
+.cap-tipo {
+  background: var(--card); border: 1.5px solid var(--border); border-radius: var(--r-card);
+  padding: 18px 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.cap-tipo-ico {
+  width: 64px; height: 64px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 30px;
+}
+.cap-tipo h3 { font-family: var(--font-display); font-weight: 700; font-size: 17px; color: var(--text); }
+.cap-tipo p { font-family: var(--font-hand); font-size: 13px; color: var(--text-mute); line-height: 1.3; min-height: 34px; }
+.cap-tipo-btn {
+  font-family: var(--font-display); font-weight: 700; font-size: 14px;
+  padding: 9px 22px; border-radius: var(--r-pill); color: var(--text); margin-top: 2px;
+}
+
+.cap-lista-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+.cap-lista-titulo { font-family: var(--font-display); font-weight: 700; font-size: 20px; color: var(--text); }
+.cap-filtros { display: flex; gap: 4px; background: var(--bg-darker); padding: 4px; border-radius: var(--r-pill); }
+.cap-filtros button { font-family: var(--font-ui); font-weight: 700; font-size: 13px; padding: 6px 14px; border-radius: var(--r-pill); color: var(--text-soft); background: transparent; }
+.cap-filtros button.active { background: var(--lavanda); color: #4A3A66; box-shadow: var(--shadow-s); }
+
+.cap-card {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--r-input);
+  padding: 14px 16px; margin-bottom: 10px;
+}
+.cap-card-ico { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+.cap-card-body { flex: 1; min-width: 0; }
+.cap-card-titulo { font-family: var(--font-hand); font-size: 18px; color: var(--text); display: flex; align-items: center; gap: 6px; }
+.cap-card-fecha { font-family: var(--font-ui); font-size: 12px; color: var(--text-mute); margin-top: 2px; }
+.cap-card-estado {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-pill);
+  padding: 8px 14px; font-family: var(--font-ui); font-weight: 700; font-size: 12px; color: var(--text-soft);
+  flex-shrink: 0;
+}
+.cap-card-estado.abierta { background: #E4F1DC; border-color: #C9E5BB; color: #4D7A3A; }
+.cap-card-estado .candado { font-size: 13px; }
+.cap-empty { text-align: center; padding: 30px 20px; font-family: var(--font-hand); font-size: 17px; color: var(--text-mute); line-height: 1.5; }
+
+/* Ideas */
+.cap-ideas { background: #F5EFFB; border: 1px solid #E7DCF5; border-radius: var(--r-card); padding: 16px 18px; margin-top: 22px; }
+.cap-ideas-titulo { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: #7A5EA8; display: flex; align-items: center; gap: 7px; margin-bottom: 12px; }
+.cap-ideas-grid { display: flex; gap: 16px; flex-wrap: wrap; }
+.cap-idea { display: flex; align-items: flex-start; gap: 8px; flex: 1; min-width: 140px; }
+.cap-idea .ico { font-size: 18px; flex-shrink: 0; }
+.cap-idea .txt { font-family: var(--font-hand); font-size: 13px; color: var(--text-soft); line-height: 1.3; }
+
+/* Modal cápsula */
+.cap-modal-tipos { display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; margin-bottom: 16px; }
+.cap-modal-tipo { text-align: center; padding: 10px 4px; border-radius: var(--r-input); border: 1.5px solid var(--border); cursor: pointer; font-family: var(--font-ui); font-size: 12px; color: var(--text-soft); }
+.cap-modal-tipo.sel { border-color: var(--lavanda); background: #F3ECFB; color: #5A4A7A; font-weight: 700; }
+.cap-modal-tipo .e { font-size: 22px; display: block; margin-bottom: 2px; }
+.cap-field-label { font-family: var(--font-ui); font-weight: 700; font-size: 13px; color: var(--text-soft); margin: 10px 0 4px; }
+.cap-hint { font-family: var(--font-hand); font-size: 13px; color: var(--text-mute); margin-top: 4px; }
+.cap-contenido-revelado { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-input); padding: 14px; margin-top: 8px; }
+.cap-contenido-revelado img { max-width: 100%; border-radius: var(--r-input); }
+.cap-contenido-revelado a { color: #7A5EA8; word-break: break-all; }
+.cap-bloqueada-msg { text-align: center; padding: 24px; font-family: var(--font-hand); font-size: 16px; color: var(--text-mute); }
+
 .placeholder-seccion {
   background: var(--card);
   border: 1.5px dashed var(--border);
@@ -1517,6 +1585,23 @@ textarea.input-base {
   </div>
 </div>
 
+<!-- Modal crear cápsula -->
+<div class="modal-bg" id="capModalBg">
+  <div class="modal" style="position: relative; max-width: 480px;">
+    <span class="modal-close" id="capModalClose">×</span>
+    <div class="modal-title" id="capModalTitulo">✨ Nueva cápsula</div>
+    <div id="capModalBody"></div>
+  </div>
+</div>
+
+<!-- Modal ver cápsula -->
+<div class="modal-bg" id="capVerBg">
+  <div class="modal" style="position: relative; max-width: 460px;">
+    <span class="modal-close" id="capVerClose">×</span>
+    <div id="capVerBody"></div>
+  </div>
+</div>
+
 <!-- Modal añadir libro -->
 <div class="modal-bg" id="modalBg">
   <div class="modal" style="position: relative;">
@@ -1539,7 +1624,7 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.11.0
+  v0.12.0
 </div>
 
 <script>
@@ -1560,6 +1645,8 @@ const state = {
   charlarActual: null,
   retosFiltro: 'todos',
   retosVerTodos: false,
+  capFiltro: 'todas',
+  capTipoSel: 'mensaje',
 };
 
 function $(s) { return document.querySelector(s); }
@@ -1991,6 +2078,7 @@ async function guardar() {
       else state.diasCalendario.push(calItem);
       pintarCalendario();
       pintarResumenSemana();
+      guardarCache();
     }
   } catch (err) {
     console.error(err);
@@ -3576,6 +3664,298 @@ function formatoFechaHist(f) {
 }
 
 // ============================================================
+// SECCIÓN CÁPSULA v0.12 — guardar para el futuro
+// ============================================================
+
+// Definición de los 5 tipos. campos: qué pide el formulario.
+const CAP_TIPOS = {
+  audio:     { ico: '🎙️', nombre: 'Audio',     desc: 'Graba tu voz y escúchala en el futuro.', bg: '#E7DCF5', btnBg: 'var(--lavanda)', btnTxt: 'Grabar',    campos: ['titulo', 'link'] },
+  mensaje:   { ico: '💬', nombre: 'Mensaje',   desc: 'Escribe algo para tu yo del futuro.',    bg: '#FBE0E8', btnBg: '#F6B8CB',       btnTxt: 'Escribir', campos: ['texto'] },
+  foto:      { ico: '📷', nombre: 'Foto',      desc: 'Guarda una foto o crea un álbum.',       bg: '#FCE9C8', btnBg: 'var(--amarillo)', btnTxt: 'Tomar foto', campos: ['titulo', 'link'] },
+  dibujo:    { ico: '✏️', nombre: 'Dibujo',    desc: 'Dibuja algo y guárdalo en tu álbum.',    bg: '#E4F1DC', btnBg: 'var(--mint)',   btnTxt: 'Dibujar',  campos: ['titulo', 'link'] },
+  personaje: { ico: '👾', nombre: 'Personaje', desc: 'Inventa un personaje y guárdalo.',        bg: '#D6ECF5', btnBg: 'var(--azul-nube)', btnTxt: 'Crear',  campos: ['nombre', 'descripcion', 'link'] },
+};
+
+function capTipo(t) { return CAP_TIPOS[t] || CAP_TIPOS.mensaje; }
+
+function getCapsulas() {
+  return (state.bootstrap && state.bootstrap.capsula) || [];
+}
+
+function capEstaAbierta(c) {
+  const apertura = String(c.fecha_apertura || '').trim();
+  if (!apertura) return true;
+  const d = new Date(apertura + (apertura.length === 10 ? 'T00:00:00' : ''));
+  if (isNaN(d.getTime())) return true;
+  return d <= new Date();
+}
+
+function pintarSeccionCapsula() {
+  $('#mainHeader').style.display = 'none';
+  state.capFiltro = state.capFiltro || 'todas';
+
+  const tiposHtml = Object.keys(CAP_TIPOS).map(function(k){
+    const t = CAP_TIPOS[k];
+    return '<div class="cap-tipo">'
+      + '<div class="cap-tipo-ico" style="background:' + t.bg + ';">' + t.ico + '</div>'
+      + '<h3>' + t.nombre + '</h3>'
+      + '<p>' + t.desc + '</p>'
+      + '<button class="cap-tipo-btn" data-tipo="' + k + '" style="background:' + t.btnBg + ';">' + t.btnTxt + '</button>'
+      + '</div>';
+  }).join('');
+
+  $('#seccionContenido').innerHTML = `
+    <div class="cap-header">
+      <div class="cap-titulo">🫙 Cápsula ✨</div>
+      <div class="cap-sub">Guarda hoy, para descubrir mañana.</div>
+    </div>
+    <div class="cap-tipos">${tiposHtml}</div>
+
+    <div class="cap-lista-header">
+      <div class="cap-lista-titulo">Mis cápsulas</div>
+      <div class="cap-filtros" id="capFiltros">
+        <button data-f="todas" class="active">Todas</button>
+        <button data-f="abiertas">Abiertas</button>
+        <button data-f="porabrir">Por abrir</button>
+      </div>
+    </div>
+    <div id="capLista"></div>
+
+    <div id="capIdeas"></div>
+  `;
+
+  pintarListaCapsulas();
+  pintarIdeasCapsula();
+
+  $$('.cap-tipo-btn').forEach(function(b){
+    b.addEventListener('click', function(){ abrirModalCapsula(b.dataset.tipo); });
+  });
+  $('#capFiltros').addEventListener('click', function(e){
+    const b = e.target.closest('button');
+    if (!b) return;
+    state.capFiltro = b.dataset.f;
+    $$('#capFiltros button').forEach(function(x){ x.classList.toggle('active', x === b); });
+    pintarListaCapsulas();
+  });
+}
+
+function pintarListaCapsulas() {
+  const cont = $('#capLista');
+  if (!cont) return;
+  let caps = getCapsulas().slice().sort(function(a, b){
+    return String(b.fecha_creacion || '').localeCompare(String(a.fecha_creacion || ''));
+  });
+
+  if (state.capFiltro === 'abiertas') caps = caps.filter(capEstaAbierta);
+  else if (state.capFiltro === 'porabrir') caps = caps.filter(function(c){ return !capEstaAbierta(c); });
+
+  if (!caps.length) {
+    cont.innerHTML = '<div class="cap-empty">Todavía no hay cápsulas.<br>¡Creá la primera con los botones de arriba! ✨</div>';
+    return;
+  }
+
+  cont.innerHTML = caps.map(function(c){
+    const t = capTipo(c.tipo);
+    const abierta = capEstaAbierta(c);
+    return '<div class="cap-card" data-id="' + _esc(c.id) + '" style="cursor:pointer;">'
+      + '<div class="cap-card-ico" style="background:' + t.bg + ';">' + t.ico + '</div>'
+      + '<div class="cap-card-body">'
+        + '<div class="cap-card-titulo">' + _esc(c.titulo || t.nombre) + '</div>'
+        + '<div class="cap-card-fecha">Guardada el ' + (formatoFechaHist(c.fecha_creacion) || '—') + '</div>'
+      + '</div>'
+      + '<div class="cap-card-estado ' + (abierta ? 'abierta' : '') + '">'
+        + '<span class="candado">' + (abierta ? '🔓' : '🔒') + '</span>'
+        + (abierta ? 'Abierta' : 'Abrir el ' + (formatoFechaHist(c.fecha_apertura) || '—'))
+      + '</div>'
+      + '</div>';
+  }).join('');
+
+  cont.querySelectorAll('.cap-card').forEach(function(card){
+    card.addEventListener('click', function(){ abrirModalVerCapsula(card.dataset.id); });
+  });
+}
+
+function pintarIdeasCapsula() {
+  const cont = $('#capIdeas');
+  if (!cont) return;
+  const ideas = ((state.bootstrap && state.bootstrap.capsula_ideas) || [])
+    .filter(function(i){ return _truthy(i.activa) && String(i.texto || '').trim(); });
+  if (!ideas.length) { cont.innerHTML = ''; return; }
+
+  const grid = ideas.map(function(i){
+    return '<div class="cap-idea"><span class="ico">' + _esc(i.emoji || '💡') + '</span>'
+      + '<span class="txt">' + _esc(i.texto) + '</span></div>';
+  }).join('');
+
+  cont.innerHTML = '<div class="cap-ideas">'
+    + '<div class="cap-ideas-titulo">💡 Ideas para tu cápsula</div>'
+    + '<div class="cap-ideas-grid">' + grid + '</div></div>';
+}
+
+// ---- Crear cápsula ----
+function abrirModalCapsula(tipoInicial) {
+  state.capTipoSel = tipoInicial || 'mensaje';
+  $('#capModalTitulo').textContent = '✨ Nueva cápsula';
+  renderFormCapsula();
+  $('#capModalBg').classList.add('show');
+}
+
+function renderFormCapsula() {
+  const tipo = state.capTipoSel;
+  const t = capTipo(tipo);
+
+  const selector = Object.keys(CAP_TIPOS).map(function(k){
+    const tt = CAP_TIPOS[k];
+    return '<div class="cap-modal-tipo' + (k === tipo ? ' sel' : '') + '" data-tipo="' + k + '">'
+      + '<span class="e">' + tt.ico + '</span>' + tt.nombre + '</div>';
+  }).join('');
+
+  let campos = '';
+  if (t.campos.indexOf('nombre') >= 0) {
+    campos += '<div class="cap-field-label">Nombre del personaje</div>'
+      + '<input type="text" class="modal-search-input" id="capNombre" placeholder="ej: Zampito" maxlength="40">';
+  }
+  if (t.campos.indexOf('texto') >= 0) {
+    campos += '<div class="cap-field-label">Tu mensaje</div>'
+      + '<textarea class="modal-search-input" id="capTexto" style="min-height:100px;" placeholder="Escribe algo para tu yo del futuro..." maxlength="1000"></textarea>';
+  }
+  if (t.campos.indexOf('descripcion') >= 0) {
+    campos += '<div class="cap-field-label">¿Cómo es?</div>'
+      + '<textarea class="modal-search-input" id="capDescripcion" style="min-height:80px;" placeholder="Sus poderes, cómo se ve, qué le gusta..." maxlength="600"></textarea>';
+  }
+  if (t.campos.indexOf('titulo') >= 0) {
+    campos += '<div class="cap-field-label">Título</div>'
+      + '<input type="text" class="modal-search-input" id="capTitulo" placeholder="ej: Atardecer en la playa" maxlength="60">';
+  }
+  if (t.campos.indexOf('link') >= 0) {
+    const opcional = (tipo === 'personaje') ? ' (opcional, si lo dibujaste)' : '';
+    campos += '<div class="cap-field-label">Link de Drive' + opcional + '</div>'
+      + '<input type="url" class="modal-search-input" id="capLink" placeholder="https://drive.google.com/...">'
+      + '<div class="cap-hint">Subí el archivo a Drive (compartido: cualquiera con el enlace) y pegá el link acá.</div>';
+  }
+
+  const hoy = new Date();
+  const minFecha = fmtFecha(hoy);
+
+  $('#capModalBody').innerHTML =
+    '<div class="cap-modal-tipos" id="capModalTipos">' + selector + '</div>'
+    + campos
+    + '<div class="cap-field-label">¿Cuándo se abre?</div>'
+    + '<input type="date" class="modal-search-input" id="capFechaApertura" min="' + minFecha + '">'
+    + '<div class="cap-hint">El contenido queda guardado en secreto hasta esa fecha. 🔒</div>'
+    + '<button id="capGuardar" style="width:100%; background:var(--lavanda); color:#4A3A66; font-family:var(--font-display); font-weight:700; font-size:15px; padding:13px; border-radius:var(--r-pill); margin-top:14px;">Guardar cápsula 🫙</button>';
+
+  $('#capModalTipos').addEventListener('click', function(e){
+    const d = e.target.closest('.cap-modal-tipo');
+    if (!d) return;
+    state.capTipoSel = d.dataset.tipo;
+    renderFormCapsula();
+  });
+  $('#capGuardar').addEventListener('click', guardarCapsula);
+}
+
+async function guardarCapsula() {
+  const tipo = state.capTipoSel;
+  const t = capTipo(tipo);
+  const val = function(id){ const el = $('#' + id); return el ? el.value.trim() : ''; };
+
+  const fechaApertura = val('capFechaApertura');
+  if (!fechaApertura) { toast('Elegí cuándo se abre la cápsula'); return; }
+
+  // título a mostrar según tipo
+  let titulo = '';
+  let texto = '';
+  if (tipo === 'mensaje') { texto = val('capTexto'); titulo = 'Un mensaje para mi futura yo'; if (!texto) { toast('Escribí tu mensaje'); return; } }
+  else if (tipo === 'personaje') {
+    const nombre = val('capNombre'); const desc = val('capDescripcion');
+    if (!nombre) { toast('Ponele un nombre al personaje'); return; }
+    titulo = nombre; texto = desc;
+  } else {
+    titulo = val('capTitulo') || t.nombre;
+    if (!val('capLink')) { toast('Pegá el link de Drive del archivo'); return; }
+  }
+
+  const capsula = {
+    id: 'cap_' + Date.now().toString(36),
+    tipo: tipo,
+    titulo: titulo,
+    texto: texto,
+    link: val('capLink'),
+    fecha_creacion: fmtFecha(new Date()),
+    fecha_apertura: fechaApertura,
+  };
+
+  // memoria + repintar
+  if (!state.bootstrap.capsula) state.bootstrap.capsula = [];
+  state.bootstrap.capsula.push(capsula);
+  $('#capModalBg').classList.remove('show');
+  toast('Cápsula guardada 🫙✨');
+  pintarListaCapsulas();
+
+  try {
+    await api('saveCapsula', { payload: JSON.stringify(capsula) });
+  } catch (err) {
+    toast('No se pudo guardar 😢');
+  }
+}
+
+// ---- Ver cápsula ----
+function abrirModalVerCapsula(id) {
+  const c = getCapsulas().find(function(x){ return String(x.id) === String(id); });
+  if (!c) return;
+  const t = capTipo(c.tipo);
+  const abierta = capEstaAbierta(c);
+
+  let contenido;
+  if (!abierta) {
+    contenido = '<div class="cap-bloqueada-msg">🔒<br>Esta cápsula es un secreto hasta el<br>'
+      + '<b>' + (formatoFechaHist(c.fecha_apertura) || '—') + '</b><br><br>¡Falta poquito! ✨</div>';
+  } else {
+    let inner = '';
+    if (c.texto) inner += '<p style="font-family:var(--font-hand); font-size:16px; color:var(--text); white-space:pre-wrap; line-height:1.5;">' + _esc(c.texto) + '</p>';
+    if (c.link) {
+      const link = _esc(c.link);
+      if (c.tipo === 'foto' || c.tipo === 'dibujo') {
+        inner += '<img id="capVerImg" src="' + link + '" alt="" style="margin-top:10px;">'
+          + '<a id="capVerImgLink" href="' + link + '" target="_blank" rel="noopener" style="display:none; margin-top:8px;">Abrir archivo en Drive →</a>';
+      } else {
+        inner += '<a href="' + link + '" target="_blank" rel="noopener" style="display:inline-block; margin-top:8px;">▶ Abrir en Drive →</a>';
+      }
+    }
+    contenido = '<div class="cap-contenido-revelado">' + (inner || 'Sin contenido') + '</div>';
+  }
+
+  $('#capVerBody').innerHTML =
+    '<div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">'
+      + '<div class="cap-card-ico" style="background:' + t.bg + ';">' + t.ico + '</div>'
+      + '<div><div class="modal-title" style="margin:0;">' + _esc(c.titulo || t.nombre) + '</div>'
+      + '<div class="cap-card-fecha">Guardada el ' + (formatoFechaHist(c.fecha_creacion) || '—') + '</div></div>'
+    + '</div>'
+    + contenido
+    + '<button id="capBorrar" data-id="' + _esc(c.id) + '" style="width:100%; background:transparent; border:1px solid var(--border); color:var(--text-mute); font-family:var(--font-ui); font-size:13px; padding:9px; border-radius:var(--r-pill); margin-top:14px;">Eliminar cápsula</button>';
+
+  $('#capBorrar').addEventListener('click', function(){ borrarCapsula(c.id); });
+  const capImg = $('#capVerImg');
+  if (capImg) {
+    capImg.addEventListener('error', function(){
+      capImg.style.display = 'none';
+      const lnk = $('#capVerImgLink');
+      if (lnk) lnk.style.display = 'inline-block';
+    });
+  }
+  $('#capVerBg').classList.add('show');
+}
+
+async function borrarCapsula(id) {
+  if (!confirm('¿Eliminar esta cápsula? No se puede deshacer.')) return;
+  state.bootstrap.capsula = getCapsulas().filter(function(c){ return String(c.id) !== String(id); });
+  $('#capVerBg').classList.remove('show');
+  pintarListaCapsulas();
+  toast('Cápsula eliminada');
+  try { await api('deleteCapsula', { id: id }); } catch (_) {}
+}
+
+// ============================================================
 // SECCIONES PLACEHOLDER
 // ============================================================
 function pintarSeccionPlaceholder(titulo) {
@@ -3593,7 +3973,7 @@ function cambiarSeccion(s) {
   else if (s === 'yo-soy') pintarSeccionYoSoy();
   else if (s === 'charlar') { toggleSidebar('hoy'); pintarSeccionCharlar(); }
   else if (s === 'retos') { toggleSidebar('hoy'); pintarSeccionRetos(); }
-  else if (s === 'capsula') { toggleSidebar('hoy'); pintarSeccionPlaceholder('Cápsula'); }
+  else if (s === 'capsula') { toggleSidebar('hoy'); pintarSeccionCapsula(); }
 }
 
 async function cargarDia(fechaStr) {
@@ -3615,27 +3995,89 @@ async function cargarDia(fechaStr) {
   pintarCancionDelDia();
 }
 
-async function bootstrap() {
+// Cache local para arranque instantáneo (el SW es network-first, no queda viejo)
+const CACHE_KEY = 'gina_cache_v1';
+
+function leerCache() {
   try {
-    state.bootstrap = await api('getBootstrap');
+    const raw = localStorage.getItem(CACHE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (_) { return null; }
+}
+
+function guardarCache() {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({
+      bootstrap: state.bootstrap,
+      diasCalendario: state.diasCalendario,
+      diaHoy: state.diaActual,
+      fechaHoy: state.fechaActual,
+      ts: Date.now(),
+    }));
+  } catch (_) {}
+}
+
+function pintarTodoInicial() {
+  pintarPerfil();
+  pintarRincon();
+  pintarCalendario();
+  pintarResumenSemana();
+  if (state.seccionActiva === 'hoy') pintarSeccionHoy();
+  pintarCancionDelDia();
+}
+
+async function bootstrap() {
+  const hoyStr = fmtFecha(new Date());
+  state.calendarioMes = new Date();
+
+  // 1) Pintado instantáneo desde cache (si la hay y es de hoy)
+  const cache = leerCache();
+  let pintadoDesdeCache = false;
+  if (cache && cache.bootstrap) {
+    state.bootstrap = cache.bootstrap;
+    state.diasCalendario = cache.diasCalendario || [];
+    state.fechaActual = hoyStr;
+    // solo reusar el día si la cache es del mismo día
+    state.diaActual = (cache.fechaHoy === hoyStr && cache.diaHoy) ? cache.diaHoy : { fecha: hoyStr };
+    const f = new Date(hoyStr + 'T00:00:00');
+    $('#fechaLarga').textContent = fechaDiaSemana(f) + ' ' + fechaLarga(f);
+    pintarTodoInicial();
+    $('#app').style.visibility = 'visible';
+    $('#loadingScreen').classList.add('hide');
+    pintadoDesdeCache = true;
+  }
+
+  // 2) Refresco real en paralelo (las 3 llamadas a la vez)
+  let boot, cal, dia;
+  try {
+    [boot, cal, dia] = await Promise.all([
+      api('getBootstrap'),
+      api('getCalendario').catch(function(){ return []; }),
+      api('getDia', { fecha: hoyStr }).catch(function(){ return null; }),
+    ]);
   } catch (err) {
     console.error(err);
-    toast('No se pudo conectar 😢');
+    if (!pintadoDesdeCache) {
+      toast('No se pudo conectar 😢');
+      $('#loadingScreen').classList.add('hide');
+    }
     return;
   }
 
-  pintarPerfil();
-  pintarRincon();
+  state.bootstrap = boot;
+  state.diasCalendario = cal || [];
+  state.fechaActual = hoyStr;
+  state.diaActual = dia || { fecha: hoyStr };
 
-  state.calendarioMes = new Date();
-  try { state.diasCalendario = await api('getCalendario') || []; } catch(_) { state.diasCalendario = []; }
+  const f = new Date(hoyStr + 'T00:00:00');
+  $('#fechaLarga').textContent = fechaDiaSemana(f) + ' ' + fechaLarga(f);
+  pintarTodoInicial();
+  guardarCache();
 
-  pintarCalendario();
-  pintarResumenSemana();
-  await cargarDia(fmtFecha(new Date()));
-
-  $('#app').style.visibility = 'visible';
-  setTimeout(function(){ $('#loadingScreen').classList.add('hide'); }, 300);
+  if (!pintadoDesdeCache) {
+    $('#app').style.visibility = 'visible';
+    setTimeout(function(){ $('#loadingScreen').classList.add('hide'); }, 300);
+  }
 }
 
 // Eventos
@@ -3702,6 +4144,15 @@ $('#modalPlaylistsClose').addEventListener('click', function(){
 $('#modalPlaylistsBg').addEventListener('click', function(e){
   if (e.target === $('#modalPlaylistsBg')) $('#modalPlaylistsBg').classList.remove('show');
 });
+// Cápsula modals
+$('#capModalClose').addEventListener('click', function(){ $('#capModalBg').classList.remove('show'); });
+$('#capModalBg').addEventListener('click', function(e){
+  if (e.target === $('#capModalBg')) $('#capModalBg').classList.remove('show');
+});
+$('#capVerClose').addEventListener('click', function(){ $('#capVerBg').classList.remove('show'); });
+$('#capVerBg').addEventListener('click', function(e){
+  if (e.target === $('#capVerBg')) $('#capVerBg').classList.remove('show');
+});
 
 // Botón refresh forzado: limpia SW + cachés + recarga sin caché
 const btnRefresh = document.getElementById('btnRefresh');
@@ -3720,6 +4171,8 @@ if (btnRefresh) {
         await Promise.all(keys.map(function(k){ return caches.delete(k); }));
       }
     } catch (e) { console.error(e); }
+    // Borrar cache de datos local (fuerza relectura del Sheet)
+    try { localStorage.removeItem(CACHE_KEY); } catch (_) {}
     // Recargar con cache-buster
     const url = new URL(window.location.href);
     url.searchParams.set('_t', Date.now());
