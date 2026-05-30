@@ -1187,6 +1187,91 @@ textarea.input-base {
   padding: 40px 20px; text-align: center; line-height: 1.6;
 }
 
+/* ============================================================
+   YO SOY v0.10 — árbol con cualidades + sobre mí
+   ============================================================ */
+.yosoy-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+.yosoy-titulo { font-family: var(--font-display); font-weight: 700; font-size: 28px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.yosoy-sub { font-family: var(--font-hand); font-size: 15px; color: var(--text-mute); }
+.btn-add-cualidad {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--card); border: 1.5px solid var(--lavanda); color: #7A5EA8;
+  font-family: var(--font-display); font-weight: 700; font-size: 14px;
+  padding: 9px 18px; border-radius: var(--r-pill); box-shadow: var(--shadow-s);
+}
+.arbol-zona {
+  position: relative;
+  min-height: 380px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 8px 0 16px;
+}
+.arbol-img { width: 300px; height: 340px; object-fit: contain; }
+.arbol-img-fallback { font-size: 150px; line-height: 1; }
+.cualidad-tag {
+  position: absolute;
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--card); border: 1.5px solid var(--border);
+  font-family: var(--font-ui); font-weight: 700; font-size: 14px; color: var(--text);
+  padding: 9px 14px; border-radius: var(--r-pill);
+  box-shadow: var(--shadow-s);
+  white-space: nowrap;
+  animation: tagPop .25s ease;
+}
+@keyframes tagPop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.cualidad-tag .x {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--bg-darker); color: var(--text-mute);
+  font-size: 12px; cursor: pointer; flex-shrink: 0;
+}
+.cualidad-tag .x:active { transform: scale(0.85); }
+.arbol-hint { font-family: var(--font-hand); font-size: 14px; color: var(--text-mute); text-align: center; margin-top: -6px; margin-bottom: 16px; }
+
+/* Sobre mí */
+.sobremi-card { background: var(--card); border: 1.5px solid var(--border); border-radius: var(--r-card); padding: 18px 20px; }
+.sobremi-head { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.sobremi-head .t { font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--text); flex: 1; }
+.sobremi-chevron { transition: transform .2s; color: var(--text-mute); }
+.sobremi-card.colapsada .sobremi-chevron { transform: rotate(180deg); }
+.sobremi-body { margin-top: 14px; }
+.sobremi-card.colapsada .sobremi-body { display: none; }
+.pregunta-bloque { margin-bottom: 12px; }
+.pregunta-label { display: flex; align-items: center; gap: 7px; font-family: var(--font-hand); font-size: 16px; color: var(--text-soft); margin-bottom: 6px; }
+.pregunta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pregunta-fila {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-input);
+  padding: 11px 14px; cursor: pointer;
+  font-family: var(--font-hand); font-size: 15px; color: var(--text-soft);
+}
+.pregunta-fila:hover { border-color: var(--lavanda); }
+.pregunta-fila .ico { font-size: 16px; }
+.pregunta-fila .txt { flex: 1; }
+.pregunta-fila.respondida { background: #F3ECFB; border-color: #E7DCF5; }
+.pregunta-fila .chev { color: var(--text-mute); }
+.sobremi-edit { margin-top: 10px; }
+.sobremi-edit textarea { width: 100%; min-height: 120px; resize: vertical; }
+.sobremi-edit-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.sobremi-count { font-family: var(--font-ui); font-size: 12px; color: var(--text-mute); }
+
+/* Regla de medición (sidebar) */
+.medicion-regla { display: flex; gap: 12px; padding: 8px 4px 4px; }
+.regla-barra {
+  position: relative; width: 30px; flex-shrink: 0;
+  background: linear-gradient(180deg, #F6C445, #E8AE2E);
+  border-radius: 8px;
+}
+.regla-marca { position: absolute; right: 100%; transform: translateY(-50%); display: flex; align-items: center; gap: 4px; padding-right: 6px; white-space: nowrap; }
+.regla-marca .lbl { font-family: var(--font-ui); font-size: 11px; color: var(--text-mute); }
+.regla-marca .tick { width: 8px; height: 2px; background: rgba(0,0,0,0.25); }
+.regla-puntos { position: relative; flex: 1; }
+.regla-punto { position: absolute; left: 0; transform: translateY(-50%); display: flex; align-items: center; gap: 6px; }
+.regla-punto .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--lavanda); border: 2px solid #fff; box-shadow: var(--shadow-s); }
+.regla-punto.hoy .dot { background: #7A5EA8; }
+.regla-punto .bubble { font-family: var(--font-display); font-weight: 700; font-size: 12px; color: #5A4A7A; background: #F3ECFB; padding: 3px 8px; border-radius: var(--r-pill); }
+.regla-punto .fecha-lbl { font-family: var(--font-ui); font-size: 10px; color: var(--text-mute); }
+.medicion-empty { font-family: var(--font-hand); font-size: 13px; color: var(--text-mute); text-align: center; padding: 16px 8px; line-height: 1.5; }
+
 .placeholder-seccion {
   background: var(--card);
   border: 1.5px dashed var(--border);
@@ -1246,19 +1331,18 @@ textarea.input-base {
 
   <!-- SIDEBAR DERECHO -->
   <aside class="sidebar-right">
-    <div class="card perfil-card">
+    <div class="card perfil-card" id="perfilCard" style="cursor:pointer;" title="Ir a Yo soy">
       <div class="perfil-avatar" id="perfilAvatar">
-        <svg class="corona" viewBox="0 0 32 32" fill="#F28C8C"><path d="M4 22 L8 12 L12 18 L16 8 L20 18 L24 12 L28 22 Z"/></svg>
         <div class="avatar-inner"><span class="inicial">G</span></div>
       </div>
       <div class="perfil-info">
         <span class="perfil-cumple-label">Faltan</span>
         <span class="perfil-cumple-dias" id="diasCumple">—</span>
         <span class="perfil-cumple-bottom">días para tu cumple 🎂</span>
-        <div class="perfil-altura" id="perfilAltura">📏 altura: — cm</div>
       </div>
     </div>
 
+    <div id="sidebarHoy">
     <div class="card calendario-card">
       <div class="calendario-header">
         <span class="calendario-titulo" id="calTitulo">—</span>
@@ -1284,6 +1368,14 @@ textarea.input-base {
       <div class="card-title">📊 Esta semana</div>
       <div class="resumen-line"><span>páginas escritas</span><span class="resumen-valor" id="resumenPaginas">0 / 7</span></div>
       <div class="resumen-line"><span>emoción favorita</span><span class="resumen-valor" id="resumenEmocion">—</span></div>
+    </div>
+    </div><!-- /sidebarHoy -->
+
+    <div id="sidebarYoSoy" style="display:none;">
+      <div class="card medicion-card">
+        <div class="card-title">🌱 Mi crecimiento</div>
+        <div class="medicion-regla" id="medicionRegla"></div>
+      </div>
     </div>
 
     <div class="card">
@@ -1358,7 +1450,7 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.9.1
+  v0.10.0
 </div>
 
 <script>
@@ -1988,7 +2080,7 @@ function pintarPerfil() {
   const p = (state.bootstrap && state.bootstrap.perfil) || {};
   const av = $('#perfilAvatar');
   if (p.avatar_url && p.avatar_url.length > 4) {
-    av.innerHTML = '<svg class="corona" viewBox="0 0 32 32" fill="#F28C8C"><path d="M4 22 L8 12 L12 18 L16 8 L20 18 L24 12 L28 22 Z"/></svg><div class="avatar-inner"><img src="' + p.avatar_url + '" alt="Gina" data-initial="G" data-bg="#FFD3B6" /></div>';
+    av.innerHTML = '<div class="avatar-inner"><img src="' + p.avatar_url + '" alt="Gina" data-initial="G" data-bg="#FFD3B6" /></div>';
   }
   if (p.fecha_cumple) {
     const hoy = new Date();
@@ -1999,17 +2091,6 @@ function pintarPerfil() {
     $('#diasCumple').textContent = dias;
   } else {
     $('#diasCumple').textContent = '—';
-  }
-  try {
-    const alturas = JSON.parse(p.alturas_json || '[]');
-    if (alturas.length) {
-      const ult = alturas[alturas.length - 1];
-      $('#perfilAltura').textContent = '📏 altura: ' + ult.cm + ' cm';
-    } else {
-      $('#perfilAltura').style.display = 'none';
-    }
-  } catch (_) {
-    $('#perfilAltura').style.display = 'none';
   }
 }
 
@@ -2908,6 +2989,280 @@ function mostrarTemaCharlar() {
 }
 
 // ============================================================
+// SECCIÓN YO SOY v0.10 — árbol de cualidades + sobre mí + crecimiento
+// ============================================================
+
+// Posiciones fijas alrededor del árbol (en %), hasta 8 tags
+const POS_CUALIDADES = [
+  { top: '8%',  left: '6%'  },
+  { top: '6%',  left: '60%' },
+  { top: '26%', left: '0%'  },
+  { top: '24%', left: '66%' },
+  { top: '48%', left: '4%'  },
+  { top: '46%', left: '62%' },
+  { top: '68%', left: '10%' },
+  { top: '66%', left: '58%' },
+];
+
+function getCualidades() {
+  const p = (state.bootstrap && state.bootstrap.perfil) || {};
+  try {
+    const arr = JSON.parse(p.cualidades_json || '[]');
+    return Array.isArray(arr) ? arr : [];
+  } catch (_) { return []; }
+}
+
+function pintarSeccionYoSoy() {
+  $('#mainHeader').style.display = 'none';
+  $('#seccionContenido').innerHTML = `
+    <div class="yosoy-header">
+      <div>
+        <div class="yosoy-titulo">Yo soy 🌿</div>
+        <div class="yosoy-sub">Así voy creciendo, por dentro y por fuera.</div>
+      </div>
+      <button class="btn-add-cualidad" id="btnAddCualidad">+ Añadir cualidad</button>
+    </div>
+
+    <div class="arbol-zona" id="arbolZona"></div>
+    <div class="arbol-hint">Añade cualidades que te representan ↑</div>
+
+    <div class="sobremi-card colapsada" id="sobremiCard">
+      <div class="sobremi-head" id="sobremiHead">
+        <span style="font-size:18px;">⭐</span>
+        <span class="t">Sobre mí</span>
+        <svg class="sobremi-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg>
+      </div>
+      <div class="sobremi-body" id="sobremiBody"></div>
+    </div>
+  `;
+
+  // sidebar: mostrar medición, ocultar calendario/resumen
+  toggleSidebar('yosoy');
+
+  pintarArbol();
+  pintarSobreMi();
+  pintarMedicion();
+
+  $('#btnAddCualidad').addEventListener('click', addCualidadPrompt);
+  $('#sobremiHead').addEventListener('click', function(){
+    $('#sobremiCard').classList.toggle('colapsada');
+  });
+}
+
+function toggleSidebar(modo) {
+  const hoy = $('#sidebarHoy');
+  const yo = $('#sidebarYoSoy');
+  if (!hoy || !yo) return;
+  if (modo === 'yosoy') { hoy.style.display = 'none'; yo.style.display = ''; }
+  else { hoy.style.display = ''; yo.style.display = 'none'; }
+}
+
+function pintarArbol() {
+  const zona = $('#arbolZona');
+  if (!zona) return;
+  const cualidades = getCualidades();
+
+  let html = '<img class="arbol-img" id="arbolImg" src="img/arbol.webp" alt="Mi árbol">';
+
+  cualidades.slice(0, POS_CUALIDADES.length).forEach(function(c, i){
+    const pos = POS_CUALIDADES[i];
+    html += '<div class="cualidad-tag" style="top:' + pos.top + '; left:' + pos.left + ';">'
+      + (c.emoji ? '<span>' + _esc(c.emoji) + '</span>' : '')
+      + '<span>' + _esc(c.texto) + '</span>'
+      + '<span class="x" data-idx="' + i + '">✕</span>'
+      + '</div>';
+  });
+
+  zona.innerHTML = html;
+
+  const img = $('#arbolImg');
+  if (img) {
+    img.addEventListener('error', function(){
+      const fb = document.createElement('div');
+      fb.className = 'arbol-img-fallback';
+      fb.textContent = '🌳';
+      img.replaceWith(fb);
+    });
+  }
+
+  zona.querySelectorAll('.cualidad-tag .x').forEach(function(x){
+    x.addEventListener('click', function(){
+      quitarCualidad(parseInt(x.dataset.idx, 10));
+    });
+  });
+}
+
+function addCualidadPrompt() {
+  const cualidades = getCualidades();
+  if (cualidades.length >= POS_CUALIDADES.length) {
+    toast('Ya hay muchas cualidades. Quitá alguna para añadir otra ✨');
+    return;
+  }
+  const texto = prompt('¿Qué cualidad te representa? (ej: Curiosa)');
+  if (!texto || !texto.trim()) return;
+  const emoji = prompt('Un emoji para acompañarla (opcional, ej: ✨)') || '';
+  cualidades.push({ texto: texto.trim().slice(0, 24), emoji: (emoji || '').trim().slice(0, 4) });
+  guardarCualidades(cualidades);
+}
+
+function quitarCualidad(idx) {
+  const cualidades = getCualidades();
+  if (idx < 0 || idx >= cualidades.length) return;
+  cualidades.splice(idx, 1);
+  guardarCualidades(cualidades);
+}
+
+async function guardarCualidades(cualidades) {
+  // actualizar en memoria y repintar al instante
+  if (!state.bootstrap.perfil) state.bootstrap.perfil = {};
+  state.bootstrap.perfil.cualidades_json = JSON.stringify(cualidades);
+  pintarArbol();
+  try {
+    await api('saveCualidades', { json: JSON.stringify(cualidades) });
+  } catch (err) {
+    toast('No se pudo guardar la cualidad');
+  }
+}
+
+// ---- Sobre mí ----
+function getRespuestaYoSoy(preguntaId) {
+  const list = (state.bootstrap && state.bootstrap.yosoy_respuestas) || [];
+  const r = list.find(function(x){ return String(x.pregunta_id) === String(preguntaId); });
+  return r ? String(r.respuesta || '') : '';
+}
+
+function pintarSobreMi() {
+  const body = $('#sobremiBody');
+  if (!body) return;
+  const preguntas = ((state.bootstrap && state.bootstrap.yosoy_preguntas) || [])
+    .filter(function(p){ return _truthy(p.activa) && String(p.pregunta || '').trim(); });
+
+  if (!preguntas.length) {
+    body.innerHTML = '<div class="medicion-empty">Añadí preguntas en la pestaña <b>YoSoy_Preguntas</b> del Sheet ✨</div>';
+    return;
+  }
+
+  const filas = preguntas.map(function(p){
+    const resp = getRespuestaYoSoy(p.id);
+    const cls = resp ? ' respondida' : '';
+    return '<div class="pregunta-fila' + cls + '" data-id="' + _esc(p.id) + '" '
+      + 'data-pregunta="' + _esc(p.pregunta) + '" data-emoji="' + _esc(p.emoji || '⭐') + '">'
+      + '<span class="ico">' + _esc(p.emoji || '⭐') + '</span>'
+      + '<span class="txt">' + _esc(p.pregunta) + '</span>'
+      + '<span class="chev">›</span>'
+      + '</div>';
+  }).join('');
+
+  body.innerHTML = '<div class="pregunta-grid">' + filas + '</div>'
+    + '<div class="sobremi-edit" id="sobremiEdit" style="display:none;"></div>';
+
+  body.querySelectorAll('.pregunta-fila').forEach(function(f){
+    f.addEventListener('click', function(){
+      abrirEdicionPregunta(f.dataset.id, f.dataset.pregunta, f.dataset.emoji);
+    });
+  });
+}
+
+function abrirEdicionPregunta(id, pregunta, emoji) {
+  const cont = $('#sobremiEdit');
+  if (!cont) return;
+  const actual = getRespuestaYoSoy(id);
+  cont.style.display = '';
+  cont.innerHTML =
+    '<div class="pregunta-label">' + (emoji || '⭐') + ' ' + _esc(pregunta) + '</div>'
+    + '<textarea class="input-base" id="ysRespuesta" maxlength="300" '
+    + 'placeholder="Escribe aquí...">' + _esc(actual) + '</textarea>'
+    + '<div class="sobremi-edit-foot">'
+    + '<button id="ysGuardar" style="background:var(--lavanda); color:#4A3A66; font-family:var(--font-display); font-weight:700; font-size:14px; padding:9px 22px; border-radius:var(--r-pill);">✓ Guardar</button>'
+    + '<span class="sobremi-count" id="ysCount">' + actual.length + '/300</span>'
+    + '</div>';
+
+  const ta = $('#ysRespuesta');
+  ta.focus();
+  ta.addEventListener('input', function(){ $('#ysCount').textContent = ta.value.length + '/300'; });
+  $('#ysGuardar').addEventListener('click', function(){ guardarRespuestaYoSoy(id, ta.value); });
+  cont.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function guardarRespuestaYoSoy(id, respuesta) {
+  respuesta = String(respuesta || '').trim();
+  // actualizar memoria
+  if (!state.bootstrap.yosoy_respuestas) state.bootstrap.yosoy_respuestas = [];
+  const list = state.bootstrap.yosoy_respuestas;
+  const ex = list.find(function(x){ return String(x.pregunta_id) === String(id); });
+  if (ex) ex.respuesta = respuesta;
+  else list.push({ pregunta_id: id, respuesta: respuesta });
+
+  toast('Guardado 💜');
+  $('#sobremiEdit').style.display = 'none';
+  pintarSobreMi();
+  $('#sobremiBody').parentElement.classList.remove('colapsada');
+
+  try {
+    await api('saveYoSoy', { pregunta_id: id, respuesta: respuesta });
+  } catch (err) {
+    toast('No se pudo guardar');
+  }
+}
+
+// ---- Medición / crecimiento ----
+function pintarMedicion() {
+  const cont = $('#medicionRegla');
+  if (!cont) return;
+  let alturas = ((state.bootstrap && state.bootstrap.alturas) || [])
+    .map(function(a){ return { fecha: String(a.fecha || ''), cm: parseFloat(a.cm) }; })
+    .filter(function(a){ return !isNaN(a.cm); });
+
+  if (!alturas.length) {
+    cont.innerHTML = '<div class="medicion-empty">Añadí registros en la pestaña <b>Alturas</b> del Sheet (fecha, cm) 📏</div>';
+    return;
+  }
+
+  // el registro más reciente = "hoy" (por fecha si parseable, si no el último de la lista)
+  let idxReciente = alturas.length - 1;
+  let maxT = -Infinity;
+  alturas.forEach(function(a, i){
+    const t = Date.parse(a.fecha);
+    if (!isNaN(t) && t >= maxT) { maxT = t; idxReciente = i; }
+  });
+  const cmReciente = alturas[idxReciente].cm;
+
+  // ordenar por cm para pintar la regla
+  alturas = alturas.slice().sort(function(a, b){ return a.cm - b.cm; });
+
+  const cms = alturas.map(function(a){ return a.cm; });
+  const minReal = Math.min.apply(null, cms);
+  const maxReal = Math.max.apply(null, cms);
+  // rango con margen, redondeado a decenas
+  const minR = Math.floor((minReal - 8) / 10) * 10;
+  const maxR = Math.ceil((maxReal + 8) / 10) * 10;
+  const rango = maxR - minR || 1;
+  const ALTO = 300; // px
+  const pct = function(cm){ return (1 - (cm - minR) / rango) * 100; };
+
+  // marcas cada 10cm
+  let marcas = '';
+  for (let v = minR; v <= maxR; v += 10) {
+    marcas += '<div class="regla-marca" style="top:' + pct(v) + '%;">'
+      + '<span class="lbl">' + v + ' cm</span><span class="tick"></span></div>';
+  }
+
+  let puntos = '';
+  alturas.forEach(function(a){
+    const esHoy = a.cm === cmReciente;
+    puntos += '<div class="regla-punto' + (esHoy ? ' hoy' : '') + '" style="top:' + pct(a.cm) + '%;">'
+      + '<span class="dot"></span>'
+      + '<span class="bubble">' + a.cm + ' cm</span>'
+      + (esHoy ? '<span class="fecha-lbl">hoy</span>' : '')
+      + '</div>';
+  });
+
+  cont.innerHTML =
+    '<div class="regla-barra" style="height:' + ALTO + 'px;">' + marcas + '</div>'
+    + '<div class="regla-puntos" style="height:' + ALTO + 'px;">' + puntos + '</div>';
+}
+
+// ============================================================
 // SECCIONES PLACEHOLDER
 // ============================================================
 function pintarSeccionPlaceholder(titulo) {
@@ -2920,12 +3275,12 @@ function cambiarSeccion(s) {
   $$('.nav-item').forEach(function(n){ n.classList.toggle('active', n.dataset.section === s); });
   // Cerrar ficha de libro si estaba abierta
   $('#fichaLibro').classList.remove('show');
-  if (s === 'hoy') pintarSeccionHoy();
-  else if (s === 'biblioteca') pintarSeccionBiblioteca();
-  else if (s === 'yo-soy') pintarSeccionPlaceholder('Yo soy');
-  else if (s === 'charlar') pintarSeccionCharlar();
-  else if (s === 'retos') pintarSeccionPlaceholder('Retos');
-  else if (s === 'capsula') pintarSeccionPlaceholder('Cápsula');
+  if (s === 'hoy') { toggleSidebar('hoy'); pintarSeccionHoy(); }
+  else if (s === 'biblioteca') { toggleSidebar('hoy'); pintarSeccionBiblioteca(); }
+  else if (s === 'yo-soy') pintarSeccionYoSoy();
+  else if (s === 'charlar') { toggleSidebar('hoy'); pintarSeccionCharlar(); }
+  else if (s === 'retos') { toggleSidebar('hoy'); pintarSeccionPlaceholder('Retos'); }
+  else if (s === 'capsula') { toggleSidebar('hoy'); pintarSeccionPlaceholder('Cápsula'); }
 }
 
 async function cargarDia(fechaStr) {
@@ -2975,6 +3330,9 @@ $('#nav').addEventListener('click', function(e){
   const b = e.target.closest('.nav-item');
   if (!b) return;
   cambiarSeccion(b.dataset.section);
+});
+$('#perfilCard').addEventListener('click', function(){
+  cambiarSeccion('yo-soy');
 });
 $('#calPrev').addEventListener('click', function(){
   state.calendarioMes = new Date(state.calendarioMes.getFullYear(), state.calendarioMes.getMonth() - 1, 1);
