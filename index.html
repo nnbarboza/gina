@@ -1676,7 +1676,7 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.13.1
+  v0.13.2
 </div>
 
 <script>
@@ -2179,7 +2179,13 @@ function normalizarFecha(raw) {
     return fmtFecha(raw);
   }
   const s = String(raw).trim();
-  // Formato ISO ya correcto YYYY-MM-DD
+  // Formato ISO con hora en UTC (ej "2026-06-18T22:00:00.000Z"): convertir a
+  // fecha LOCAL antes de recortar, para no quedarnos con el día UTC equivocado.
+  if (/^\d{4}-\d{2}-\d{2}T/.test(s) && /[Z+]/.test(s.slice(10))) {
+    const d = new Date(s);
+    if (!isNaN(d.getTime())) return fmtFecha(d);
+  }
+  // Formato ISO ya correcto YYYY-MM-DD (con o sin hora local sin zona)
   if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
   // Formato DD/MM/YYYY (español)
   const m1 = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
