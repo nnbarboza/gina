@@ -1676,7 +1676,7 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.13.2
+  v0.13.3
 </div>
 
 <script>
@@ -2048,14 +2048,18 @@ function conectarInputsHoy() {
     }
   } catch(_) {}
 
+  // Guardado por evento (no en cada tecla): al salir del campo (blur)
   ['#actividadSelect', '#actividadDetalle', '#algoBueno1', '#algoBueno2', '#algoBueno3', '#aprendi', '#mdQuePaso', '#mdQueSenti', '#mdQueAyudo', '#mdQueNecesito'].forEach(function(sel){
     const el = $(sel);
-    if (el) el.addEventListener('input', guardarDebounced);
+    if (el) {
+      el.addEventListener('blur', guardarAhora);
+      el.addEventListener('change', guardarAhora);
+    }
   });
 
   $('#dificilToggle').addEventListener('click', function(){
     $('#dificilCard').classList.toggle('active');
-    guardarDebounced();
+    guardarAhora();
   });
   $('#actividadToggle').addEventListener('click', function(){
     const card = $('#actividadCard');
@@ -2066,7 +2070,7 @@ function conectarInputsHoy() {
       card.classList.remove('tiene-datos');
       actualizarResumenActividad();
     }
-    guardarDebounced();
+    guardarAhora();
   });
   $('#actividadSelect').addEventListener('change', function(){
     if ($('#actividadSelect').value) $('#actividadCard').classList.add('tiene-datos');
@@ -2112,16 +2116,40 @@ function recopilarDia() {
   };
 }
 
-function guardarDebounced() {
+// Guarda solo si hay algo que guardar y no se está guardando ya.
+// (Antes guardaba en cada tecla con debounce → spam de filas. Ahora por evento.)
+function guardarAhora() {
   clearTimeout(state.guardandoTimer);
-  state.guardandoTimer = setTimeout(guardar, 1500);
+  // pequeño margen para que el valor del campo ya esté actualizado
+  state.guardandoTimer = setTimeout(guardar, 150);
+}
+
+// Compat: algunos sitios podían llamar guardarDebounced
+function guardarDebounced() { guardarAhora(); }
+
+function diaTieneContenido(payload) {
+  return !!(payload.emocion || payload.actividad_categoria || payload.actividad_detalle
+    || payload.algo_bueno_1 || payload.algo_bueno_2 || payload.algo_bueno_3
+    || payload.aprendi || payload.momento_dificil === 'true'
+    || payload.md_que_paso || payload.md_que_senti || payload.md_que_ayudo || payload.md_que_necesito
+    || (payload.cosas_hice_json && payload.cosas_hice_json !== '[]')
+    || (state.diaActual && state.diaActual.cancion_spotify_id));
 }
 
 async function guardar() {
   if (state.saving) return;
+  const payload = recopilarDia();
+  // Conservar la canción ya guardada (no está en el form)
+  if (state.diaActual && state.diaActual.cancion_spotify_id) {
+    payload.cancion_spotify_id = state.diaActual.cancion_spotify_id;
+    payload.cancion_recomendada_por = state.diaActual.cancion_recomendada_por || '';
+  }
+  // No crear filas vacías por solo navegar/enfocar campos
+  if (!diaTieneContenido(payload) && !(state.diaActual && state.diaActual.id)) {
+    return;
+  }
   state.saving = true;
   try {
-    const payload = recopilarDia();
     const res = await api('saveDia', { payload: payload });
     if (res && res.id) {
       state.diaActual = Object.assign({}, state.diaActual, payload, { id: res.id });
@@ -4158,6 +4186,11 @@ function pintarSeccionPlaceholder(titulo) {
 }
 
 function cambiarSeccion(s) {
+  // Si salimos de Hoy, guardar lo pendiente antes de cambiar
+  if (state.seccionActiva === 'hoy' && s !== 'hoy') {
+    clearTimeout(state.guardandoTimer);
+    guardar();
+  }
   state.seccionActiva = s;
   $$('.nav-item').forEach(function(n){ n.classList.toggle('active', n.dataset.section === s); });
   // Cerrar ficha de libro si estaba abierta
@@ -4171,6 +4204,11 @@ function cambiarSeccion(s) {
 }
 
 async function cargarDia(fechaStr) {
+  // Guardar lo pendiente del día actual antes de cambiar
+  if (state.fechaActual && state.fechaActual !== fechaStr) {
+    clearTimeout(state.guardandoTimer);
+    await guardar();
+  }
   state.fechaActual = fechaStr;
   const f = new Date(fechaStr + 'T00:00:00');
   $('#fechaLarga').textContent = fechaDiaSemana(f) + ' ' + fechaLarga(f);
@@ -4376,6 +4414,14 @@ if (btnRefresh) {
     window.location.replace(url.toString());
   });
 }
+
+// Guardar lo pendiente si la app se cierra o pasa a segundo plano
+document.addEventListener('visibilitychange', function(){
+  if (document.visibilityState === 'hidden' && state.seccionActiva === 'hoy') {
+    clearTimeout(state.guardandoTimer);
+    guardar();
+  }
+});
 
 bootstrap();
 </script>
