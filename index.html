@@ -946,6 +946,31 @@ textarea.input-base {
 }
 .ficha-datos-item .ficha-icon { width: 16px; height: 16px; opacity: 0.7; }
 
+/* Ficha rediseño v0.14 */
+.ficha-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.ficha-acciones { display: flex; gap: 18px; }
+.ficha-accion { display: flex; flex-direction: column; align-items: center; gap: 3px; font-family: var(--font-ui); font-weight: 600; font-size: 12px; color: var(--text-soft); background: transparent; }
+.ficha-accion span { font-size: 18px; }
+.ficha-accion.danger { color: var(--coral); }
+.ficha-grid2 { display: grid; grid-template-columns: 200px 1.1fr 1.2fr 1.1fr; gap: 18px; align-items: start; margin-bottom: 16px; }
+@media (max-width: 1100px) { .ficha-grid2 { grid-template-columns: 180px 1fr; } }
+.ficha-col-portada { display: flex; flex-direction: column; gap: 10px; }
+.ficha-cambiar-portada { background: var(--card); border: 1px solid var(--border); color: var(--lavanda); font-family: var(--font-ui); font-weight: 700; font-size: 12px; padding: 9px; border-radius: var(--r-pill); }
+.ficha-fav-star { font-size: 22px; vertical-align: middle; }
+.ficha-datos2 { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+.ficha-datos2 .fd { display: flex; align-items: flex-start; gap: 10px; }
+.ficha-datos2 .fd-ico { font-size: 18px; }
+.ficha-datos2 .fd-lbl { font-family: var(--font-ui); font-size: 11px; color: var(--text-mute); }
+.ficha-datos2 .fd-val { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--text); }
+.ficha-fecha-input { background: transparent; border: 1px dashed var(--border); border-radius: 6px; padding: 2px 6px; font-family: var(--font-ui); font-size: 14px; color: var(--text); }
+.ficha-sinopsis { font-family: var(--font-hand); font-size: 15px; color: var(--text-soft); line-height: 1.55; }
+.ficha-vacio { font-family: var(--font-hand); font-size: 14px; color: var(--text-mute); }
+.ficha-grid3 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 900px) { .ficha-grid3 { grid-template-columns: 1fr; } }
+.ficha-frases-list { display: flex; flex-direction: column; gap: 8px; }
+.ficha-frase-item { display: flex; align-items: flex-start; gap: 8px; background: var(--bg); border-radius: var(--r-input); padding: 10px 12px; }
+.ficha-frase-txt { flex: 1; font-family: var(--font-hand); font-size: 14px; color: var(--text-soft); line-height: 1.4; }
+
 .ficha-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -1493,6 +1518,70 @@ textarea.input-base {
 .cap-contenido-revelado a { color: #7A5EA8; word-break: break-all; }
 .cap-bloqueada-msg { text-align: center; padding: 24px; font-family: var(--font-hand); font-size: 16px; color: var(--text-mute); }
 
+/* ============================================================
+   BIBLIOTECA v0.14 — rediseño: contadores, tabs, filas, colecciones
+   ============================================================ */
+.bib-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
+.bib-stat { display: flex; align-items: center; gap: 14px; border-radius: var(--r-card); padding: 16px 18px; }
+.bib-stat.mes  { background: #F3ECFB; }
+.bib-stat.anio { background: #FBE4EC; }
+.bib-stat.total{ background: #FCF1D8; }
+.bib-stat .ico { font-size: 34px; line-height: 1; }
+.bib-stat .lbl { font-family: var(--font-hand); font-size: 14px; color: var(--text-soft); }
+.bib-stat .num { font-family: var(--font-display); font-weight: 700; font-size: 30px; color: var(--text); line-height: 1; }
+.bib-stat .sub { font-family: var(--font-hand); font-size: 13px; color: var(--text-mute); }
+
+.bib-tabs { display: flex; gap: 6px; background: var(--bg-darker); padding: 5px; border-radius: var(--r-pill); width: fit-content; margin-bottom: 16px; }
+.bib-tabs button { font-family: var(--font-display); font-weight: 700; font-size: 14px; padding: 9px 22px; border-radius: var(--r-pill); color: var(--text-soft); background: transparent; }
+.bib-tabs button.active { background: var(--lavanda); color: #fff; box-shadow: var(--shadow-s); }
+
+.bib-toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.bib-toolbar .orden-label { font-family: var(--font-hand); font-size: 14px; color: var(--text-soft); margin-left: auto; }
+
+/* Filas de libros */
+.bib-lista { display: flex; flex-direction: column; gap: 10px; }
+.bib-row {
+  display: grid;
+  grid-template-columns: 56px 1.4fr auto 1.1fr 28px;
+  align-items: center; gap: 16px;
+  background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--r-card);
+  padding: 12px 16px; cursor: pointer; transition: box-shadow .15s, transform .15s;
+}
+.bib-row:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+.bib-row-portada { width: 56px; height: 78px; border-radius: 8px; overflow: hidden; background: var(--peach); display: flex; align-items: center; justify-content: center; }
+.bib-row-portada img { width: 100%; height: 100%; object-fit: cover; }
+.bib-row-portada .img-fallback { font-size: 22px; }
+.bib-row-info { min-width: 0; }
+.bib-row-titulo { font-family: var(--font-display); font-weight: 700; font-size: 17px; color: var(--text); line-height: 1.2; }
+.bib-row-autor { font-family: var(--font-hand); font-size: 14px; color: var(--text-soft); margin: 2px 0 6px; }
+.bib-row-genero { display: inline-block; font-family: var(--font-ui); font-weight: 700; font-size: 11px; padding: 3px 10px; border-radius: var(--r-pill); background: #EADFF7; color: #7A5EA8; }
+.bib-row-fecha { font-family: var(--font-ui); font-size: 11px; color: var(--text-mute); margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+.bib-row-valoracion { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.bib-row-stars { font-size: 14px; color: var(--amarillo); letter-spacing: 1px; white-space: nowrap; }
+.bib-row-stars .off { color: #E6DFD2; }
+.bib-row-iconos { display: flex; gap: 8px; align-items: center; }
+.bib-row-iconos .ic { font-size: 15px; opacity: .9; }
+.bib-row-frase { font-family: var(--font-hand); font-size: 13px; color: var(--text-soft); font-style: italic; line-height: 1.3; }
+.bib-row-frase::before { content: '“'; } .bib-row-frase::after { content: '”'; }
+.bib-row-menu { text-align: center; color: var(--text-mute); font-size: 18px; }
+.bib-vermas { display: block; margin: 16px auto 0; background: var(--card); border: 1px solid var(--border); color: var(--lavanda); font-family: var(--font-display); font-weight: 700; font-size: 14px; padding: 10px 26px; border-radius: var(--r-pill); }
+
+/* Grid de colecciones */
+.bib-cols-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.bib-col-card {
+  position: relative; border-radius: var(--r-card); overflow: hidden; cursor: pointer;
+  min-height: 150px; display: flex; flex-direction: column; justify-content: flex-end;
+  border: 1px solid var(--border-soft); transition: transform .15s, box-shadow .15s;
+}
+.bib-col-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.bib-col-img { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.bib-col-emoji { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 54px; }
+.bib-col-overlay { position: relative; background: linear-gradient(transparent, rgba(0,0,0,0.04) 40%, rgba(255,253,249,0.96)); padding: 28px 16px 14px; }
+.bib-col-nombre { font-family: var(--font-display); font-weight: 700; font-size: 16px; color: var(--text); display: flex; align-items: center; gap: 6px; }
+.bib-col-count { font-family: var(--font-hand); font-size: 13px; color: var(--text-soft); display: flex; align-items: center; justify-content: space-between; }
+.bib-col-nueva { border: 1.5px dashed var(--border); background: var(--card); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--text-soft); font-family: var(--font-hand); font-size: 14px; }
+.bib-col-nueva .plus { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--lavanda); color: var(--lavanda); display: flex; align-items: center; justify-content: center; font-size: 22px; }
+
 .placeholder-seccion {
   background: var(--card);
   border: 1.5px dashed var(--border);
@@ -1676,7 +1765,7 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.13.3
+  v0.14.0
 </div>
 
 <script>
@@ -1701,6 +1790,10 @@ const state = {
   capTipoSel: 'mensaje',
   resumenModo: 'semana',
   resumenRef: null,
+  bibTab: 'libros',
+  bibOrden: 'reciente',
+  bibVisibles: 8,
+  bibColeccionActiva: null,
 };
 
 function $(s) { return document.querySelector(s); }
@@ -2533,115 +2626,279 @@ const ORDEN_OPCIONES = [
 
 async function pintarSeccionBiblioteca() {
   $('#mainHeader').style.display = 'none';
-  $('#seccionContenido').innerHTML = `
-    <div class="biblio-header">
-      <div>
-        <div class="biblio-titulo">Mi biblioteca 💜</div>
-        <div class="biblio-subtitulo">Mis historias, ideas y recuerdos favoritos.</div>
-      </div>
-      <button id="btnAñadirLibro2" style="background: var(--amarillo); color: var(--text); font-family: var(--font-display); font-weight: 700; font-size: 13px; padding: 10px 16px; border-radius: var(--r-pill); box-shadow: var(--shadow-s);">+ Añadir libro</button>
-    </div>
-
-    <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center;">
-      <select id="filtroBiblio" class="input-base" style="max-width: 220px;">
-        <option value="todos">📚 Todos los libros</option>
-        <option value="favoritos">💖 Favoritos</option>
-      </select>
-      <select id="ordenBiblio" class="input-base" style="max-width: 220px;">
-        ${ORDEN_OPCIONES.map(o => '<option value="' + o.value + '">' + o.label + '</option>').join('')}
-      </select>
-      <button id="btnNuevaColeccion" style="background: var(--card); border: 1px dashed var(--border); color: var(--text-soft); font-family: var(--font-hand); font-size: 13px; padding: 8px 14px; border-radius: var(--r-pill); margin-left: auto;">+ Crear colección</button>
-    </div>
-
-    <div id="librosGrid" class="libros-fila"></div>
-  `;
+  state.bibTab = state.bibTab || 'libros';
+  state.bibOrden = state.bibOrden || 'reciente';
+  state.bibVisibles = state.bibVisibles || 8;
 
   // Cargar libros si no están en memoria
   if (!state.libros.length) {
     try { state.libros = await api('getBiblioteca') || []; } catch(_) { state.libros = []; }
   }
 
-  poblarFiltroColecciones();
-  pintarLibrosFiltrados();
+  const ahora = new Date();
+  const mesKey = ahora.getFullYear() + '-' + String(ahora.getMonth()+1).padStart(2,'0');
+  const anioKey = String(ahora.getFullYear());
+  const nMes = state.libros.filter(function(l){ return String(l.fecha_terminado||'').slice(0,7) === mesKey; }).length;
+  const nAnio = state.libros.filter(function(l){ return String(l.fecha_terminado||'').slice(0,4) === anioKey; }).length;
+  const nTotal = state.libros.length;
+
+  $('#seccionContenido').innerHTML = `
+    <div class="biblio-header">
+      <div>
+        <div class="biblio-titulo">📖 Biblioteca ✨</div>
+        <div class="biblio-subtitulo">Mis libros, mis historias.</div>
+      </div>
+      <button id="btnAñadirLibro2" style="background: var(--lavanda); color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 14px; padding: 11px 20px; border-radius: var(--r-pill); box-shadow: var(--shadow-s);">+ Añadir libro</button>
+    </div>
+
+    <div class="bib-stats">
+      <div class="bib-stat mes"><span class="ico">📘</span><div><div class="lbl">Este mes</div><div class="num">${nMes}</div><div class="sub">libros</div></div></div>
+      <div class="bib-stat anio"><span class="ico">📅</span><div><div class="lbl">Este año</div><div class="num">${nAnio}</div><div class="sub">libros</div></div></div>
+      <div class="bib-stat total"><span class="ico">🏆</span><div><div class="lbl">Total</div><div class="num">${nTotal}</div><div class="sub">libros</div></div></div>
+    </div>
+
+    <div class="bib-tabs" id="bibTabs">
+      <button data-tab="libros" class="${state.bibTab==='libros'?'active':''}">Mis libros</button>
+      <button data-tab="colecciones" class="${state.bibTab==='colecciones'?'active':''}">Mis colecciones</button>
+    </div>
+
+    <div id="bibContenido"></div>
+  `;
 
   $('#btnAñadirLibro2').addEventListener('click', abrirModalAñadir);
-  $('#btnNuevaColeccion').addEventListener('click', crearColeccionPrompt);
-  $('#filtroBiblio').addEventListener('change', pintarLibrosFiltrados);
-  $('#ordenBiblio').addEventListener('change', pintarLibrosFiltrados);
-}
-
-function poblarFiltroColecciones() {
-  const sel = $('#filtroBiblio');
-  if (!sel) return;
-  const cols = (state.bootstrap && state.bootstrap.biblioteca_colecciones) || [];
-  cols.forEach(function(c){
-    if (!c.id) return;
-    const opt = document.createElement('option');
-    opt.value = 'col:' + c.id;
-    opt.textContent = (c.emoji ? c.emoji + ' ' : '📚 ') + c.nombre;
-    sel.appendChild(opt);
+  $('#bibTabs').addEventListener('click', function(e){
+    const b = e.target.closest('button');
+    if (!b) return;
+    state.bibTab = b.dataset.tab;
+    state.bibVisibles = 8;
+    if (b.dataset.tab === 'libros') state.bibColeccionActiva = null;
+    $$('#bibTabs button').forEach(function(x){ x.classList.toggle('active', x === b); });
+    pintarBibContenido();
   });
+
+  pintarBibContenido();
 }
 
-function pintarLibrosFiltrados() {
-  const cont = $('#librosGrid');
-  if (!cont) return;
-  const filtro = $('#filtroBiblio').value;
-  const orden = $('#ordenBiblio').value;
+function pintarBibContenido() {
+  if (state.bibTab === 'colecciones') { pintarMisColecciones(); return; }
+  if (state.bibColeccionActiva) { abrirColeccion(state.bibColeccionActiva); return; }
+  pintarMisLibros();
+}
 
-  let libros = state.libros.slice();
-
-  // Filtros
-  if (filtro === 'favoritos') {
-    libros = libros.filter(function(l){ return _truthy(l.favorito); });
-  } else if (filtro.indexOf('col:') === 0) {
-    const colId = filtro.slice(4);
-    libros = libros.filter(function(l){
-      const cs = String(l.colecciones || '').split(',').map(function(x){ return x.trim(); });
-      return cs.includes(colId);
-    });
-  }
-
-  // Orden
-  libros.sort(function(a, b){
-    if (orden === 'reciente')   return (b.fecha_terminado || '').localeCompare(a.fecha_terminado || '');
-    if (orden === 'antiguo')    return (a.fecha_terminado || '').localeCompare(b.fecha_terminado || '');
-    if (orden === 'valoracion') return (parseInt(b.estrellas) || 0) - (parseInt(a.estrellas) || 0);
-    if (orden === 'megusto')    {
-      const aS = a.me_gusto === 'si' ? 1 : 0;
-      const bS = b.me_gusto === 'si' ? 1 : 0;
-      return bS - aS;
-    }
+function ordenarLibros(libros) {
+  const orden = state.bibOrden;
+  return libros.slice().sort(function(a, b){
+    if (orden === 'reciente')   return String(b.fecha_terminado||'').localeCompare(String(a.fecha_terminado||''));
+    if (orden === 'antiguo')    return String(a.fecha_terminado||'').localeCompare(String(b.fecha_terminado||''));
+    if (orden === 'valoracion') return (parseInt(b.estrellas)||0) - (parseInt(a.estrellas)||0);
+    if (orden === 'megusto')    return ((b.me_gusto==='si')?1:0) - ((a.me_gusto==='si')?1:0);
     if (orden === 'alfabetico') return String(a.titulo||'').localeCompare(String(b.titulo||''));
     return 0;
   });
+}
+
+function pintarMisLibros() {
+  const cont = $('#bibContenido');
+  if (!cont) return;
+
+  cont.innerHTML = `
+    <div class="bib-toolbar">
+      <span class="orden-label">Ordenar por:</span>
+      <select id="ordenBiblio" class="input-base" style="max-width: 200px;">
+        ${ORDEN_OPCIONES.map(o => '<option value="' + o.value + '"' + (o.value===state.bibOrden?' selected':'') + '>' + o.label + '</option>').join('')}
+      </select>
+    </div>
+    <div id="librosLista" class="bib-lista"></div>
+    <div id="librosVerMas"></div>
+  `;
+
+  $('#ordenBiblio').addEventListener('change', function(){
+    state.bibOrden = this.value;
+    state.bibVisibles = 8;
+    pintarFilasLibros();
+  });
+
+  pintarFilasLibros();
+}
+
+function pintarFilasLibros() {
+  const lista = $('#librosLista');
+  const verMas = $('#librosVerMas');
+  if (!lista) return;
+
+  const libros = ordenarLibros(state.libros);
 
   if (!libros.length) {
-    cont.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-mute); font-family: var(--font-hand); font-size: 14px;">No hay libros en esta vista. ¡Añade uno!</div>';
+    lista.innerHTML = '<div style="text-align:center; padding: 40px; color: var(--text-mute); font-family: var(--font-hand); font-size: 15px;">Todavía no hay libros. ¡Añadí el primero! 📚</div>';
+    verMas.innerHTML = '';
     return;
   }
 
-  cont.innerHTML = libros.map(libroCardHtml).join('');
-  cont.querySelectorAll('.libro-card').forEach(function(el){
+  const mostrar = libros.slice(0, state.bibVisibles);
+  lista.innerHTML = mostrar.map(libroFilaHtml).join('');
+  lista.querySelectorAll('.bib-row').forEach(function(el){
     el.addEventListener('click', function(){ abrirFichaLibro(el.dataset.id); });
   });
+
+  if (libros.length > state.bibVisibles) {
+    verMas.innerHTML = '<button class="bib-vermas" id="btnVerMasLibros">Ver más libros ▾</button>';
+    $('#btnVerMasLibros').addEventListener('click', function(){
+      state.bibVisibles += 8;
+      pintarFilasLibros();
+    });
+  } else {
+    verMas.innerHTML = '';
+  }
 }
 
-function libroCardHtml(l) {
+function primeraFrase(l) {
+  try {
+    const fr = JSON.parse(l.frases_destacadas_json || '[]');
+    if (Array.isArray(fr) && fr.length) return String(fr[0]);
+  } catch(_) {}
+  return '';
+}
+
+function libroFilaHtml(l) {
   const stars = parseInt(l.estrellas) || 0;
-  const starsHtml = stars > 0 ? '<div class="libro-stars">' + '★'.repeat(stars) + '☆'.repeat(5-stars) + '</div>' : '';
+  const starsHtml = '<span>' + '★'.repeat(stars) + '</span><span class="off">' + '★'.repeat(5-stars) + '</span>';
   const portada = l.portada_url
-    ? '<img src="' + l.portada_url + '" alt="' + (l.titulo || '') + '" data-initial="' + ((l.titulo||'?')[0]) + '" data-bg="#FFD3B6" />'
+    ? '<img src="' + l.portada_url + '" loading="lazy" alt="' + _esc(l.titulo||'') + '" data-initial="' + _esc((l.titulo||'?')[0]) + '" data-bg="#FFD3B6" />'
     : '<div class="img-fallback">📖</div>';
-  const favBadge = _truthy(l.favorito) ? '<div style="position:absolute; top:6px; right:6px; font-size:14px;">💖</div>' : '';
-  return '<div class="libro-card" data-id="' + l.id + '">'
-    + favBadge
-    + '<div class="libro-portada">' + portada + '</div>'
-    + '<div class="libro-titulo">' + (l.titulo || '') + '</div>'
-    + '<div class="libro-autor">' + (l.autor || '') + '</div>'
-    + starsHtml
+  const pulgar = l.me_gusto === 'si' ? '👍' : (l.me_gusto === 'no' ? '👎' : '');
+  const fav = _truthy(l.favorito) ? '❤️' : '';
+  const iconos = (pulgar || fav)
+    ? '<div class="bib-row-iconos">' + (pulgar ? '<span class="ic">' + pulgar + '</span>' : '') + (fav ? '<span class="ic">' + fav + '</span>' : '') + '</div>'
+    : '';
+  const frase = primeraFrase(l);
+  const fraseHtml = frase ? '<div class="bib-row-frase">' + _esc(frase.length > 70 ? frase.slice(0,70)+'…' : frase) + '</div>' : '<div></div>';
+  const fechaHtml = l.fecha_terminado ? '<div class="bib-row-fecha">📅 Leído el ' + (formatoFechaHist(l.fecha_terminado) || l.fecha_terminado) + '</div>' : '';
+  const genero = l.genero ? '<span class="bib-row-genero">' + _esc(String(l.genero).split(',')[0]) + '</span>' : '';
+
+  return '<div class="bib-row" data-id="' + _esc(l.id) + '">'
+    + '<div class="bib-row-portada">' + portada + '</div>'
+    + '<div class="bib-row-info">'
+      + '<div class="bib-row-titulo">' + _esc(l.titulo||'') + '</div>'
+      + '<div class="bib-row-autor">' + _esc(l.autor||'') + '</div>'
+      + genero
+      + fechaHtml
+    + '</div>'
+    + '<div class="bib-row-valoracion">'
+      + (stars > 0 ? '<div class="bib-row-stars">' + starsHtml + '</div>' : '<div class="bib-row-stars"><span class="off">★★★★★</span></div>')
+      + iconos
+    + '</div>'
+    + fraseHtml
+    + '<div class="bib-row-menu">›</div>'
     + '</div>';
 }
+
+function pintarMisColecciones() {
+  const cont = $('#bibContenido');
+  if (!cont) return;
+  const cols = (state.bootstrap && state.bootstrap.biblioteca_colecciones) || [];
+
+  // Card especial fija: Favoritos
+  const nFav = state.libros.filter(function(l){ return _truthy(l.favorito); }).length;
+  let cards = '<div class="bib-col-card" data-fav="1">'
+    + '<div class="bib-col-emoji">❤️</div>'
+    + '<div class="bib-col-overlay"><div class="bib-col-nombre">Favoritos</div>'
+    + '<div class="bib-col-count"><span>' + nFav + ' libros</span><span>›</span></div></div>'
+    + '</div>';
+
+  cards += cols.map(function(c){
+    if (!c.id) return '';
+    const n = state.libros.filter(function(l){
+      return String(l.colecciones||'').split(',').map(function(x){return x.trim();}).includes(c.id);
+    }).length;
+    const fondo = (c.imagen && String(c.imagen).length > 4)
+      ? '<div class="bib-col-img" style="background-image:url(' + _esc(c.imagen) + ');"></div>'
+      : '<div class="bib-col-emoji">' + _esc(c.emoji || '📚') + '</div>';
+    return '<div class="bib-col-card" data-col="' + _esc(c.id) + '">'
+      + fondo
+      + '<div class="bib-col-overlay"><div class="bib-col-nombre">' + _esc(c.nombre) + '</div>'
+      + '<div class="bib-col-count"><span>' + n + ' libros</span><span>›</span></div></div>'
+      + '</div>';
+  }).join('');
+
+  cards += '<div class="bib-col-card bib-col-nueva" id="btnNuevaColeccion2">'
+    + '<div class="plus">+</div><div>Crear nueva colección</div></div>';
+
+  cont.innerHTML = '<div class="bib-cols-grid">' + cards + '</div>';
+
+  cont.querySelectorAll('.bib-col-card[data-col]').forEach(function(el){
+    el.addEventListener('click', function(){ abrirColeccion(el.dataset.col); });
+  });
+  const favCard = cont.querySelector('.bib-col-card[data-fav]');
+  if (favCard) favCard.addEventListener('click', function(){ abrirColeccion('__fav__'); });
+  $('#btnNuevaColeccion2').addEventListener('click', crearColeccionPrompt);
+}
+
+// Abre una colección como lista de libros filtrada (reusa la vista de filas)
+function abrirColeccion(colId) {
+  state.bibTab = 'libros';
+  state.bibColeccionActiva = colId;
+  state.bibVisibles = 8;
+  $$('#bibTabs button').forEach(function(x){ x.classList.toggle('active', x.dataset.tab === 'libros'); });
+
+  const cont = $('#bibContenido');
+  let nombre = 'Favoritos';
+  if (colId !== '__fav__') {
+    const cols = (state.bootstrap && state.bootstrap.biblioteca_colecciones) || [];
+    const c = cols.find(function(x){ return x.id === colId; });
+    nombre = c ? c.nombre : 'Colección';
+  }
+
+  cont.innerHTML = `
+    <div class="bib-toolbar">
+      <button id="bibVolverCols" style="background:var(--card); border:1px solid var(--border); color:var(--text-soft); font-family:var(--font-hand); font-size:13px; padding:7px 16px; border-radius:var(--r-pill);">← Colecciones</button>
+      <span style="font-family:var(--font-display); font-weight:700; font-size:16px; color:var(--text);">${_esc(nombre)}</span>
+      <span class="orden-label">Ordenar por:</span>
+      <select id="ordenBiblio" class="input-base" style="max-width: 180px;">
+        ${ORDEN_OPCIONES.map(o => '<option value="' + o.value + '"' + (o.value===state.bibOrden?' selected':'') + '>' + o.label + '</option>').join('')}
+      </select>
+    </div>
+    <div id="librosLista" class="bib-lista"></div>
+    <div id="librosVerMas"></div>
+  `;
+
+  $('#bibVolverCols').addEventListener('click', function(){
+    state.bibColeccionActiva = null;
+    state.bibTab = 'colecciones';
+    $$('#bibTabs button').forEach(function(x){ x.classList.toggle('active', x.dataset.tab === 'colecciones'); });
+    pintarMisColecciones();
+  });
+  $('#ordenBiblio').addEventListener('change', function(){
+    state.bibOrden = this.value; state.bibVisibles = 8; pintarFilasColeccion(colId);
+  });
+  pintarFilasColeccion(colId);
+}
+
+function pintarFilasColeccion(colId) {
+  const lista = $('#librosLista');
+  const verMas = $('#librosVerMas');
+  if (!lista) return;
+
+  let libros = state.libros.filter(function(l){
+    if (colId === '__fav__') return _truthy(l.favorito);
+    return String(l.colecciones||'').split(',').map(function(x){return x.trim();}).includes(colId);
+  });
+  libros = ordenarLibros(libros);
+
+  if (!libros.length) {
+    lista.innerHTML = '<div style="text-align:center; padding: 40px; color: var(--text-mute); font-family: var(--font-hand); font-size: 15px;">No hay libros en esta colección todavía.</div>';
+    verMas.innerHTML = ''; return;
+  }
+  const mostrar = libros.slice(0, state.bibVisibles);
+  lista.innerHTML = mostrar.map(libroFilaHtml).join('');
+  lista.querySelectorAll('.bib-row').forEach(function(el){
+    el.addEventListener('click', function(){ abrirFichaLibro(el.dataset.id); });
+  });
+  if (libros.length > state.bibVisibles) {
+    verMas.innerHTML = '<button class="bib-vermas" id="btnVerMasLibros">Ver más libros ▾</button>';
+    $('#btnVerMasLibros').addEventListener('click', function(){ state.bibVisibles += 8; pintarFilasColeccion(colId); });
+  } else { verMas.innerHTML = ''; }
+}
+
 
 async function crearColeccionPrompt() {
   const nombre = prompt('Nombre de la nueva colección:');
@@ -2726,7 +2983,7 @@ async function enriquecerEnBackground(id) {
       abrirFichaLibro(id);
     }
     if (state.seccionActiva === 'biblioteca') {
-      pintarLibrosFiltrados();
+      pintarBibContenido();
     }
   } catch (err) {
     console.error('Error enriqueciendo:', err);
@@ -2782,71 +3039,78 @@ function abrirFichaLibro(id) {
   }
 
   $('#fichaLibro').innerHTML = `
-    <button class="ficha-back" id="fichaBack">← Volver</button>
-    <div class="ficha-grid">
-      <div>
+    <div class="ficha-topbar">
+      <button class="ficha-back" id="fichaBack">← Volver a Biblioteca</button>
+      <div class="ficha-acciones">
+        <button id="btnEditarLibro" class="ficha-accion"><span>✏️</span>Editar info</button>
+        <button id="btnRegenerar" class="ficha-accion"><span>🪄</span>Regenerar info</button>
+        <button id="fichaBorrar" class="ficha-accion danger"><span>🗑️</span>Eliminar libro</button>
+      </div>
+    </div>
+
+    ${avisoEstado}
+
+    <div class="ficha-grid2">
+      <div class="ficha-col-portada">
         <div class="ficha-portada">${portada}</div>
-        <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
-          <button id="btnEditarLibro" style="background: var(--card); border: 1px solid var(--border); padding: 8px; border-radius: var(--r-pill); font-family: var(--font-display); font-weight: 600; font-size: 12px;">✏️ Editar info</button>
-          <button id="btnRegenerar" style="background: var(--card); border: 1px solid var(--border); padding: 8px; border-radius: var(--r-pill); font-family: var(--font-display); font-weight: 600; font-size: 12px;">🔄 Regenerar info</button>
-          <button id="btnCambiarPortada" style="background: var(--card); border: 1px solid var(--border); padding: 8px; border-radius: var(--r-pill); font-family: var(--font-display); font-weight: 600; font-size: 12px;">🖼️ Cambiar portada</button>
-          <label style="display: flex; align-items: center; gap: 6px; font-family: var(--font-hand); font-size: 14px; color: var(--text-soft); cursor: pointer; padding: 6px 0;">
-            <input type="checkbox" id="fichaFavorito" ${_truthy(libro.favorito) ? 'checked' : ''}> 💖 Marcar como favorito
-          </label>
-          <button id="fichaBorrar" style="margin-top: 4px; color: var(--coral); font-size: 12px; font-family: var(--font-ui);">Eliminar libro</button>
-        </div>
+        <button id="btnCambiarPortada" class="ficha-cambiar-portada">🖼️ Cambiar portada</button>
       </div>
 
-      <div>
-        ${avisoEstado}
-        <div class="ficha-titulo">${libro.titulo || ''}</div>
-        <div class="ficha-autor">${libro.autor || ''}</div>
-
-        <div class="ficha-datos">
-          ${libro.anio ? '<div class="ficha-datos-item"><span>📅</span> Año: ' + libro.anio + '</div>' : ''}
-          ${libro.paginas ? '<div class="ficha-datos-item"><span>📖</span> ' + libro.paginas + ' páginas</div>' : ''}
-          ${libro.editorial ? '<div class="ficha-datos-item"><span>🏢</span> ' + libro.editorial + '</div>' : ''}
-          ${libro.genero ? '<div class="ficha-datos-item"><span>📚</span> ' + libro.genero + '</div>' : ''}
-          <div class="ficha-datos-item"><span>✅</span> Terminado: <input type="date" id="fichaFechaTerminado" value="${libro.fecha_terminado || ''}" style="background: transparent; border: 1px dashed var(--border); border-radius: 6px; padding: 2px 6px; font-family: var(--font-ui); font-size: 13px; color: var(--text-soft);" /></div>
+      <div class="ficha-col-datos">
+        <div class="ficha-titulo">${_esc(libro.titulo || '')} <span class="ficha-fav-star" id="fichaFavStar">${_truthy(libro.favorito)?'⭐':'☆'}</span></div>
+        <div class="ficha-autor">${_esc(libro.autor || '')}</div>
+        <div class="ficha-datos2">
+          ${libro.anio ? '<div class="fd"><span class="fd-ico">📅</span><div><div class="fd-lbl">Año de publicación</div><div class="fd-val">' + _esc(libro.anio) + '</div></div></div>' : ''}
+          ${libro.genero ? '<div class="fd"><span class="fd-ico">🏷️</span><div><div class="fd-lbl">Categoría</div><div class="fd-val"><span class="bib-row-genero">' + _esc(String(libro.genero).split(',')[0]) + '</span></div></div></div>' : ''}
+          ${libro.paginas ? '<div class="fd"><span class="fd-ico">📖</span><div><div class="fd-lbl">Páginas</div><div class="fd-val">' + _esc(libro.paginas) + '</div></div></div>' : ''}
+          <div class="fd"><span class="fd-ico">✅</span><div><div class="fd-lbl">Terminado el</div><div class="fd-val"><input type="date" id="fichaFechaTerminado" value="${libro.fecha_terminado || ''}" class="ficha-fecha-input" /></div></div></div>
         </div>
-
-        ${libro.sinopsis ? '<div style="font-family: var(--font-hand); font-size: 14px; color: var(--text-soft); margin-bottom: 16px; line-height: 1.4;">' + libro.sinopsis.slice(0, 300) + (libro.sinopsis.length > 300 ? '…' : '') + '</div>' : ''}
-
-        <div class="ficha-card" style="margin-bottom: 12px;">
+        <div class="ficha-card" style="margin-top:14px;">
           <div class="ficha-card-title">📚 Colecciones</div>
           <div class="ficha-chip-list" id="fichaColecciones">${colChips}</div>
           <button class="ficha-add-btn" id="addAColeccion">+ Añadir a colección</button>
         </div>
+      </div>
 
-        <div class="ficha-cards">
-          <div class="ficha-card">
-            <div class="ficha-card-title">⭐ Mi valoración</div>
-            <div class="ficha-stars" id="fichaStars">${starsHtml}</div>
-            <div class="ficha-card-title" style="margin-top: 12px;">¿Te gustó?</div>
-            <div class="ficha-megusto-row">
-              <button class="ficha-megusto-btn ${libro.me_gusto === 'si' ? 'active' : ''}" data-val="si"><span class="ficha-megusto-emoji">😊</span>Me gustó</button>
-              <button class="ficha-megusto-btn ${libro.me_gusto === 'no' ? 'active' : ''}" data-val="no"><span class="ficha-megusto-emoji">😐</span>Meh</button>
-            </div>
-            <div class="ficha-card-title" style="margin-top: 12px;">💭 Comentario</div>
-            <textarea id="fichaComentario" class="input-base" placeholder="¿Qué te pareció? ¿Cómo te hizo sentir?" style="min-height: 70px; font-family: var(--font-hand); font-size: 15px;">${libro.comentario || ''}</textarea>
-          </div>
-
-          <div class="ficha-card">
-            <div class="ficha-card-title">🎭 Personajes favoritos</div>
-            <div class="ficha-chip-list" id="fichaPersonajes">
-              ${personajes.map(function(p, i){ return '<div class="ficha-chip">' + p + '<span class="ficha-chip-remove" data-i="' + i + '">×</span></div>'; }).join('')}
-            </div>
-            <button class="ficha-add-btn" id="addPersonaje">+ Añadir personaje</button>
-          </div>
-
-          <div class="ficha-card">
-            <div class="ficha-card-title">💬 Frases destacadas</div>
-            <div class="ficha-chip-list" id="fichaFrases">
-              ${frases.map(function(f, i){ return '<div class="ficha-chip">' + f + '<span class="ficha-chip-remove" data-i="' + i + '">×</span></div>'; }).join('')}
-            </div>
-            <button class="ficha-add-btn" id="addFrase">+ Añadir frase</button>
-          </div>
+      <div class="ficha-col-resumen">
+        <div class="ficha-card">
+          <div class="ficha-card-title">📝 Resumen</div>
+          ${libro.sinopsis
+            ? '<div class="ficha-sinopsis">' + _esc(libro.sinopsis.slice(0, 500)) + (libro.sinopsis.length > 500 ? '…' : '') + '</div>'
+            : '<div class="ficha-vacio">Sin resumen todavía. Editá la info o regenerá. ✨</div>'}
         </div>
+      </div>
+
+      <div class="ficha-col-valoracion">
+        <div class="ficha-card">
+          <div class="ficha-card-title">⭐ Mi valoración</div>
+          <div class="ficha-stars" id="fichaStars">${starsHtml}</div>
+          <div class="ficha-megusto-row" style="margin-top:12px;">
+            <button class="ficha-megusto-btn ${libro.me_gusto === 'si' ? 'active' : ''}" data-val="si"><span class="ficha-megusto-emoji">😊</span>¡Me gustó!</button>
+            <button class="ficha-megusto-btn ${libro.me_gusto === 'meh' ? 'active' : ''}" data-val="meh"><span class="ficha-megusto-emoji">😐</span>Meh</button>
+            <button class="ficha-megusto-btn ${libro.me_gusto === 'no' ? 'active' : ''}" data-val="no"><span class="ficha-megusto-emoji">🙁</span>No me gustó</button>
+          </div>
+          <div class="ficha-card-title" style="margin-top: 12px;">Comentario (opcional)</div>
+          <textarea id="fichaComentario" class="input-base" placeholder="¿Qué te pareció? ¿Cómo te hizo sentir?" style="min-height: 70px; font-family: var(--font-hand); font-size: 15px;">${_esc(libro.comentario || '')}</textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="ficha-grid3">
+      <div class="ficha-card">
+        <div class="ficha-card-title">🎭 Personajes favoritos</div>
+        <div class="ficha-chip-list" id="fichaPersonajes">
+          ${personajes.map(function(p, i){ return '<div class="ficha-chip">' + _esc(p) + '<span class="ficha-chip-remove" data-i="' + i + '">×</span></div>'; }).join('')}
+        </div>
+        <button class="ficha-add-btn" id="addPersonaje">+ Añadir personaje</button>
+      </div>
+
+      <div class="ficha-card">
+        <div class="ficha-card-title">💬 Frases destacadas</div>
+        <div class="ficha-frases-list" id="fichaFrases">
+          ${frases.map(function(f, i){ return '<div class="ficha-frase-item"><span class="ficha-frase-txt">“' + _esc(f) + '”</span><span class="ficha-chip-remove" data-i="' + i + '">×</span></div>'; }).join('')}
+        </div>
+        <button class="ficha-add-btn" id="addFrase">+ Añadir frase</button>
       </div>
     </div>
   `;
@@ -2866,7 +3130,7 @@ function conectarFicha() {
       state.libros = state.libros.filter(function(l){ return l.id !== state.libroActual.id; });
       $('#fichaLibro').classList.remove('show');
       toast('Libro eliminado');
-      pintarLibrosFiltrados();
+      pintarBibContenido();
     } catch(err) { toast('Error al borrar'); }
   });
 
@@ -2918,11 +3182,17 @@ function conectarFicha() {
     });
   });
 
-  // Favorito
-  $('#fichaFavorito').addEventListener('change', function(){
-    state.libroActual.favorito = $('#fichaFavorito').checked ? 'sí' : '';
-    guardarLibroDebounced();
-  });
+  // Favorito (estrella en el título)
+  const favStar = $('#fichaFavStar');
+  if (favStar) {
+    favStar.style.cursor = 'pointer';
+    favStar.addEventListener('click', function(){
+      const nuevo = !_truthy(state.libroActual.favorito);
+      state.libroActual.favorito = nuevo ? 'sí' : '';
+      favStar.textContent = nuevo ? '⭐' : '☆';
+      guardarLibroDebounced();
+    });
+  }
 
   // Comentario
   if ($('#fichaComentario')) {
