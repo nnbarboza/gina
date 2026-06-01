@@ -952,8 +952,11 @@ textarea.input-base {
 .ficha-accion { display: flex; flex-direction: column; align-items: center; gap: 3px; font-family: var(--font-ui); font-weight: 600; font-size: 12px; color: var(--text-soft); background: transparent; }
 .ficha-accion span { font-size: 18px; }
 .ficha-accion.danger { color: var(--coral); }
-.ficha-grid2 { display: grid; grid-template-columns: 200px 1.1fr 1.2fr 1.1fr; gap: 18px; align-items: start; margin-bottom: 16px; }
-@media (max-width: 1100px) { .ficha-grid2 { grid-template-columns: 180px 1fr; } }
+.ficha-grid2 { display: grid; grid-template-columns: 190px 1fr 1.2fr 1.2fr; gap: 16px; align-items: stretch; margin-bottom: 16px; }
+@media (max-width: 1000px) { .ficha-grid2 { grid-template-columns: 170px 1fr; } }
+.ficha-grid2 .ficha-card { height: 100%; }
+.ficha-col-resumen .ficha-card { background: #FCF6E4; border-color: #F0E4C2; }
+.ficha-col-valoracion .ficha-card { background: #FBEFF3; border-color: #F2DCE5; }
 .ficha-col-portada { display: flex; flex-direction: column; gap: 10px; }
 .ficha-cambiar-portada { background: var(--card); border: 1px solid var(--border); color: var(--lavanda); font-family: var(--font-ui); font-weight: 700; font-size: 12px; padding: 9px; border-radius: var(--r-pill); }
 .ficha-fav-star { font-size: 22px; vertical-align: middle; }
@@ -1765,7 +1768,7 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.14.0
+  v0.14.1
 </div>
 
 <script>
@@ -3065,11 +3068,6 @@ function abrirFichaLibro(id) {
           ${libro.paginas ? '<div class="fd"><span class="fd-ico">📖</span><div><div class="fd-lbl">Páginas</div><div class="fd-val">' + _esc(libro.paginas) + '</div></div></div>' : ''}
           <div class="fd"><span class="fd-ico">✅</span><div><div class="fd-lbl">Terminado el</div><div class="fd-val"><input type="date" id="fichaFechaTerminado" value="${libro.fecha_terminado || ''}" class="ficha-fecha-input" /></div></div></div>
         </div>
-        <div class="ficha-card" style="margin-top:14px;">
-          <div class="ficha-card-title">📚 Colecciones</div>
-          <div class="ficha-chip-list" id="fichaColecciones">${colChips}</div>
-          <button class="ficha-add-btn" id="addAColeccion">+ Añadir a colección</button>
-        </div>
       </div>
 
       <div class="ficha-col-resumen">
@@ -3094,6 +3092,12 @@ function abrirFichaLibro(id) {
           <textarea id="fichaComentario" class="input-base" placeholder="¿Qué te pareció? ¿Cómo te hizo sentir?" style="min-height: 70px; font-family: var(--font-hand); font-size: 15px;">${_esc(libro.comentario || '')}</textarea>
         </div>
       </div>
+    </div>
+
+    <div class="ficha-card" style="margin-bottom:16px;">
+      <div class="ficha-card-title">📚 Colecciones</div>
+      <div class="ficha-chip-list" id="fichaColecciones" style="flex-direction:row; flex-wrap:wrap;">${colChips}</div>
+      <button class="ficha-add-btn" id="addAColeccion">+ Añadir a colección</button>
     </div>
 
     <div class="ficha-grid3">
