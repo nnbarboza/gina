@@ -288,12 +288,53 @@ textarea { resize: none; }
   flex-direction: column;
   gap: 8px;
 }
+/* Sistema de iconos v0.15 */
+.ui-icon { width: 1.1em; height: 1.1em; object-fit: contain; vertical-align: -0.18em; display: inline-block; }
+.ui-emoji { display: inline-block; font-style: normal; line-height: 1; }
+.nav-icon-img { width: 24px; height: 24px; object-fit: contain; }
+
 .frase-body {
   display: grid;
   grid-template-columns: 64px 1fr;
   gap: 10px;
   align-items: start;
 }
+/* Card "palabra/frase del día" v0.15: imagen grande a la izquierda, alto completo */
+.frase-body2 {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 16px;
+  align-items: stretch;
+  flex: 1;
+}
+.frase-imagen2 {
+  width: 130px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--card);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-s);
+  align-self: stretch;
+  min-height: 150px;
+}
+.frase-imagen2 img { width: 100%; height: 100%; object-fit: cover; }
+.frase-contenido { display: flex; flex-direction: column; justify-content: center; gap: 8px; min-width: 0; }
+.frase-grande {
+  font-family: var(--font-hand);
+  font-size: 26px;
+  line-height: 1.15;
+  color: var(--text);
+}
+.frase-grande.es-palabra {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 30px;
+  color: #6B4A98;
+  text-transform: capitalize;
+}
+.frase-sub1 { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: #6B4A98; }
+.frase-sub2 { font-family: var(--font-hand); font-size: 14px; color: var(--text-soft); line-height: 1.4; }
+
 .frase-imagen {
   width: 64px;
   height: 76px;
@@ -1616,14 +1657,14 @@ textarea.input-base {
     </div>
     <nav class="nav" id="nav">
       <button class="nav-item active" data-section="hoy">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.22 4.22l1.77 1.77M18.01 18.01l1.77 1.77M2 12h2.5M19.5 12H22M4.22 19.78l1.77-1.77M18.01 5.99l1.77-1.77" stroke="#F6C445" stroke-width="2.2" fill="none"/></svg></span>
+        <span class="nav-icon" data-icono="nav-hoy"><svg viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.22 4.22l1.77 1.77M18.01 18.01l1.77 1.77M2 12h2.5M19.5 12H22M4.22 19.78l1.77-1.77M18.01 5.99l1.77-1.77" stroke="#F6C445" stroke-width="2.2" fill="none"/></svg></span>
         Hoy
       </button>
-      <button class="nav-item" data-section="yo-soy"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="#BEE5B0" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 C13 8, 16 9, 18 9 C16 11, 15 14, 15 17 L9 17 C9 14, 8 11, 6 9 C8 9, 11 8, 12 4 Z"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>Yo soy</button>
-      <button class="nav-item" data-section="charlar"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="#C8B6E2" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5 C4 4, 5 3, 6 3 L18 3 C19 3, 20 4, 20 5 L20 14 C20 15, 19 16, 18 16 L11 16 L7 20 L7 16 L6 16 C5 16, 4 15, 4 14 Z"/></svg></span>Charlar</button>
-      <button class="nav-item" data-section="retos"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L14.5 9 L21 9.5 L16 14 L17.5 20.5 L12 17 L6.5 20.5 L8 14 L3 9.5 L9.5 9 Z"/></svg></span>Retos</button>
-      <button class="nav-item" data-section="biblioteca"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="#A9D6E5" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4 L11 4 L11 20 L4 20 Z M11 4 L11 20 M11 4 L19 5 L18 18 L11 20"/></svg></span>Biblioteca</button>
-      <button class="nav-item" data-section="capsula"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="#F28C8C" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3 L17 3 L17 8 C17 10, 15 11, 13 12 C15 13, 17 14, 17 16 L17 21 L7 21 L7 16 C7 14, 9 13, 11 12 C9 11, 7 10, 7 8 Z"/></svg></span>Cápsula</button>
+      <button class="nav-item" data-section="yo-soy"><span class="nav-icon" data-icono="nav-yo-soy"><svg viewBox="0 0 24 24" fill="#BEE5B0" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 C13 8, 16 9, 18 9 C16 11, 15 14, 15 17 L9 17 C9 14, 8 11, 6 9 C8 9, 11 8, 12 4 Z"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>Yo soy</button>
+      <button class="nav-item" data-section="charlar"><span class="nav-icon" data-icono="nav-charlar"><svg viewBox="0 0 24 24" fill="#C8B6E2" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5 C4 4, 5 3, 6 3 L18 3 C19 3, 20 4, 20 5 L20 14 C20 15, 19 16, 18 16 L11 16 L7 20 L7 16 L6 16 C5 16, 4 15, 4 14 Z"/></svg></span>Charlar</button>
+      <button class="nav-item" data-section="retos"><span class="nav-icon" data-icono="nav-retos"><svg viewBox="0 0 24 24" fill="#F6C445" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L14.5 9 L21 9.5 L16 14 L17.5 20.5 L12 17 L6.5 20.5 L8 14 L3 9.5 L9.5 9 Z"/></svg></span>Retos</button>
+      <button class="nav-item" data-section="biblioteca"><span class="nav-icon" data-icono="nav-biblioteca"><svg viewBox="0 0 24 24" fill="#A9D6E5" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4 L11 4 L11 20 L4 20 Z M11 4 L11 20 M11 4 L19 5 L18 18 L11 20"/></svg></span>Biblioteca</button>
+      <button class="nav-item" data-section="capsula"><span class="nav-icon" data-icono="nav-capsula"><svg viewBox="0 0 24 24" fill="#F28C8C" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3 L17 3 L17 8 C17 10, 15 11, 13 12 C15 13, 17 14, 17 16 L17 21 L7 21 L7 16 C7 14, 9 13, 11 12 C9 11, 7 10, 7 8 Z"/></svg></span>Cápsula</button>
     </nav>
     <div class="rincon" id="rincon"></div>
   </aside>
@@ -1768,11 +1809,78 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.14.1
+  v0.15.0
 </div>
 
 <script>
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwnuMgU-Ooa0qsq_MgDAo4FOBGHH5WiVhgSEFtQ1LPbXUfouaHw9jJbYLEE39btsJQD/exec';
+
+// ============================================================
+// SISTEMA DE ICONOS v0.15
+// icono('nombre') → <img> propio si existe en el set, o emoji de fallback.
+// Para activar un icono propio: subí img/iconos/<archivo> y poné su nombre
+// de archivo en ICONOS_PROPIOS. Mientras no esté, cae al emoji y nada se rompe.
+// ============================================================
+const ICONO_EMOJI = {
+  // menú
+  'hoy': '☀️', 'yo-soy': '🌳', 'charlar': '💬', 'retos': '⭐', 'biblioteca': '📖', 'capsula': '🫙',
+  // secciones / cards Hoy
+  'algo-bueno': '⭐', 'algo-aprendi': '🌱', 'actividad': '☕', 'momento-dificil': '🌩️',
+  'md-paso': '🌩️', 'md-senti': '💥', 'md-ayudo': '🔧', 'md-necesito': '❤️',
+  'cosas-hice': '✓', 'sol': '☀️',
+  // sidebar
+  'resumen': '📊', 'cancion': '🎵', 'playlists': '📻', 'calendario': '📅',
+  'crecimiento': '🌱', 'altura': '📏',
+  // calendario / fechas especiales
+  'emociones': '😊', 'actividades': '🎫', 'cumple': '🎂', 'vacaciones': '🏖️', 'viaje': '✈️', 'amigas': '👯',
+  // biblioteca
+  'libro': '📚', 'libro-mes': '📘', 'anio': '📅', 'trofeo': '🏆', 'estrella': '⭐', 'estrella-off': '☆',
+  'editar': '✏️', 'regenerar': '🪄', 'eliminar': '🗑️', 'portada': '🖼️', 'resumen-libro': '📝',
+  'valoracion': '⭐', 'personajes': '🎭', 'frases-libro': '💬', 'categoria': '🏷️', 'paginas': '📖', 'terminado': '✅',
+  // retos
+  'reto-objetivo': '🎯', 'reto-cerebro': '🧠', 'reto-cara': '🙂', 'logrado': '🏆',
+  // capsula
+  'cap-audio': '🎙️', 'cap-mensaje': '💬', 'cap-foto': '📷', 'cap-dibujo': '✏️', 'cap-personaje': '👾',
+  'candado': '🔒', 'candado-abierto': '🔓', 'idea': '💡',
+  // yo soy / charlar
+  'arbol': '🌳', 'cualidad': '🌿',
+  // varios UI
+  'guardar': '💾', 'check': '✓', 'aviso': '⚠️', 'cargando': '⏳', 'corazon': '💜', 'sparkle': '✨',
+  'celebra': '🎉', 'triste': '😢', 'refresh': '🔄',
+};
+
+// Cuando tengas un icono propio, poné aquí su nombre de archivo (en img/iconos/).
+// Ej: 'hoy': 'hoy.webp'. Lo que no esté acá usa el emoji.
+const ICONOS_PROPIOS = {
+  // --- Menú lateral (descomentá cuando subas el archivo a img/iconos/) ---
+  // 'nav-hoy': 'nav-hoy.webp',
+  // 'nav-yo-soy': 'nav-yo-soy.webp',
+  // 'nav-charlar': 'nav-charlar.webp',
+  // 'nav-retos': 'nav-retos.webp',
+  // 'nav-biblioteca': 'nav-biblioteca.webp',
+  // 'nav-capsula': 'nav-capsula.webp',
+};
+
+function icono(nombre, clase) {
+  const archivo = ICONOS_PROPIOS[nombre];
+  if (archivo) {
+    return '<img src="img/iconos/' + archivo + '" alt="" class="ui-icon ' + (clase || '') + '">';
+  }
+  return '<span class="ui-emoji ' + (clase || '') + '">' + (ICONO_EMOJI[nombre] || '') + '</span>';
+}
+
+// Reemplaza el contenido de cualquier elemento con [data-icono="X"] por la
+// imagen propia img/iconos/<archivo> SI está declarada en ICONOS_PROPIOS.
+// Si no hay imagen propia, deja lo que ya tenga (SVG, emoji, etc.) intacto.
+function aplicarIconosPropios(scope) {
+  const root = scope || document;
+  root.querySelectorAll('[data-icono]').forEach(function(el){
+    const archivo = ICONOS_PROPIOS[el.dataset.icono];
+    if (archivo) {
+      el.innerHTML = '<img src="img/iconos/' + archivo + '" alt="" class="nav-icon-img">';
+    }
+  });
+}
 
 const state = {
   bootstrap: null,
@@ -1889,15 +1997,15 @@ function pintarSeccionHoy() {
     <div class="row-top">
       <div class="col-izq">
         <div class="card frase" id="fraseCard">
-          <div class="card-title">💜 Alguien dijo una vez…</div>
-          <div class="frase-body">
-            <div class="frase-imagen" id="fraseImagen"><div class="img-fallback">?</div></div>
-            <div>
-              <div class="frase-persona" id="frasePersona">—</div>
-              <div class="frase-texto" id="fraseTexto">—</div>
+          <div class="card-title" id="fraseTitulo">La frase del día</div>
+          <div class="frase-body2">
+            <div class="frase-imagen2" id="fraseImagen"><div class="img-fallback">?</div></div>
+            <div class="frase-contenido">
+              <div class="frase-grande" id="fraseTexto">—</div>
+              <div class="frase-sub1" id="fraseSub1"></div>
+              <div class="frase-sub2" id="fraseSub2"></div>
             </div>
           </div>
-          <div class="frase-bio" id="fraseBio"></div>
         </div>
 
         <div class="card">
@@ -1971,25 +2079,43 @@ function pintarSeccionHoy() {
 }
 
 function pintarFrase() {
-  const frases = ((state.bootstrap && state.bootstrap.frases) || []).filter(function(f){ return f.frase; });
-  if (!frases.length) {
-    $('#frasePersona').textContent = '';
-    $('#fraseTexto').textContent = 'Hoy todavía no hay frase.';
+  const items = ((state.bootstrap && state.bootstrap.frases) || []).filter(function(f){ return f.texto || f.frase; });
+  if (!items.length) {
+    $('#fraseTexto').textContent = 'Hoy todavía no hay nada.';
+    $('#fraseSub1').textContent = '';
+    $('#fraseSub2').textContent = '';
     return;
   }
   const ahora = new Date();
   const inicio = new Date(ahora.getFullYear(), 0, 0);
   const diaAnio = Math.floor((ahora - inicio) / (1000 * 60 * 60 * 24));
-  const f = frases[diaAnio % frases.length];
+  const f = items[diaAnio % items.length];
 
-  $('#frasePersona').textContent = f.persona || '';
-  $('#fraseTexto').textContent = '"' + f.frase + '"';
-  $('#fraseBio').textContent = f.mini_bio || '';
+  // Compatibilidad: 'texto' es el campo nuevo; 'frase' el viejo
+  const texto = String(f.texto || f.frase || '').trim();
+  const tipo = String(f.tipo || 'frase').trim().toLowerCase();
+  const descripcion = String(f.descripcion || f.mini_bio || '').trim();
+  const ejemploAutor = String(f.ejemplo_autor || f.persona || '').trim();
+
+  if (tipo === 'palabra') {
+    $('#fraseTitulo').textContent = 'La palabra del día';
+    $('#fraseTexto').textContent = texto;
+    $('#fraseTexto').classList.add('es-palabra');
+    $('#fraseSub1').textContent = descripcion;                    // definición
+    $('#fraseSub2').textContent = ejemploAutor ? 'Ejemplo: ' + ejemploAutor : '';
+  } else {
+    $('#fraseTitulo').textContent = 'La frase del día';
+    $('#fraseTexto').textContent = '“' + texto + '”';
+    $('#fraseTexto').classList.remove('es-palabra');
+    $('#fraseSub1').textContent = ejemploAutor;                   // autora
+    $('#fraseSub2').textContent = descripcion;                    // bio
+  }
 
   const cont = $('#fraseImagen');
-  // Si hay imagen en el Sheet, usarla; si no, comodín rotando
-  const archivo = (f.imagen && f.imagen.length > 3) ? f.imagen : ('comodin-' + ((diaAnio % 3) + 1) + '.webp');
-  cont.innerHTML = '<img src="img/frases/' + archivo + '" alt="' + (f.persona || 'frase') + '" data-initial="' + ((f.persona || '?')[0]) + '" data-bg="#E8D9FF" />';
+  const archivo = (f.imagen && f.imagen.length > 3)
+    ? (f.imagen.indexOf('http') === 0 ? f.imagen : 'img/frases/' + f.imagen)
+    : 'img/frases/comodin-' + ((diaAnio % 3) + 1) + '.webp';
+  cont.innerHTML = '<img src="' + archivo + '" alt="' + _esc(texto) + '" data-initial="' + _esc((texto||'?')[0]) + '" data-bg="#E8D9FF" />';
 }
 
 function pintarEmociones() {
@@ -4530,6 +4656,7 @@ function pintarTodoInicial() {
   pintarResumenSemana();
   if (state.seccionActiva === 'hoy') pintarSeccionHoy();
   pintarCancionDelDia();
+  aplicarIconosPropios();
 }
 
 async function bootstrap() {
