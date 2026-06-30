@@ -1334,7 +1334,7 @@ textarea.input-base {
 }
 .arbol-zona {
   position: relative;
-  min-height: 380px;
+  min-height: 460px;
   display: flex; align-items: center; justify-content: center;
   margin: 8px 0 16px;
 }
@@ -1809,7 +1809,7 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.15.0
+  v0.15.1
 </div>
 
 <script>
@@ -2086,10 +2086,16 @@ function pintarFrase() {
     $('#fraseSub2').textContent = '';
     return;
   }
-  const ahora = new Date();
-  const inicio = new Date(ahora.getFullYear(), 0, 0);
-  const diaAnio = Math.floor((ahora - inicio) / (1000 * 60 * 60 * 24));
-  const f = items[diaAnio % items.length];
+  // Avanza a la siguiente fila SOLO cuando hay un día nuevo con registro.
+  // Cuenta días con registro EXCLUYENDO hoy → mientras completás hoy no avanza;
+  // al día siguiente (hoy ya cuenta como completado) avanza a la siguiente.
+  const hoyStr = fmtFecha(new Date());
+  const fechasConRegistro = {};
+  ((state.diasCalendario) || []).forEach(function(d){
+    if (d.fecha && d.fecha !== hoyStr) fechasConRegistro[d.fecha] = true;
+  });
+  const completados = Object.keys(fechasConRegistro).length;
+  const f = items[completados % items.length];
 
   // Compatibilidad: 'texto' es el campo nuevo; 'frase' el viejo
   const texto = String(f.texto || f.frase || '').trim();
@@ -2114,7 +2120,7 @@ function pintarFrase() {
   const cont = $('#fraseImagen');
   const archivo = (f.imagen && f.imagen.length > 3)
     ? (f.imagen.indexOf('http') === 0 ? f.imagen : 'img/frases/' + f.imagen)
-    : 'img/frases/comodin-' + ((diaAnio % 3) + 1) + '.webp';
+    : 'img/frases/comodin-' + ((completados % 3) + 1) + '.webp';
   cont.innerHTML = '<img src="' + archivo + '" alt="' + _esc(texto) + '" data-initial="' + _esc((texto||'?')[0]) + '" data-bg="#E8D9FF" />';
 }
 
@@ -2171,6 +2177,31 @@ function pintarActividades() {
   sel.innerHTML = '<option value="">Elige una actividad</option>' + ACTIVIDADES.map(function(a){ return '<option value="' + a + '">' + a + '</option>'; }).join('');
 }
 
+// Semilla numérica determinista a partir de una fecha "YYYY-MM-DD"
+function _semillaDia(fechaStr) {
+  let h = 0;
+  const s = String(fechaStr || '');
+  for (let i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) >>> 0; }
+  return h || 1;
+}
+
+// PRNG simple (mulberry32) → barajado determinista
+function _muestraEstable(arr, n, semilla) {
+  let s = semilla >>> 0;
+  function rnd() {
+    s |= 0; s = (s + 0x6D2B79F5) | 0;
+    let t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  }
+  const copia = arr.slice();
+  for (let i = copia.length - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * (i + 1));
+    const tmp = copia[i]; copia[i] = copia[j]; copia[j] = tmp;
+  }
+  return copia.slice(0, n);
+}
+
 // Rotación de cosas según columna 'dias' del Sheet (ej: "1,8,15,22,29")
 function pintarCosas() {
   const checks = ((state.bootstrap && state.bootstrap.checks_cosas_hice) || []);
@@ -2180,16 +2211,16 @@ function pintarCosas() {
     return;
   }
 
-  // Día del mes actual de la fecha que está editando
-  const diaDelMes = state.fechaActual ? parseInt(state.fechaActual.split('-')[2]) : new Date().getDate();
-
-  // Filtrar checks que contengan ese día del mes en su columna 'dias' (ej: "1,8,15,22,29")
-  // Si la columna 'dias' está vacía, lo incluimos siempre
-  const elegidos = checks.filter(function(c){
-    if (!c.dias || String(c.dias).trim() === '') return true;
-    const lista = String(c.dias).split(',').map(function(x){ return parseInt(x.trim()); });
-    return lista.includes(diaDelMes);
-  }).slice(0, 5); // máximo 5 visibles
+  // Selección: si hay 5 o menos activas, se muestran todas.
+  // Si hay más de 5, se eligen 5 al azar de forma ESTABLE por día
+  // (misma fecha → misma selección, no cambia al re-renderizar).
+  let elegidos;
+  if (checks.length <= 5) {
+    elegidos = checks.slice();
+  } else {
+    const semilla = _semillaDia(state.fechaActual || fmtFecha(new Date()));
+    elegidos = _muestraEstable(checks, 5, semilla);
+  }
 
   if (!elegidos.length) {
     $('#cosasGrid').innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 18px; color: var(--text-mute); font-family: var(--font-hand); font-size: 14px;">Hoy no hay cosas para marcar.</div>';
@@ -3793,17 +3824,28 @@ function mostrarTemaCharlar() {
 // SECCIÓN YO SOY v0.10 — árbol de cualidades + sobre mí + crecimiento
 // ============================================================
 
-// Posiciones fijas alrededor del árbol (en %), hasta 8 tags
-const POS_CUALIDADES = [
-  { top: '8%',  left: '6%'  },
-  { top: '6%',  left: '60%' },
-  { top: '26%', left: '0%'  },
-  { top: '24%', left: '66%' },
-  { top: '48%', left: '4%'  },
-  { top: '46%', left: '62%' },
-  { top: '68%', left: '10%' },
-  { top: '66%', left: '58%' },
-];
+// Límite de cualidades en el árbol
+const MAX_CUALIDADES = 30;
+
+// Genera posiciones (en %) repartidas a izquierda y derecha del árbol.
+// Escala a cualquier cantidad: reparte en N filas por columna.
+function posicionesCualidades(n) {
+  const pos = [];
+  const porColumna = Math.ceil(n / 2);
+  const topMin = 2, topMax = 88;
+  const paso = porColumna > 1 ? (topMax - topMin) / (porColumna - 1) : 0;
+  // columnas laterales con pequeño zigzag horizontal para que no queden rígidas
+  const leftCols = [2, 0, 4];   // izquierda
+  const rightCols = [62, 66, 60]; // derecha
+  for (let i = 0; i < n; i++) {
+    const col = i % 2;                 // 0 izq, 1 der
+    const fila = Math.floor(i / 2);
+    const top = topMin + fila * paso;
+    const left = col === 0 ? leftCols[fila % leftCols.length] : rightCols[fila % rightCols.length];
+    pos.push({ top: top + '%', left: left + '%' });
+  }
+  return pos;
+}
 
 function getCualidades() {
   const p = (state.bootstrap && state.bootstrap.perfil) || {};
@@ -3865,9 +3907,11 @@ function pintarArbol() {
 
   let html = '<img class="arbol-img" id="arbolImg" src="img/arbol.webp" alt="Mi árbol">';
 
-  cualidades.slice(0, POS_CUALIDADES.length).forEach(function(c, i){
-    const pos = POS_CUALIDADES[i];
-    html += '<div class="cualidad-tag" style="top:' + pos.top + '; left:' + pos.left + ';">'
+  const cuals = cualidades.slice(0, MAX_CUALIDADES);
+  const pos = posicionesCualidades(cuals.length);
+  cuals.forEach(function(c, i){
+    const p = pos[i];
+    html += '<div class="cualidad-tag" style="top:' + p.top + '; left:' + p.left + ';">'
       + (c.emoji ? '<span>' + _esc(c.emoji) + '</span>' : '')
       + '<span>' + _esc(c.texto) + '</span>'
       + '<span class="x" data-idx="' + i + '">✕</span>'
@@ -3895,7 +3939,7 @@ function pintarArbol() {
 
 function addCualidadPrompt() {
   const cualidades = getCualidades();
-  if (cualidades.length >= POS_CUALIDADES.length) {
+  if (cualidades.length >= MAX_CUALIDADES) {
     toast('Ya hay muchas cualidades. Quitá alguna para añadir otra ✨');
     return;
   }
