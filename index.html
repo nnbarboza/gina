@@ -289,8 +289,8 @@ textarea { resize: none; }
   gap: 8px;
 }
 /* Sistema de iconos v0.15 */
-.ui-icon { width: 1.1em; height: 1.1em; object-fit: contain; vertical-align: -0.18em; display: inline-block; }
-.ui-emoji { display: inline-block; font-style: normal; line-height: 1; }
+.ui-ico { display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
+.ui-ico-img { width: 1.1em; height: 1.1em; object-fit: contain; vertical-align: -0.18em; }
 .nav-icon-img { width: 24px; height: 24px; object-fit: contain; }
 
 .frase-body {
@@ -1368,6 +1368,23 @@ textarea.input-base {
 .sobremi-card.colapsada .sobremi-chevron { transform: rotate(180deg); }
 .sobremi-body { margin-top: 14px; }
 .sobremi-card.colapsada .sobremi-body { display: none; }
+.sobremi-preguntas { display: flex; flex-direction: column; gap: 16px; }
+.sm-pregunta-label { display: flex; align-items: center; gap: 7px; font-family: var(--font-hand); font-size: 16px; color: var(--text-soft); margin-bottom: 8px; }
+.sm-emoji { font-size: 16px; }
+.sm-tags { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.sm-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #F3ECFB; border: 1px solid #E7DCF5; color: var(--text);
+  font-family: var(--font-ui); font-weight: 600; font-size: 13px;
+  padding: 7px 12px; border-radius: var(--r-pill);
+}
+.sm-tag-x { cursor: pointer; color: var(--text-mute); font-size: 11px; }
+.sm-tag-x:active { color: var(--coral); }
+.sm-add {
+  font-family: var(--font-hand); font-size: 13px; color: #7A5EA8;
+  background: transparent; border: 1px dashed var(--lavanda); border-radius: var(--r-pill);
+  padding: 6px 14px; cursor: pointer;
+}
 .pregunta-bloque { margin-bottom: 12px; }
 .pregunta-label { display: flex; align-items: center; gap: 7px; font-family: var(--font-hand); font-size: 16px; color: var(--text-soft); margin-bottom: 6px; }
 .pregunta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -1488,6 +1505,45 @@ textarea.input-base {
 .hist-estado.no { background: #FBE0E0; color: #B85C5C; }
 .hist-card .fecha { font-family: var(--font-ui); font-size: 11px; color: var(--text-mute); margin: 8px 0 6px; }
 .hist-card .estrella { font-size: 18px; }
+.reto-editar-link { font-family: var(--font-hand); font-size: 13px; color: var(--text-mute); margin-top: 10px; cursor: pointer; text-decoration: underline; }
+.reto-editar-link:active { opacity: .6; }
+.reto-estado-actual { text-align: center; font-family: var(--font-hand); font-size: 15px; color: var(--text-soft); margin-bottom: 12px; }
+.reto-toggle-row { display: flex; gap: 10px; }
+.reto-toggle-btn { flex: 1; font-family: var(--font-display); font-weight: 700; font-size: 14px; padding: 12px; border-radius: var(--r-pill); border: 1.5px solid var(--border); background: var(--card); color: var(--text-soft); }
+.reto-toggle-btn.active-si { background: var(--mint); border-color: #A9D6A0; color: #3D6B33; }
+.reto-toggle-btn.active-no { background: #FBE0E0; border-color: #F0C0C0; color: #B85C5C; }
+.col-chip-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.col-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--card); border: 1.5px solid var(--border); color: var(--text);
+  font-family: var(--font-ui); font-weight: 700; font-size: 14px;
+  padding: 10px 14px; border-radius: var(--r-pill); cursor: pointer;
+  transition: all .12s;
+}
+.col-chip.on { background: #F3ECFB; border-color: var(--lavanda); color: #5A4A7A; }
+.col-chip-emoji { font-size: 16px; }
+.col-chip-check { font-size: 13px; width: 16px; height: 16px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--bg-darker); color: var(--text-mute); }
+.col-chip.on .col-chip-check { background: var(--lavanda); color: #fff; }
+/* Modal Mis playlists */
+.pl-tabs { display: flex; gap: 6px; background: var(--bg-darker); padding: 5px; border-radius: var(--r-pill); width: fit-content; margin: 4px auto 16px; }
+.pl-tabs button { font-family: var(--font-display); font-weight: 700; font-size: 13px; padding: 8px 18px; border-radius: var(--r-pill); color: var(--text-soft); background: transparent; }
+.pl-tabs button.active { background: var(--lavanda); color: #fff; }
+.pl-empty { text-align: center; font-family: var(--font-hand); font-size: 15px; color: var(--text-mute); padding: 30px 10px; }
+.pl-lista { display: flex; flex-direction: column; gap: 14px; max-height: 52vh; overflow-y: auto; }
+.pl-cancion { border-radius: 12px; overflow: hidden; }
+.pl-embed { border-radius: 12px; display: block; }
+.pl-cancion-meta { display: flex; gap: 10px; justify-content: space-between; padding: 4px 4px 0; }
+.pl-cancion-por { font-family: var(--font-hand); font-size: 13px; color: var(--text-soft); }
+.pl-cancion-fecha { font-family: var(--font-ui); font-size: 11px; color: var(--text-mute); }
+.pl-items { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; max-height: 34vh; overflow-y: auto; }
+.pl-item { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--border-soft); border-radius: 14px; padding: 12px 14px; }
+.pl-item-info { flex: 1; min-width: 0; }
+.pl-item-nombre { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--text); }
+.pl-item-link { font-family: var(--font-ui); font-size: 12px; color: var(--lavanda); text-decoration: none; }
+.pl-item-del { font-size: 16px; opacity: .7; background: transparent; }
+.pl-add-box { background: var(--bg-darker); border-radius: 14px; padding: 14px; }
+.pl-add-title { font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--text); margin-bottom: 10px; }
+.pl-guardar-btn { width: 100%; background: var(--lavanda); color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 14px; padding: 11px; border-radius: var(--r-pill); }
 .hist-vertodos {
   background: var(--card); border: 1px dashed var(--border); color: var(--text-soft);
   font-family: var(--font-hand); font-size: 14px;
@@ -1715,14 +1771,14 @@ textarea.input-base {
 
     <div id="sidebarYoSoy" style="display:none;">
       <div class="card medicion-card">
-        <div class="card-title">🌱 Mi crecimiento</div>
+        <div class="card-title">${icono('crecimiento')} Mi crecimiento</div>
         <div class="medicion-regla" id="medicionRegla"></div>
       </div>
     </div>
 
     <div class="card">
       <div class="card-title" style="display: flex; align-items: center; gap: 6px;">
-        🎵 Canción del día
+        <span data-icono="cancion">🎵</span> Canción del día
         <button id="btnCambiarCancionHeader" style="margin-left: auto; background: transparent; padding: 2px 6px; font-size: 14px; color: var(--text-mute); display: none;" title="Cambiar canción">🔄</button>
       </div>
       <div id="cancionContent"></div>
@@ -1760,13 +1816,16 @@ textarea.input-base {
   </div>
 </div>
 
-<!-- Modal placeholder de playlists -->
+<!-- Modal Mis playlists -->
 <div class="modal-bg" id="modalPlaylistsBg">
-  <div class="modal" style="position: relative; max-width: 400px; text-align: center;">
+  <div class="modal" style="position: relative; max-width: 480px;">
     <span class="modal-close" id="modalPlaylistsClose">×</span>
-    <div style="font-size: 48px; margin: 8px 0;">📻</div>
-    <div class="modal-title">Mis playlists</div>
-    <p style="font-family: var(--font-hand); font-size: 15px; color: var(--text-soft); padding: 8px 0 16px;">Próximamente vas a poder ver y armar tus playlists de Spotify desde acá ✨</p>
+    <div class="modal-title" id="plModalTitulo">📻 Mis playlists</div>
+    <div class="pl-tabs" id="plTabs">
+      <button data-tab="canciones" class="active">🎵 Canciones</button>
+      <button data-tab="playlists">📻 Playlists</button>
+    </div>
+    <div id="plBody"></div>
   </div>
 </div>
 
@@ -1784,6 +1843,22 @@ textarea.input-base {
   <div class="modal" style="position: relative; max-width: 460px;">
     <span class="modal-close" id="capVerClose">×</span>
     <div id="capVerBody"></div>
+  </div>
+</div>
+
+<!-- Modal detalle de reto -->
+<div class="modal-bg" id="retoModalBg">
+  <div class="modal" style="position: relative; max-width: 460px;">
+    <span class="modal-close" id="retoModalClose">×</span>
+    <div id="retoModalBody"></div>
+  </div>
+</div>
+
+<!-- Modal elegir colecciones de un libro -->
+<div class="modal-bg" id="colModalBg">
+  <div class="modal" style="position: relative; max-width: 440px;">
+    <span class="modal-close" id="colModalClose">×</span>
+    <div id="colModalBody"></div>
   </div>
 </div>
 
@@ -1809,7 +1884,7 @@ textarea.input-base {
 <div class="toast" id="toast"></div>
 <div class="version-tag">
   <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.15.1
+  v0.15.3
 </div>
 
 <script>
@@ -1851,34 +1926,44 @@ const ICONO_EMOJI = {
 
 // Cuando tengas un icono propio, poné aquí su nombre de archivo (en img/iconos/).
 // Ej: 'hoy': 'hoy.webp'. Lo que no esté acá usa el emoji.
-const ICONOS_PROPIOS = {
-  // --- Menú lateral (descomentá cuando subas el archivo a img/iconos/) ---
-  // 'nav-hoy': 'nav-hoy.webp',
-  // 'nav-yo-soy': 'nav-yo-soy.webp',
-  // 'nav-charlar': 'nav-charlar.webp',
-  // 'nav-retos': 'nav-retos.webp',
-  // 'nav-biblioteca': 'nav-biblioteca.webp',
-  // 'nav-capsula': 'nav-capsula.webp',
-};
+// (El sistema intenta cargar img/iconos/<nombre>.webp y cae al emoji/SVG si no existe.)
 
+
+// icono('nombre') intenta cargar img/iconos/<nombre>.webp. Si el archivo no
+// existe todavía, la imagen falla y se sustituye automáticamente por el emoji.
+// Así solo tenés que subir archivos a img/iconos/ — sin tocar código.
 function icono(nombre, clase) {
-  const archivo = ICONOS_PROPIOS[nombre];
-  if (archivo) {
-    return '<img src="img/iconos/' + archivo + '" alt="" class="ui-icon ' + (clase || '') + '">';
-  }
-  return '<span class="ui-emoji ' + (clase || '') + '">' + (ICONO_EMOJI[nombre] || '') + '</span>';
+  const emoji = ICONO_EMOJI[nombre] || '';
+  return '<span class="ui-ico ' + (clase || '') + '" data-emoji="' + emoji + '">'
+    + '<img src="img/iconos/' + nombre + '.webp" alt="" class="ui-ico-img">'
+    + '</span>';
 }
 
-// Reemplaza el contenido de cualquier elemento con [data-icono="X"] por la
-// imagen propia img/iconos/<archivo> SI está declarada en ICONOS_PROPIOS.
-// Si no hay imagen propia, deja lo que ya tenga (SVG, emoji, etc.) intacto.
+// Fallback: cualquier <img.ui-ico-img> que falle al cargar se reemplaza por su
+// emoji. Se escucha en captura a nivel documento (error no burbujea).
+document.addEventListener('error', function(e){
+  const img = e.target;
+  if (img && img.classList && img.classList.contains('ui-ico-img')) {
+    const span = img.parentNode;
+    if (span) span.textContent = span.getAttribute('data-emoji') || '';
+  }
+}, true);
+
+// Para el menú: intenta cargar img/iconos/<data-icono>.webp encima del SVG.
+// Si el archivo no existe, la imagen falla y se queda el SVG original.
 function aplicarIconosPropios(scope) {
   const root = scope || document;
   root.querySelectorAll('[data-icono]').forEach(function(el){
-    const archivo = ICONOS_PROPIOS[el.dataset.icono];
-    if (archivo) {
-      el.innerHTML = '<img src="img/iconos/' + archivo + '" alt="" class="nav-icon-img">';
-    }
+    const nombre = el.dataset.icono;
+    if (el.dataset.icoTried) return;
+    el.dataset.icoTried = '1';
+    const svgOriginal = el.innerHTML;
+    const esNav = !!el.closest('.nav-item');
+    const cls = esNav ? 'nav-icon-img' : 'ui-ico-img';
+    const img = new Image();
+    img.onload = function(){ el.innerHTML = '<img src="img/iconos/' + nombre + '.webp" alt="" class="' + cls + '">'; };
+    img.onerror = function(){ el.innerHTML = svgOriginal; };
+    img.src = 'img/iconos/' + nombre + '.webp';
   });
 }
 
@@ -2009,7 +2094,7 @@ function pintarSeccionHoy() {
         </div>
 
         <div class="card">
-          <div class="card-title">⭐ Algo bueno de hoy</div>
+          <div class="card-title">${icono('algo-bueno')} Algo bueno de hoy</div>
           <div class="algo-bueno-list">
             <div class="algo-bueno-item"><span class="algo-bueno-num">1</span><input id="algoBueno1" placeholder="Escribe algo bueno..." /></div>
             <div class="algo-bueno-item"><span class="algo-bueno-num">2</span><input id="algoBueno2" placeholder="Escribe algo bueno..." /></div>
@@ -2018,7 +2103,7 @@ function pintarSeccionHoy() {
         </div>
 
         <div class="card aprendi-card">
-          <div class="card-title">🌱 Algo que aprendí</div>
+          <div class="card-title">${icono('algo-aprendi')} Algo que aprendí</div>
           <textarea id="aprendi" class="input-base" placeholder="Escribe aquí..."></textarea>
         </div>
       </div>
@@ -2066,7 +2151,7 @@ function pintarSeccionHoy() {
     </div>
 
     <div class="card estira-fondo">
-      <div class="card-title">✓ Cosas que hice <span id="cosasContador" style="font-family: var(--font-hand); font-weight: normal; color: var(--text-mute); font-size: 12px; margin-left: auto;"></span></div>
+      <div class="card-title">${icono('cosas-hice')} Cosas que hice <span id="cosasContador" style="font-family: var(--font-hand); font-weight: normal; color: var(--text-mute); font-size: 12px; margin-left: auto;"></span></div>
       <div class="cosas-grid" id="cosasGrid"></div>
     </div>
   `;
@@ -2558,7 +2643,17 @@ function pintarCalendario() {
       esConmigo ? 'conmigo' : '',
     ].filter(Boolean).join(' ');
 
-    cellsHtml += '<div class="' + classes + '" data-fecha="' + fkey + '">'
+    // Tooltip (hover) con lo que hay ese día
+    const tipTxt = [];
+    if (fechaEsp && fechaEsp.nombre) tipTxt.push(String(fechaEsp.nombre));
+    if (dia && dia.actividad) tipTxt.push(_cap(String(dia.actividad)));
+    if (state.calendarioVista === 'emociones' && dia && dia.emocion) {
+      const em = getEmocionByslug(parseEmociones(dia.emocion)[0]);
+      if (em) tipTxt.push(em.label);
+    }
+    const titleAttr = tipTxt.length ? ' title="' + _esc(tipTxt.join(' · ')) + '"' : '';
+
+    cellsHtml += '<div class="' + classes + '" data-fecha="' + fkey + '"' + titleAttr + '>'
       + '<span class="cal-num">' + d + '</span>'
       + iconoEvento
       + contenido
@@ -2692,7 +2787,7 @@ function pintarResumenSemana() {
   }
 
   cont.innerHTML =
-    '<div class="card-title">📊 Resumen</div>'
+    '<div class="card-title">' + icono('resumen') + ' Resumen</div>'
     + '<div class="res-switch" id="resSwitch">' + switchHtml + '</div>'
     + '<div class="res-nav" id="resNav">'
       + '<button data-dir="-1"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>'
@@ -2805,16 +2900,16 @@ async function pintarSeccionBiblioteca() {
   $('#seccionContenido').innerHTML = `
     <div class="biblio-header">
       <div>
-        <div class="biblio-titulo">📖 Biblioteca ✨</div>
+        <div class="biblio-titulo">${icono('biblioteca')} Biblioteca</div>
         <div class="biblio-subtitulo">Mis libros, mis historias.</div>
       </div>
       <button id="btnAñadirLibro2" style="background: var(--lavanda); color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 14px; padding: 11px 20px; border-radius: var(--r-pill); box-shadow: var(--shadow-s);">+ Añadir libro</button>
     </div>
 
     <div class="bib-stats">
-      <div class="bib-stat mes"><span class="ico">📘</span><div><div class="lbl">Este mes</div><div class="num">${nMes}</div><div class="sub">libros</div></div></div>
-      <div class="bib-stat anio"><span class="ico">📅</span><div><div class="lbl">Este año</div><div class="num">${nAnio}</div><div class="sub">libros</div></div></div>
-      <div class="bib-stat total"><span class="ico">🏆</span><div><div class="lbl">Total</div><div class="num">${nTotal}</div><div class="sub">libros</div></div></div>
+      <div class="bib-stat mes"><span class="ico">${icono('libro-mes')}</span><div><div class="lbl">Este mes</div><div class="num">${nMes}</div><div class="sub">libros</div></div></div>
+      <div class="bib-stat anio"><span class="ico">${icono('anio')}</span><div><div class="lbl">Este año</div><div class="num">${nAnio}</div><div class="sub">libros</div></div></div>
+      <div class="bib-stat total"><span class="ico">${icono('trofeo')}</span><div><div class="lbl">Total</div><div class="num">${nTotal}</div><div class="sub">libros</div></div></div>
     </div>
 
     <div class="bib-tabs" id="bibTabs">
@@ -3060,6 +3155,57 @@ function pintarFilasColeccion(colId) {
 }
 
 
+// Modal para elegir colecciones de un libro con chips (tocar añade/quita)
+function abrirModalColecciones() {
+  if (!state.libroActual) return;
+  renderModalColecciones();
+  $('#colModalBg').classList.add('show');
+}
+
+function renderModalColecciones() {
+  const cols = (state.bootstrap && state.bootstrap.biblioteca_colecciones) || [];
+  const actuales = String(state.libroActual.colecciones || '').split(',').map(function(x){ return x.trim(); }).filter(Boolean);
+
+  const chips = cols.filter(function(c){ return c.id; }).map(function(c){
+    const on = actuales.includes(c.id);
+    return '<button class="col-chip' + (on ? ' on' : '') + '" data-cid="' + _esc(c.id) + '">'
+      + '<span class="col-chip-emoji">' + _esc(c.emoji || '📚') + '</span>'
+      + _esc(c.nombre)
+      + '<span class="col-chip-check">' + (on ? '✓' : '+') + '</span>'
+      + '</button>';
+  }).join('');
+
+  $('#colModalBody').innerHTML =
+    '<div class="modal-title">📚 Colecciones de este libro</div>'
+    + '<p style="font-family:var(--font-hand); font-size:14px; color:var(--text-soft); margin-bottom:14px;">Tocá para añadir o quitar el libro de cada colección.</p>'
+    + '<div class="col-chip-grid">' + (chips || '<span style="color:var(--text-mute); font-family:var(--font-hand);">Todavía no hay colecciones.</span>') + '</div>'
+    + '<button class="ficha-add-btn" id="colModalNueva" style="margin-top:14px;">+ Crear colección nueva</button>';
+
+  $$('#colModalBody .col-chip').forEach(function(b){
+    b.addEventListener('click', function(){ toggleColeccionLibro(b.dataset.cid); });
+  });
+  $('#colModalNueva').addEventListener('click', async function(){
+    await crearColeccionPrompt();
+    // reabrir sobre el mismo libro tras recargar bootstrap
+    if ($('#colModalBg')) { renderModalColecciones(); $('#colModalBg').classList.add('show'); }
+  });
+}
+
+async function toggleColeccionLibro(cid) {
+  const actuales = String(state.libroActual.colecciones || '').split(',').map(function(x){ return x.trim(); }).filter(Boolean);
+  const idx = actuales.indexOf(cid);
+  if (idx >= 0) actuales.splice(idx, 1);
+  else actuales.push(cid);
+  state.libroActual.colecciones = actuales.join(',');
+  renderModalColecciones(); // refresco visual inmediato
+
+  try {
+    await api('saveLibro', { payload: state.libroActual });
+    const idx2 = state.libros.findIndex(function(l){ return l.id === state.libroActual.id; });
+    if (idx2 >= 0) state.libros[idx2] = Object.assign({}, state.libros[idx2], state.libroActual);
+  } catch (err) { toast('No se pudo guardar'); }
+}
+
 async function crearColeccionPrompt() {
   const nombre = prompt('Nombre de la nueva colección:');
   if (!nombre || !nombre.trim()) return;
@@ -3202,9 +3348,9 @@ function abrirFichaLibro(id) {
     <div class="ficha-topbar">
       <button class="ficha-back" id="fichaBack">← Volver a Biblioteca</button>
       <div class="ficha-acciones">
-        <button id="btnEditarLibro" class="ficha-accion"><span>✏️</span>Editar info</button>
-        <button id="btnRegenerar" class="ficha-accion"><span>🪄</span>Regenerar info</button>
-        <button id="fichaBorrar" class="ficha-accion danger"><span>🗑️</span>Eliminar libro</button>
+        <button id="btnEditarLibro" class="ficha-accion"><span>${icono('editar')}</span>Editar info</button>
+        <button id="btnRegenerar" class="ficha-accion"><span>${icono('regenerar')}</span>Regenerar info</button>
+        <button id="fichaBorrar" class="ficha-accion danger"><span>${icono('eliminar')}</span>Eliminar libro</button>
       </div>
     </div>
 
@@ -3213,23 +3359,23 @@ function abrirFichaLibro(id) {
     <div class="ficha-grid2">
       <div class="ficha-col-portada">
         <div class="ficha-portada">${portada}</div>
-        <button id="btnCambiarPortada" class="ficha-cambiar-portada">🖼️ Cambiar portada</button>
+        <button id="btnCambiarPortada" class="ficha-cambiar-portada">${icono('portada')} Cambiar portada</button>
       </div>
 
       <div class="ficha-col-datos">
         <div class="ficha-titulo">${_esc(libro.titulo || '')} <span class="ficha-fav-star" id="fichaFavStar">${_truthy(libro.favorito)?'⭐':'☆'}</span></div>
         <div class="ficha-autor">${_esc(libro.autor || '')}</div>
         <div class="ficha-datos2">
-          ${libro.anio ? '<div class="fd"><span class="fd-ico">📅</span><div><div class="fd-lbl">Año de publicación</div><div class="fd-val">' + _esc(libro.anio) + '</div></div></div>' : ''}
-          ${libro.genero ? '<div class="fd"><span class="fd-ico">🏷️</span><div><div class="fd-lbl">Categoría</div><div class="fd-val"><span class="bib-row-genero">' + _esc(String(libro.genero).split(',')[0]) + '</span></div></div></div>' : ''}
-          ${libro.paginas ? '<div class="fd"><span class="fd-ico">📖</span><div><div class="fd-lbl">Páginas</div><div class="fd-val">' + _esc(libro.paginas) + '</div></div></div>' : ''}
-          <div class="fd"><span class="fd-ico">✅</span><div><div class="fd-lbl">Terminado el</div><div class="fd-val"><input type="date" id="fichaFechaTerminado" value="${libro.fecha_terminado || ''}" class="ficha-fecha-input" /></div></div></div>
+          ${libro.anio ? '<div class="fd"><span class="fd-ico">' + icono('anio') + '</span><div><div class="fd-lbl">Año de publicación</div><div class="fd-val">' + _esc(libro.anio) + '</div></div></div>' : ''}
+          ${libro.genero ? '<div class="fd"><span class="fd-ico">' + icono('categoria') + '</span><div><div class="fd-lbl">Categoría</div><div class="fd-val"><span class="bib-row-genero">' + _esc(String(libro.genero).split(',')[0]) + '</span></div></div></div>' : ''}
+          ${libro.paginas ? '<div class="fd"><span class="fd-ico">' + icono('paginas') + '</span><div><div class="fd-lbl">Páginas</div><div class="fd-val">' + _esc(libro.paginas) + '</div></div></div>' : ''}
+          <div class="fd"><span class="fd-ico">${icono('terminado')}</span><div><div class="fd-lbl">Terminado el</div><div class="fd-val"><input type="date" id="fichaFechaTerminado" value="${libro.fecha_terminado || ''}" class="ficha-fecha-input" /></div></div></div>
         </div>
       </div>
 
       <div class="ficha-col-resumen">
         <div class="ficha-card">
-          <div class="ficha-card-title">📝 Resumen</div>
+          <div class="ficha-card-title">${icono('resumen-libro')} Resumen</div>
           ${libro.sinopsis
             ? '<div class="ficha-sinopsis">' + _esc(libro.sinopsis.slice(0, 500)) + (libro.sinopsis.length > 500 ? '…' : '') + '</div>'
             : '<div class="ficha-vacio">Sin resumen todavía. Editá la info o regenerá. ✨</div>'}
@@ -3238,7 +3384,7 @@ function abrirFichaLibro(id) {
 
       <div class="ficha-col-valoracion">
         <div class="ficha-card">
-          <div class="ficha-card-title">⭐ Mi valoración</div>
+          <div class="ficha-card-title">${icono('valoracion')} Mi valoración</div>
           <div class="ficha-stars" id="fichaStars">${starsHtml}</div>
           <div class="ficha-megusto-row" style="margin-top:12px;">
             <button class="ficha-megusto-btn ${libro.me_gusto === 'si' ? 'active' : ''}" data-val="si"><span class="ficha-megusto-emoji">😊</span>¡Me gustó!</button>
@@ -3252,14 +3398,14 @@ function abrirFichaLibro(id) {
     </div>
 
     <div class="ficha-card" style="margin-bottom:16px;">
-      <div class="ficha-card-title">📚 Colecciones</div>
+      <div class="ficha-card-title">${icono('libro')} Colecciones</div>
       <div class="ficha-chip-list" id="fichaColecciones" style="flex-direction:row; flex-wrap:wrap;">${colChips}</div>
       <button class="ficha-add-btn" id="addAColeccion">+ Añadir a colección</button>
     </div>
 
     <div class="ficha-grid3">
       <div class="ficha-card">
-        <div class="ficha-card-title">🎭 Personajes favoritos</div>
+        <div class="ficha-card-title">${icono('personajes')} Personajes favoritos</div>
         <div class="ficha-chip-list" id="fichaPersonajes">
           ${personajes.map(function(p, i){ return '<div class="ficha-chip">' + _esc(p) + '<span class="ficha-chip-remove" data-i="' + i + '">×</span></div>'; }).join('')}
         </div>
@@ -3267,7 +3413,7 @@ function abrirFichaLibro(id) {
       </div>
 
       <div class="ficha-card">
-        <div class="ficha-card-title">💬 Frases destacadas</div>
+        <div class="ficha-card-title">${icono('frases-libro')} Frases destacadas</div>
         <div class="ficha-frases-list" id="fichaFrases">
           ${frases.map(function(f, i){ return '<div class="ficha-frase-item"><span class="ficha-frase-txt">“' + _esc(f) + '”</span><span class="ficha-chip-remove" data-i="' + i + '">×</span></div>'; }).join('')}
         </div>
@@ -3372,44 +3518,8 @@ function conectarFicha() {
   }
 
   // Añadir a colección
-  $('#addAColeccion').addEventListener('click', async function(){
-    const cols = (state.bootstrap && state.bootstrap.biblioteca_colecciones) || [];
-    const actuales = String(state.libroActual.colecciones || '').split(',').map(function(x){ return x.trim(); }).filter(Boolean);
-    const disponibles = cols.filter(function(c){ return c.id && !actuales.includes(c.id); });
-
-    if (!disponibles.length && !cols.length) {
-      if (confirm('No hay colecciones todavía. ¿Crear una nueva?')) {
-        await crearColeccionPrompt();
-        // Después de crear, reabrir ficha
-        abrirFichaLibro(state.libroActual.id);
-      }
-      return;
-    }
-
-    if (!disponibles.length) {
-      toast('Este libro ya está en todas las colecciones');
-      return;
-    }
-
-    const opciones = disponibles.map(function(c, i){ return (i+1) + ') ' + (c.emoji || '📚') + ' ' + c.nombre; }).join('\n');
-    const eleccion = prompt('Elegí una colección (escribí el número):\n\n' + opciones + '\n\n0) Crear nueva colección');
-    if (!eleccion) return;
-    const n = parseInt(eleccion);
-    if (n === 0) {
-      await crearColeccionPrompt();
-      abrirFichaLibro(state.libroActual.id);
-      return;
-    }
-    const elegida = disponibles[n - 1];
-    if (!elegida) return;
-    actuales.push(elegida.id);
-    state.libroActual.colecciones = actuales.join(',');
-    try {
-      await api('saveLibro', { payload: state.libroActual });
-      state.libros = await api('getBiblioteca') || [];
-      abrirFichaLibro(state.libroActual.id);
-      toast('Añadido a "' + elegida.nombre + '" ✨', 'success');
-    } catch(err) { toast('No se pudo guardar'); }
+  $('#addAColeccion').addEventListener('click', function(){
+    abrirModalColecciones();
   });
 
   // Quitar de colección (× en chip de colección)
@@ -3713,6 +3823,11 @@ function _esc(s) {
   });
 }
 
+function _cap(s) {
+  s = String(s || '');
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+}
+
 function emojiCategoria(cat) {
   const n = _norm(cat);
   for (let i = 0; i < EMOJI_CAT.length; i++) {
@@ -3860,7 +3975,7 @@ function pintarSeccionYoSoy() {
   $('#seccionContenido').innerHTML = `
     <div class="yosoy-header">
       <div>
-        <div class="yosoy-titulo">Yo soy 🌿</div>
+        <div class="yosoy-titulo">Yo soy ${icono('cualidad')}</div>
         <div class="yosoy-sub">Así voy creciendo, por dentro y por fuera.</div>
       </div>
       <button class="btn-add-cualidad" id="btnAddCualidad">+ Añadir cualidad</button>
@@ -3970,10 +4085,17 @@ async function guardarCualidades(cualidades) {
 }
 
 // ---- Sobre mí ----
-function getRespuestaYoSoy(preguntaId) {
+function getRespuestasYoSoy(preguntaId) {
   const list = (state.bootstrap && state.bootstrap.yosoy_respuestas) || [];
   const r = list.find(function(x){ return String(x.pregunta_id) === String(preguntaId); });
-  return r ? String(r.respuesta || '') : '';
+  const raw = r ? String(r.respuesta || '') : '';
+  if (!raw) return [];
+  // Guardado como JSON array; compat: si es texto plano viejo, lo tomamos como 1 tag
+  try {
+    const arr = JSON.parse(raw);
+    if (Array.isArray(arr)) return arr.filter(Boolean);
+  } catch (_) {}
+  return raw.trim() ? [raw.trim()] : [];
 }
 
 function pintarSobreMi() {
@@ -3987,64 +4109,53 @@ function pintarSobreMi() {
     return;
   }
 
-  const filas = preguntas.map(function(p){
-    const resp = getRespuestaYoSoy(p.id);
-    const cls = resp ? ' respondida' : '';
-    return '<div class="pregunta-fila' + cls + '" data-id="' + _esc(p.id) + '" '
-      + 'data-pregunta="' + _esc(p.pregunta) + '" data-emoji="' + _esc(p.emoji || '⭐') + '">'
-      + '<span class="ico">' + _esc(p.emoji || '⭐') + '</span>'
-      + '<span class="txt">' + _esc(p.pregunta) + '</span>'
-      + '<span class="chev">›</span>'
+  body.innerHTML = '<div class="sobremi-preguntas">' + preguntas.map(function(p){
+    const resp = getRespuestasYoSoy(p.id);
+    const tags = resp.map(function(t, i){
+      return '<span class="sm-tag">' + _esc(t) + '<span class="sm-tag-x" data-id="' + _esc(p.id) + '" data-i="' + i + '">✕</span></span>';
+    }).join('');
+    return '<div class="sm-pregunta">'
+      + '<div class="sm-pregunta-label"><span class="sm-emoji">' + _esc(p.emoji || '⭐') + '</span>' + _esc(p.pregunta) + '</div>'
+      + '<div class="sm-tags">' + tags
+        + '<button class="sm-add" data-id="' + _esc(p.id) + '">+ añadir</button>'
+      + '</div>'
       + '</div>';
-  }).join('');
+  }).join('') + '</div>';
 
-  body.innerHTML = '<div class="pregunta-grid">' + filas + '</div>'
-    + '<div class="sobremi-edit" id="sobremiEdit" style="display:none;"></div>';
-
-  body.querySelectorAll('.pregunta-fila').forEach(function(f){
-    f.addEventListener('click', function(){
-      abrirEdicionPregunta(f.dataset.id, f.dataset.pregunta, f.dataset.emoji);
-    });
+  body.querySelectorAll('.sm-add').forEach(function(b){
+    b.addEventListener('click', function(){ addTagYoSoy(b.dataset.id); });
+  });
+  body.querySelectorAll('.sm-tag-x').forEach(function(x){
+    x.addEventListener('click', function(){ quitarTagYoSoy(x.dataset.id, parseInt(x.dataset.i,10)); });
   });
 }
 
-function abrirEdicionPregunta(id, pregunta, emoji) {
-  const cont = $('#sobremiEdit');
-  if (!cont) return;
-  const actual = getRespuestaYoSoy(id);
-  cont.style.display = '';
-  cont.innerHTML =
-    '<div class="pregunta-label">' + (emoji || '⭐') + ' ' + _esc(pregunta) + '</div>'
-    + '<textarea class="input-base" id="ysRespuesta" maxlength="300" '
-    + 'placeholder="Escribe aquí...">' + _esc(actual) + '</textarea>'
-    + '<div class="sobremi-edit-foot">'
-    + '<button id="ysGuardar" style="background:var(--lavanda); color:#4A3A66; font-family:var(--font-display); font-weight:700; font-size:14px; padding:9px 22px; border-radius:var(--r-pill);">✓ Guardar</button>'
-    + '<span class="sobremi-count" id="ysCount">' + actual.length + '/300</span>'
-    + '</div>';
-
-  const ta = $('#ysRespuesta');
-  ta.focus();
-  ta.addEventListener('input', function(){ $('#ysCount').textContent = ta.value.length + '/300'; });
-  $('#ysGuardar').addEventListener('click', function(){ guardarRespuestaYoSoy(id, ta.value); });
-  cont.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+function addTagYoSoy(id) {
+  const texto = prompt('Escribí tu respuesta:');
+  if (!texto || !texto.trim()) return;
+  const tags = getRespuestasYoSoy(id);
+  tags.push(texto.trim().slice(0, 60));
+  guardarTagsYoSoy(id, tags);
 }
 
-async function guardarRespuestaYoSoy(id, respuesta) {
-  respuesta = String(respuesta || '').trim();
-  // actualizar memoria
+function quitarTagYoSoy(id, i) {
+  const tags = getRespuestasYoSoy(id);
+  if (i < 0 || i >= tags.length) return;
+  tags.splice(i, 1);
+  guardarTagsYoSoy(id, tags);
+}
+
+async function guardarTagsYoSoy(id, tags) {
+  const val = JSON.stringify(tags);
   if (!state.bootstrap.yosoy_respuestas) state.bootstrap.yosoy_respuestas = [];
   const list = state.bootstrap.yosoy_respuestas;
   const ex = list.find(function(x){ return String(x.pregunta_id) === String(id); });
-  if (ex) ex.respuesta = respuesta;
-  else list.push({ pregunta_id: id, respuesta: respuesta });
+  if (ex) ex.respuesta = val;
+  else list.push({ pregunta_id: id, respuesta: val });
 
-  toast('Guardado 💜');
-  $('#sobremiEdit').style.display = 'none';
   pintarSobreMi();
-  $('#sobremiBody').parentElement.classList.remove('colapsada');
-
   try {
-    await api('saveYoSoy', { pregunta_id: id, respuesta: respuesta });
+    await api('saveYoSoy', { pregunta_id: id, respuesta: val });
   } catch (err) {
     toast('No se pudo guardar');
   }
@@ -4113,9 +4224,9 @@ function pintarMedicion() {
 
 // Detalles fijos del reto (icono + título fijos; el texto sale del Sheet)
 const RETO_DETALLES_FIJOS = [
-  { ico: '🎯', t: 'Te reta',        campo: 'detalle_1' },
-  { ico: '🧠', t: 'Despierta',      campo: 'detalle_2' },
-  { ico: '🙂', t: 'Te hace sentir', campo: 'detalle_3' },
+  { ico: 'reto-objetivo', t: 'Te reta',        campo: 'detalle_1' },
+  { ico: 'reto-cerebro',  t: 'Despierta',      campo: 'detalle_2' },
+  { ico: 'reto-cara',     t: 'Te hace sentir', campo: 'detalle_3' },
 ];
 
 // Número de semana ISO 8601 (lunes = inicio). Coincide con el backend.
@@ -4174,7 +4285,7 @@ function pintarSeccionRetos() {
   $('#seccionContenido').innerHTML = `
     <div class="retos-header">
       <div>
-        <div class="retos-titulo">Retos ⭐</div>
+        <div class="retos-titulo">Retos ${icono('retos')}</div>
         <div class="retos-sub">Pequeños desafíos, grandes aventuras.</div>
       </div>
     </div>
@@ -4235,7 +4346,7 @@ function pintarRetoSemana() {
   const detalles = RETO_DETALLES_FIJOS.map(function(det){
     const texto = String(reto[det.campo] || '').trim();
     if (!texto) return '';
-    return '<div class="reto-detalle"><span class="ico">' + det.ico + '</span>'
+    return '<div class="reto-detalle"><span class="ico">' + icono(det.ico) + '</span>'
       + '<div><div class="t">' + det.t + '</div><div class="d">' + _esc(texto) + '</div></div></div>';
   }).filter(Boolean).join('');
 
@@ -4243,41 +4354,48 @@ function pintarRetoSemana() {
     '<div class="reto-semana-card">'
     + '<div class="reto-dias-nota"><span class="lbl">Quedan</span>'
       + '<span class="num">' + dias + '</span><span class="lbl">' + (dias === 1 ? 'día' : 'días') + '</span></div>'
-    + '<div style="text-align:center;"><span class="reto-pill">📅 Reto de la semana</span></div>'
+    + '<div style="text-align:center;"><span class="reto-pill">' + icono('calendario') + ' Reto de la semana</span></div>'
     + '<div class="reto-cuerpo">'
       + '<div class="reto-titulo-grande">' + _esc(reto.titulo || '') + '</div>'
       + (reto.subtitulo ? '<div class="reto-subtitulo">' + _esc(reto.subtitulo) + '</div>' : '')
       + '<button class="btn-conseguir' + (yaHecho ? ' hecho' : '') + '" id="btnConseguir">'
         + (yaHecho ? '✓ ¡Conseguido!' : '✓ ¡Lo conseguí!')
       + '</button>'
+      + (yaHecho ? '<div class="reto-editar-link" id="btnEditarConsecucion">↺ Marcar como no conseguido</div>' : '')
     + '</div>'
     + (detalles ? '<div class="reto-detalles">' + detalles + '</div>' : '')
     + '</div>';
 
   if (!yaHecho) {
     $('#btnConseguir').addEventListener('click', function(){
-      marcarRetoConseguido(sem.anio, sem.semana);
+      marcarReto(sem.anio, sem.semana, true);
+    });
+  } else {
+    $('#btnEditarConsecucion').addEventListener('click', function(){
+      marcarReto(sem.anio, sem.semana, false);
     });
   }
 }
 
-async function marcarRetoConseguido(anio, semana) {
+async function marcarReto(anio, semana, conseguido) {
   const hoy = new Date();
   const fechaStr = hoy.getFullYear() + '-' + String(hoy.getMonth()+1).padStart(2,'0') + '-' + String(hoy.getDate()).padStart(2,'0');
+  const val = conseguido ? 'sí' : 'no';
 
   // actualizar memoria
   if (!state.bootstrap.retos_historial) state.bootstrap.retos_historial = [];
   const hist = state.bootstrap.retos_historial;
   const ex = hist.find(function(h){ return parseInt(h.anio,10)===anio && parseInt(h.semana,10)===semana; });
-  if (ex) { ex.conseguido = 'sí'; ex.fecha = fechaStr; }
-  else hist.push({ anio: anio, semana: semana, conseguido: 'sí', fecha: fechaStr });
+  if (ex) { ex.conseguido = val; ex.fecha = fechaStr; }
+  else hist.push({ anio: anio, semana: semana, conseguido: val, fecha: fechaStr });
 
-  toast('¡Conseguido! 🌟');
+  toast(conseguido ? '¡Conseguido! 🌟' : 'Marcado como no conseguido');
   pintarRetoSemana();
   pintarHistorialRetos();
+  if ($('#retoModalBg') && $('#retoModalBg').classList.contains('show')) cerrarModalReto();
 
   try {
-    await api('saveReto', { anio: anio, semana: semana, conseguido: 'sí', fecha: fechaStr });
+    await api('saveReto', { anio: anio, semana: semana, conseguido: val, fecha: fechaStr });
   } catch (err) {
     toast('No se pudo guardar');
   }
@@ -4308,7 +4426,7 @@ function pintarHistorialRetos() {
   cont.className = 'hist-grid' + (state.retosVerTodos ? ' todos' : '');
 
   cont.innerHTML = mostrar.map(function(h){
-    return '<div class="hist-card">'
+    return '<div class="hist-card" data-anio="' + h.anio + '" data-semana="' + h.semana + '" style="cursor:pointer;">'
       + '<div class="ico">' + _esc(h.icono) + '</div>'
       + '<div class="titulo">' + _esc(h.titulo) + '</div>'
       + '<div class="hist-estado ' + (h.conseguido ? 'si' : 'no') + '">'
@@ -4318,7 +4436,52 @@ function pintarHistorialRetos() {
       + '</div>';
   }).join('');
 
+  cont.querySelectorAll('.hist-card').forEach(function(card){
+    card.addEventListener('click', function(){
+      abrirModalReto(parseInt(card.dataset.anio,10), parseInt(card.dataset.semana,10));
+    });
+  });
+
   $('#btnVerTodosRetos').style.display = hayMas ? '' : 'none';
+}
+
+function abrirModalReto(anio, semana) {
+  const reto = getRetoSemana(anio, semana);
+  const hist = (state.bootstrap && state.bootstrap.retos_historial) || [];
+  const reg = hist.find(function(h){ return parseInt(h.anio,10)===anio && parseInt(h.semana,10)===semana; });
+  const conseguido = reg ? _truthy(reg.conseguido) : false;
+
+  const titulo = reto ? (reto.titulo || 'Reto') : 'Reto';
+  const subtitulo = reto ? (reto.subtitulo || '') : '';
+  const detalles = reto ? RETO_DETALLES_FIJOS.map(function(det){
+    const texto = String(reto[det.campo] || '').trim();
+    if (!texto) return '';
+    return '<div class="reto-detalle"><span class="ico">' + icono(det.ico) + '</span>'
+      + '<div><div class="t">' + det.t + '</div><div class="d">' + _esc(texto) + '</div></div></div>';
+  }).filter(Boolean).join('') : '';
+
+  $('#retoModalBody').innerHTML =
+    '<div style="text-align:center; margin-bottom:6px;"><span class="reto-pill">' + icono('retos') + ' Semana ' + semana + ' · ' + anio + '</span></div>'
+    + '<div class="reto-titulo-grande" style="text-align:center;">' + _esc(titulo) + '</div>'
+    + (subtitulo ? '<div class="reto-subtitulo" style="text-align:center; margin:0 auto 16px;">' + _esc(subtitulo) + '</div>' : '')
+    + (detalles ? '<div class="reto-detalles" style="margin-bottom:18px;">' + detalles + '</div>' : '')
+    + '<div class="reto-estado-actual">Estado: <b>' + (conseguido ? '¡Conseguido! ⭐' : 'No conseguido') + '</b></div>'
+    + '<div class="reto-toggle-row">'
+      + '<button class="reto-toggle-btn ' + (conseguido ? 'active-si' : '') + '" data-set="1">✓ Conseguido</button>'
+      + '<button class="reto-toggle-btn ' + (!conseguido ? 'active-no' : '') + '" data-set="0">✕ No conseguido</button>'
+    + '</div>';
+
+  $$('#retoModalBody .reto-toggle-btn').forEach(function(b){
+    b.addEventListener('click', function(){
+      marcarReto(anio, semana, b.dataset.set === '1');
+    });
+  });
+
+  $('#retoModalBg').classList.add('show');
+}
+
+function cerrarModalReto() {
+  if ($('#retoModalBg')) $('#retoModalBg').classList.remove('show');
 }
 
 function formatoFechaHist(f) {
@@ -4372,7 +4535,7 @@ function pintarSeccionCapsula() {
 
   $('#seccionContenido').innerHTML = `
     <div class="cap-header">
-      <div class="cap-titulo">🫙 Cápsula ✨</div>
+      <div class="cap-titulo">${icono('capsula')} Cápsula</div>
       <div class="cap-sub">Guarda hoy, para descubrir mañana.</div>
     </div>
     <div class="cap-tipos">${tiposHtml}</div>
@@ -4816,7 +4979,17 @@ $('#btnPegarLink').addEventListener('click', usarLinkDirecto);
 
 // Modal playlists (placeholder)
 $('#btnPlaylists').addEventListener('click', function(){
+  state.plTab = 'canciones';
+  $$('#plTabs button').forEach(function(b){ b.classList.toggle('active', b.dataset.tab === 'canciones'); });
+  pintarPlaylistsModal();
   $('#modalPlaylistsBg').classList.add('show');
+});
+$('#plTabs').addEventListener('click', function(e){
+  const b = e.target.closest('button');
+  if (!b) return;
+  state.plTab = b.dataset.tab;
+  $$('#plTabs button').forEach(function(x){ x.classList.toggle('active', x === b); });
+  pintarPlaylistsModal();
 });
 $('#modalPlaylistsClose').addEventListener('click', function(){
   $('#modalPlaylistsBg').classList.remove('show');
@@ -4824,6 +4997,83 @@ $('#modalPlaylistsClose').addEventListener('click', function(){
 $('#modalPlaylistsBg').addEventListener('click', function(e){
   if (e.target === $('#modalPlaylistsBg')) $('#modalPlaylistsBg').classList.remove('show');
 });
+
+function pintarPlaylistsModal() {
+  const body = $('#plBody');
+  if (!body) return;
+  if (state.plTab === 'playlists') pintarPlaylistsTab(body);
+  else pintarCancionesTab(body);
+}
+
+function pintarCancionesTab(body) {
+  const canciones = (state.bootstrap && state.bootstrap.canciones) || [];
+  if (!canciones.length) {
+    body.innerHTML = '<div class="pl-empty">Todavía no hay canciones. Cuando agregues la canción del día, van a ir apareciendo acá 🎵</div>';
+    return;
+  }
+  body.innerHTML = '<div class="pl-lista">' + canciones.map(function(c){
+    const emb = 'https://open.spotify.com/embed/track/' + encodeURIComponent(c.spotify_id);
+    const por = c.recomendada_por ? '<div class="pl-cancion-por">Recomendada por ' + _esc(c.recomendada_por) + '</div>' : '';
+    const fecha = c.fecha ? '<div class="pl-cancion-fecha">' + _esc(formatoFechaHist(c.fecha) || c.fecha) + '</div>' : '';
+    return '<div class="pl-cancion">'
+      + '<iframe class="pl-embed" src="' + emb + '" width="100%" height="80" frameborder="0" allow="encrypted-media" loading="lazy"></iframe>'
+      + '<div class="pl-cancion-meta">' + por + fecha + '</div>'
+      + '</div>';
+  }).join('') + '</div>';
+}
+
+function pintarPlaylistsTab(body) {
+  const playlists = (state.bootstrap && state.bootstrap.playlists) || [];
+  const items = playlists.filter(function(p){ return p.url; }).map(function(p){
+    return '<div class="pl-item">'
+      + '<div class="pl-item-info">'
+        + '<div class="pl-item-nombre">📻 ' + _esc(p.nombre || 'Playlist') + '</div>'
+        + '<a class="pl-item-link" href="' + _esc(p.url) + '" target="_blank" rel="noopener">Abrir en Spotify ↗</a>'
+      + '</div>'
+      + '<button class="pl-item-del" data-id="' + _esc(p.id) + '">🗑️</button>'
+      + '</div>';
+  }).join('');
+
+  body.innerHTML =
+    (items ? '<div class="pl-items">' + items + '</div>' : '<div class="pl-empty">Todavía no enlazaste ninguna playlist.</div>')
+    + '<div class="pl-add-box">'
+      + '<div class="pl-add-title">+ Enlazar una playlist de Spotify</div>'
+      + '<input id="plNuevoNombre" class="input-base" placeholder="Nombre (ej: Para bailar)" style="margin-bottom:8px;">'
+      + '<input id="plNuevoUrl" class="input-base" placeholder="Pegá el link de Spotify" style="margin-bottom:8px;">'
+      + '<button id="plGuardar" class="pl-guardar-btn">Guardar playlist</button>'
+    + '</div>';
+
+  body.querySelectorAll('.pl-item-del').forEach(function(b){
+    b.addEventListener('click', function(){ borrarPlaylist(b.dataset.id); });
+  });
+  $('#plGuardar').addEventListener('click', guardarPlaylist);
+}
+
+async function guardarPlaylist() {
+  const nombre = $('#plNuevoNombre').value.trim();
+  const url = $('#plNuevoUrl').value.trim();
+  if (!nombre || !url) { toast('Poné nombre y link'); return; }
+  if (url.indexOf('spotify.com') < 0 && url.indexOf('spotify:') < 0) {
+    toast('El link no parece de Spotify');
+    return;
+  }
+  try {
+    const res = await api('savePlaylist', { payload: { nombre: nombre, url: url } });
+    if (!state.bootstrap.playlists) state.bootstrap.playlists = [];
+    state.bootstrap.playlists.push({ id: (res && res.id) || ('pl_' + Date.now()), nombre: nombre, url: url });
+    toast('Playlist guardada 📻', 'success');
+    pintarPlaylistsModal();
+  } catch (err) { toast('No se pudo guardar'); }
+}
+
+async function borrarPlaylist(id) {
+  if (!confirm('¿Quitar esta playlist?')) return;
+  try {
+    await api('deletePlaylist', { id: id });
+    state.bootstrap.playlists = (state.bootstrap.playlists || []).filter(function(p){ return String(p.id) !== String(id); });
+    pintarPlaylistsModal();
+  } catch (err) { toast('No se pudo borrar'); }
+}
 // Cápsula modals
 $('#capModalClose').addEventListener('click', function(){ $('#capModalBg').classList.remove('show'); });
 $('#capModalBg').addEventListener('click', function(e){
@@ -4833,6 +5083,24 @@ $('#capVerClose').addEventListener('click', function(){ $('#capVerBg').classList
 $('#capVerBg').addEventListener('click', function(e){
   if (e.target === $('#capVerBg')) $('#capVerBg').classList.remove('show');
 });
+// Modal detalle de reto
+if ($('#retoModalClose')) {
+  $('#retoModalClose').addEventListener('click', cerrarModalReto);
+  $('#retoModalBg').addEventListener('click', function(e){
+    if (e.target === $('#retoModalBg')) cerrarModalReto();
+  });
+}
+// Modal colecciones de libro: al cerrar, refrescar la ficha
+function cerrarModalColecciones() {
+  if ($('#colModalBg')) $('#colModalBg').classList.remove('show');
+  if (state.libroActual) abrirFichaLibro(state.libroActual.id);
+}
+if ($('#colModalClose')) {
+  $('#colModalClose').addEventListener('click', cerrarModalColecciones);
+  $('#colModalBg').addEventListener('click', function(e){
+    if (e.target === $('#colModalBg')) cerrarModalColecciones();
+  });
+}
 
 // Botón refresh forzado: limpia SW + cachés + recarga sin caché
 const btnRefresh = document.getElementById('btnRefresh');
