@@ -152,6 +152,15 @@ textarea { resize: none; }
 .nav-item .nav-icon svg { width: 22px; height: 22px; }
 
 .rincon { margin-top: auto; padding: 4px; display: flex; align-items: center; justify-content: center; min-height: 0; overflow: hidden; }
+.nav-refresh { margin: 6px auto 4px; width: 34px; height: 34px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); font-size: 15px; opacity: 0.7; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav-refresh:active { opacity: 1; transform: rotate(90deg); }
+.cal-preview { position: absolute; z-index: 200; background: var(--card); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); padding: 12px 14px; animation: calPreviewIn .12s ease; }
+@keyframes calPreviewIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.cal-preview-evento { font-family: var(--font-display); font-weight: 700; font-size: 13px; color: var(--coral); margin-bottom: 4px; }
+.cal-preview-cat { display: flex; align-items: center; gap: 6px; font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--text); }
+.cal-preview-cat .emo { font-size: 18px; }
+.cal-preview-det { font-family: var(--font-hand); font-size: 14px; color: var(--text-soft); margin-top: 6px; line-height: 1.35; }
+.cal-preview-ir { margin-top: 10px; width: 100%; background: var(--bg-darker); color: var(--lavanda); font-family: var(--font-display); font-weight: 700; font-size: 12px; padding: 7px; border-radius: var(--r-pill); }
 .rincon img { max-width: 100%; max-height: 180px; height: auto; width: auto; border-radius: var(--r-input); }
 .rincon-placeholder {
   width: 100%;
@@ -254,7 +263,7 @@ textarea { resize: none; }
 .card-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--text);
   margin-bottom: 10px;
   display: flex;
@@ -311,13 +320,12 @@ textarea { resize: none; }
   width: 130px;
   border-radius: 14px;
   overflow: hidden;
-  background: var(--card);
+  background: transparent;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: var(--shadow-s);
   align-self: stretch;
   min-height: 150px;
 }
-.frase-imagen2 img { width: 100%; height: 100%; object-fit: cover; }
+.frase-imagen2 img { width: 100%; height: 100%; object-fit: contain; }
 .frase-contenido { display: flex; flex-direction: column; justify-content: center; gap: 8px; min-width: 0; }
 .frase-grande {
   font-family: var(--font-hand);
@@ -1030,7 +1038,7 @@ textarea.input-base {
 .ficha-card-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text);
   margin-bottom: 8px;
   display: flex;
@@ -1723,6 +1731,7 @@ textarea.input-base {
       <button class="nav-item" data-section="capsula"><span class="nav-icon" data-icono="nav-capsula"><svg viewBox="0 0 24 24" fill="#F28C8C" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3 L17 3 L17 8 C17 10, 15 11, 13 12 C15 13, 17 14, 17 16 L17 21 L7 21 L7 16 C7 14, 9 13, 11 12 C9 11, 7 10, 7 8 Z"/></svg></span>Cápsula</button>
     </nav>
     <div class="rincon" id="rincon"></div>
+    <button id="btnRefresh" class="nav-refresh" title="Actualizar">🔄</button>
   </aside>
 
   <!-- MAIN -->
@@ -1883,8 +1892,7 @@ textarea.input-base {
 
 <div class="toast" id="toast"></div>
 <div class="version-tag">
-  <button id="btnRefresh" style="background:transparent; border:none; padding:0 4px; font-size:11px; opacity:0.6; cursor:pointer; color: var(--text-mute);">🔄</button>
-  v0.15.3
+  v0.15.4
 </div>
 
 <script>
@@ -1921,6 +1929,7 @@ const ICONO_EMOJI = {
   'arbol': '🌳', 'cualidad': '🌿',
   // varios UI
   'guardar': '💾', 'check': '✓', 'aviso': '⚠️', 'cargando': '⏳', 'corazon': '💜', 'sparkle': '✨',
+  'palabra': '💬', 'frase': '💜',
   'celebra': '🎉', 'triste': '😢', 'refresh': '🔄',
 };
 
@@ -2082,7 +2091,7 @@ function pintarSeccionHoy() {
     <div class="row-top">
       <div class="col-izq">
         <div class="card frase" id="fraseCard">
-          <div class="card-title" id="fraseTitulo">La frase del día</div>
+          <div class="card-title" id="fraseTitulo"><span data-icono="frase">💜</span> La frase del día</div>
           <div class="frase-body2">
             <div class="frase-imagen2" id="fraseImagen"><div class="img-fallback">?</div></div>
             <div class="frase-contenido">
@@ -2189,13 +2198,13 @@ function pintarFrase() {
   const ejemploAutor = String(f.ejemplo_autor || f.persona || '').trim();
 
   if (tipo === 'palabra') {
-    $('#fraseTitulo').textContent = 'La palabra del día';
+    $('#fraseTitulo').innerHTML = icono('palabra') + ' La palabra del día';
     $('#fraseTexto').textContent = texto;
     $('#fraseTexto').classList.add('es-palabra');
     $('#fraseSub1').textContent = descripcion;                    // definición
     $('#fraseSub2').textContent = ejemploAutor ? 'Ejemplo: ' + ejemploAutor : '';
   } else {
-    $('#fraseTitulo').textContent = 'La frase del día';
+    $('#fraseTitulo').innerHTML = icono('frase') + ' La frase del día';
     $('#fraseTexto').textContent = '“' + texto + '”';
     $('#fraseTexto').classList.remove('es-palabra');
     $('#fraseSub1').textContent = ejemploAutor;                   // autora
@@ -2496,7 +2505,7 @@ async function guardar() {
       const nB = (payload.algo_bueno_1 && payload.algo_bueno_1.trim() ? 1 : 0)
                + (payload.algo_bueno_2 && payload.algo_bueno_2.trim() ? 1 : 0)
                + (payload.algo_bueno_3 && payload.algo_bueno_3.trim() ? 1 : 0);
-      const calItem = { fecha: payload.fecha, emocion: payload.emocion, actividad: payload.actividad_categoria, n_buenas: nB, tiene_aprendi: (payload.aprendi && payload.aprendi.trim() ? 1 : 0) };
+      const calItem = { fecha: payload.fecha, emocion: payload.emocion, actividad: payload.actividad_categoria, actividad_detalle: payload.actividad_detalle, n_buenas: nB, tiene_aprendi: (payload.aprendi && payload.aprendi.trim() ? 1 : 0) };
       if (idx >= 0) state.diasCalendario[idx] = calItem;
       else state.diasCalendario.push(calItem);
       pintarCalendario();
@@ -2664,8 +2673,72 @@ function pintarCalendario() {
   grid.onclick = function(e){
     const c = e.target.closest('.cal-day');
     if (!c || !c.dataset.fecha) return;
-    cargarDia(c.dataset.fecha);
+    if (state.calendarioVista === 'actividades') {
+      mostrarPreviewActividad(c, c.dataset.fecha);
+    } else {
+      cargarDia(c.dataset.fecha);
+    }
   };
+}
+
+function mostrarPreviewActividad(celda, fkey) {
+  cerrarPreviewActividad();
+  const dia = (state.diasCalendario || []).find(function(d){ return d.fecha === fkey; });
+  const fechaEsp = (state.bootstrap && state.bootstrap.fechas_especiales || []).find(function(f){ return normalizarFecha(f.fecha) === fkey; });
+
+  const cat = dia && dia.actividad ? _cap(String(dia.actividad)) : '';
+  const detalle = dia && dia.actividad_detalle ? String(dia.actividad_detalle) : '';
+  const evento = fechaEsp && fechaEsp.nombre ? String(fechaEsp.nombre) : '';
+
+  if (!cat && !detalle && !evento) {
+    toast('Ese día no tiene actividad');
+    return;
+  }
+
+  const emoji = cat ? (ACTIVIDAD_EMOJI[String(dia.actividad).toLowerCase()] || '✨') : '📌';
+  const pop = document.createElement('div');
+  pop.className = 'cal-preview';
+  pop.id = 'calPreview';
+  pop.innerHTML =
+    (evento ? '<div class="cal-preview-evento">' + _esc(evento) + '</div>' : '')
+    + (cat ? '<div class="cal-preview-cat"><span class="emo">' + emoji + '</span>' + _esc(cat) + '</div>' : '')
+    + (detalle ? '<div class="cal-preview-det">' + _esc(detalle) + '</div>' : '')
+    + '<button class="cal-preview-ir" data-fecha="' + fkey + '">Abrir el día ›</button>';
+
+  document.body.appendChild(pop);
+
+  // posicionar cerca de la celda
+  const r = celda.getBoundingClientRect();
+  const pw = 200;
+  let left = r.left + r.width/2 - pw/2 + window.scrollX;
+  left = Math.max(8, Math.min(left, window.innerWidth - pw - 8));
+  pop.style.left = left + 'px';
+  pop.style.top = (r.bottom + window.scrollY + 6) + 'px';
+  pop.style.width = pw + 'px';
+
+  pop.querySelector('.cal-preview-ir').addEventListener('click', function(){
+    const f = this.dataset.fecha;
+    cerrarPreviewActividad();
+    cargarDia(f);
+  });
+
+  // cerrar al tocar fuera
+  setTimeout(function(){
+    document.addEventListener('click', _cerrarPreviewSiFuera, true);
+  }, 0);
+}
+
+function _cerrarPreviewSiFuera(e) {
+  const pop = document.getElementById('calPreview');
+  if (pop && !pop.contains(e.target) && !e.target.closest('.cal-day')) {
+    cerrarPreviewActividad();
+  }
+}
+
+function cerrarPreviewActividad() {
+  const pop = document.getElementById('calPreview');
+  if (pop) pop.remove();
+  document.removeEventListener('click', _cerrarPreviewSiFuera, true);
 }
 
 // ============================================================
