@@ -1259,7 +1259,7 @@ textarea.input-base {
   position: relative;
   width: 100%; max-width: 640px;
   background: linear-gradient(160deg, #F3ECFB 0%, #FBF7FF 55%, #FFFDF9 100%);
-  border: 1.5px solid #E7DCF5;
+  border: 2px dashed #D9C7EE;
   border-radius: 28px;
   box-shadow: var(--shadow-l);
   padding: 30px 34px 36px;
@@ -1267,6 +1267,8 @@ textarea.input-base {
   text-align: center;
   overflow: hidden;
 }
+.charlar-deco-img { display: flex; justify-content: center; margin-top: 18px; }
+.charlar-deco-img img { max-width: 220px; max-height: 160px; width: auto; height: auto; }
 .charlar-cat {
   display: inline-flex; align-items: center; gap: 7px;
   background: #EADFF7; color: #7A5EA8;
@@ -1735,7 +1737,7 @@ textarea.input-base {
     <div class="rincon" id="rincon"></div>
     <div class="nav-footer">
       <button id="btnRefresh" class="nav-refresh" title="Actualizar"><span data-icono="refresh">🔄</span></button>
-      <span class="nav-version">v0.15.6</span>
+      <span class="nav-version">v0.15.7</span>
     </div>
   </aside>
 
@@ -1929,6 +1931,8 @@ const ICONO_EMOJI = {
   'candado': '🔒', 'candado-abierto': '🔓', 'idea': '💡',
   // yo soy / charlar
   'arbol': '🌳', 'cualidad': '🌿',
+  'cat-amistad': '🌈', 'cat-divertida': '🤯', 'cat-papa': '🧒', 'cat-profunda': '💭',
+  'cat-curiosa': '🔍', 'cat-emociones': '💜', 'cat-familia': '🏡', 'cat-cole': '🎒',
   // varios UI
   'guardar': '💾', 'check': '✓', 'aviso': '⚠️', 'cargando': '⏳', 'corazon': '💜', 'sparkle': '✨',
   'palabra': '💬', 'frase': '💜',
@@ -2874,10 +2878,10 @@ function pintarResumenSemana() {
       + '<div class="res-bar"><i style="width:' + pct + '%;"></i></div></div>'
     + '<div><div class="res-emo-titulo">Mis emociones</div>' + emoBars + '</div>'
     + '<div class="res-counters">'
-      + '<div class="res-counter"><div class="ico">⭐</div><div class="num">' + nBuenas + '</div><div class="lbl">Cosas buenas</div></div>'
-      + '<div class="res-counter"><div class="ico">🌱</div><div class="num">' + nAprend + '</div><div class="lbl">Aprendizajes</div></div>'
-      + '<div class="res-counter clickable" data-goto="capsula"><div class="ico">🫙</div><div class="num">' + nCaps + '</div><div class="lbl">Cápsulas</div></div>'
-      + '<div class="res-counter clickable" data-goto="retos"><div class="ico">🏆</div><div class="num">' + nRetos + '</div><div class="lbl">Retos logrados</div></div>'
+      + '<div class="res-counter"><div class="ico">' + icono('algo-bueno') + '</div><div class="num">' + nBuenas + '</div><div class="lbl">Cosas buenas</div></div>'
+      + '<div class="res-counter"><div class="ico">' + icono('algo-aprendi') + '</div><div class="num">' + nAprend + '</div><div class="lbl">Aprendizajes</div></div>'
+      + '<div class="res-counter clickable" data-goto="capsula"><div class="ico">' + icono('nav-capsula') + '</div><div class="num">' + nCaps + '</div><div class="lbl">Cápsulas</div></div>'
+      + '<div class="res-counter clickable" data-goto="retos"><div class="ico">' + icono('logrado') + '</div><div class="num">' + nRetos + '</div><div class="lbl">Retos logrados</div></div>'
     + '</div>';
 
   $('#resSwitch').addEventListener('click', function(e){
@@ -3878,14 +3882,14 @@ async function guardarCancionId(trackId) {
 // SECCIÓN CHARLAR v0.9 — disparadores rotativos, sin registro
 // ============================================================
 const EMOJI_CAT = [
-  { k: ['amistad', 'amig'],                 e: '🌈' },
-  { k: ['absurd', 'divert', 'tonta', 'rara', 'rar'], e: '🤯' },
-  { k: ['papa', 'cuando papa'],             e: '🧒' },
-  { k: ['profund', 'importante'],           e: '💭' },
-  { k: ['curios'],                          e: '🔍' },
-  { k: ['emocion', 'sentim'],               e: '💜' },
-  { k: ['familia'],                         e: '🏡' },
-  { k: ['cole', 'escuela'],                 e: '🎒' },
+  { k: ['amistad', 'amig'],                 e: 'cat-amistad' },
+  { k: ['absurd', 'divert', 'tonta', 'rara', 'rar'], e: 'cat-divertida' },
+  { k: ['papa', 'cuando papa'],             e: 'cat-papa' },
+  { k: ['profund', 'importante'],           e: 'cat-profunda' },
+  { k: ['curios'],                          e: 'cat-curiosa' },
+  { k: ['emocion', 'sentim'],               e: 'cat-emociones' },
+  { k: ['familia'],                         e: 'cat-familia' },
+  { k: ['cole', 'escuela'],                 e: 'cat-cole' },
 ];
 
 function _norm(s) {
@@ -3908,7 +3912,7 @@ function emojiCategoria(cat) {
   for (let i = 0; i < EMOJI_CAT.length; i++) {
     if (EMOJI_CAT[i].k.some(function(w){ return n.indexOf(w) >= 0; })) return EMOJI_CAT[i].e;
   }
-  return '💬';
+  return 'charlar';
 }
 
 function getPromptsCharlar() {
@@ -3936,12 +3940,25 @@ function pintarSeccionCharlar() {
     <div class="charlar-wrap">
       <div class="charlar-header">
         <h1>${icono('nav-charlar')} Charlar</h1>
-        <p>Un momento para hablar juntos 💜</p>
+        <p>Un momento para hablar juntos</p>
       </div>
       <div class="charlar-card" id="charlarCard"></div>
+      <div class="charlar-deco-img" id="charlarDecoImg"></div>
     </div>
   `;
+  pintarCharlarDeco();
   mostrarTemaCharlar();
+}
+
+// Imagen decorativa opcional (Nico sube img/charlar-deco.webp). Si no existe, no muestra nada.
+function pintarCharlarDeco() {
+  const cont = $('#charlarDecoImg');
+  if (!cont) return;
+  const img = new Image();
+  img.onload = function(){ cont.innerHTML = ''; cont.appendChild(img); };
+  img.onerror = function(){ cont.innerHTML = ''; };
+  img.alt = '';
+  img.src = 'img/charlar-deco.webp';
 }
 
 function mostrarTemaCharlar() {
@@ -3978,7 +3995,7 @@ function mostrarTemaCharlar() {
   const cap = tituloFoto || capAuto;
 
   const catHtml = cat
-    ? '<div class="charlar-cat">' + emojiCategoria(cat) + ' ' + _esc(cat) + '</div>'
+    ? '<div class="charlar-cat">' + icono(emojiCategoria(cat)) + ' ' + _esc(cat) + '</div>'
     : '';
 
   const fotoHtml = foto
@@ -3990,24 +4007,9 @@ function mostrarTemaCharlar() {
     : '';
 
   card.innerHTML =
-    '<span class="charlar-deco star">⭐</span>'
-    + '<span class="charlar-deco heart">💗</span>'
-    + '<span class="charlar-deco flower">🌸</span>'
-    + catHtml
+    catHtml
     + '<div class="charlar-tema">' + _esc(tema) + '</div>'
-    + fotoHtml
-    + '<button class="charlar-otra" id="btnOtraPregunta">'
-      + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
-      + '<rect x="3" y="3" width="18" height="18" rx="4"/>'
-      + '<circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/>'
-      + '<circle cx="15.5" cy="8.5" r="1.3" fill="currentColor"/>'
-      + '<circle cx="12" cy="12" r="1.3" fill="currentColor"/>'
-      + '<circle cx="8.5" cy="15.5" r="1.3" fill="currentColor"/>'
-      + '<circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/></svg>'
-      + 'Otra pregunta'
-    + '</button>';
-
-  $('#btnOtraPregunta').addEventListener('click', mostrarTemaCharlar);
+    + fotoHtml;
 }
 
 // ============================================================
@@ -4573,11 +4575,11 @@ function formatoFechaHist(f) {
 
 // Definición de los 5 tipos. campos: qué pide el formulario.
 const CAP_TIPOS = {
-  audio:     { ico: '🎙️', nombre: 'Audio',     desc: 'Graba tu voz y escúchala en el futuro.', bg: '#E7DCF5', btnBg: 'var(--lavanda)', btnTxt: 'Grabar',    campos: ['titulo', 'link'] },
-  mensaje:   { ico: '💬', nombre: 'Mensaje',   desc: 'Escribe algo para tu yo del futuro.',    bg: '#FBE0E8', btnBg: '#F6B8CB',       btnTxt: 'Escribir', campos: ['texto'] },
-  foto:      { ico: '📷', nombre: 'Foto',      desc: 'Guarda una foto o crea un álbum.',       bg: '#FCE9C8', btnBg: 'var(--amarillo)', btnTxt: 'Tomar foto', campos: ['titulo', 'link'] },
-  dibujo:    { ico: '✏️', nombre: 'Dibujo',    desc: 'Dibuja algo y guárdalo en tu álbum.',    bg: '#E4F1DC', btnBg: 'var(--mint)',   btnTxt: 'Dibujar',  campos: ['titulo', 'link'] },
-  personaje: { ico: '👾', nombre: 'Personaje', desc: 'Inventa un personaje y guárdalo.',        bg: '#D6ECF5', btnBg: 'var(--azul-nube)', btnTxt: 'Crear',  campos: ['nombre', 'descripcion', 'link'] },
+  audio:     { ico: 'cap-audio',     nombre: 'Audio',     desc: 'Graba tu voz y escúchala en el futuro.', bg: '#E7DCF5', btnBg: 'var(--lavanda)', btnTxt: 'Grabar',    campos: ['titulo', 'link'] },
+  mensaje:   { ico: 'cap-mensaje',   nombre: 'Mensaje',   desc: 'Escribe algo para tu yo del futuro.',    bg: '#FBE0E8', btnBg: '#F6B8CB',       btnTxt: 'Escribir', campos: ['texto'] },
+  foto:      { ico: 'cap-foto',      nombre: 'Foto',      desc: 'Guarda una foto o crea un álbum.',       bg: '#FCE9C8', btnBg: 'var(--amarillo)', btnTxt: 'Tomar foto', campos: ['titulo', 'link'] },
+  dibujo:    { ico: 'cap-dibujo',    nombre: 'Dibujo',    desc: 'Dibuja algo y guárdalo en tu álbum.',    bg: '#E4F1DC', btnBg: 'var(--mint)',   btnTxt: 'Dibujar',  campos: ['titulo', 'link'] },
+  personaje: { ico: 'cap-personaje', nombre: 'Personaje', desc: 'Inventa un personaje y guárdalo.',        bg: '#D6ECF5', btnBg: 'var(--azul-nube)', btnTxt: 'Crear',  campos: ['nombre', 'descripcion', 'link'] },
 };
 
 function capTipo(t) { return CAP_TIPOS[t] || CAP_TIPOS.mensaje; }
@@ -4601,7 +4603,7 @@ function pintarSeccionCapsula() {
   const tiposHtml = Object.keys(CAP_TIPOS).map(function(k){
     const t = CAP_TIPOS[k];
     return '<div class="cap-tipo">'
-      + '<div class="cap-tipo-ico" style="background:' + t.bg + ';">' + t.ico + '</div>'
+      + '<div class="cap-tipo-ico" style="background:' + t.bg + ';">' + icono(t.ico) + '</div>'
       + '<h3>' + t.nombre + '</h3>'
       + '<p>' + t.desc + '</p>'
       + '<button class="cap-tipo-btn" data-tipo="' + k + '" style="background:' + t.btnBg + ';">' + t.btnTxt + '</button>'
@@ -4662,7 +4664,7 @@ function pintarListaCapsulas() {
     const t = capTipo(c.tipo);
     const abierta = capEstaAbierta(c);
     return '<div class="cap-card" data-id="' + _esc(c.id) + '" style="cursor:pointer;">'
-      + '<div class="cap-card-ico" style="background:' + t.bg + ';">' + t.ico + '</div>'
+      + '<div class="cap-card-ico" style="background:' + t.bg + ';">' + icono(t.ico) + '</div>'
       + '<div class="cap-card-body">'
         + '<div class="cap-card-titulo">' + _esc(c.titulo || t.nombre) + '</div>'
         + '<div class="cap-card-fecha">Guardada el ' + (formatoFechaHist(c.fecha_creacion) || '—') + '</div>'
@@ -4711,7 +4713,7 @@ function renderFormCapsula() {
   const selector = Object.keys(CAP_TIPOS).map(function(k){
     const tt = CAP_TIPOS[k];
     return '<div class="cap-modal-tipo' + (k === tipo ? ' sel' : '') + '" data-tipo="' + k + '">'
-      + '<span class="e">' + tt.ico + '</span>' + tt.nombre + '</div>';
+      + '<span class="e">' + icono(tt.ico) + '</span>' + tt.nombre + '</div>';
   }).join('');
 
   let campos = '';
@@ -4831,7 +4833,7 @@ function abrirModalVerCapsula(id) {
 
   $('#capVerBody').innerHTML =
     '<div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">'
-      + '<div class="cap-card-ico" style="background:' + t.bg + ';">' + t.ico + '</div>'
+      + '<div class="cap-card-ico" style="background:' + t.bg + ';">' + icono(t.ico) + '</div>'
       + '<div><div class="modal-title" style="margin:0;">' + _esc(c.titulo || t.nombre) + '</div>'
       + '<div class="cap-card-fecha">Guardada el ' + (formatoFechaHist(c.fecha_creacion) || '—') + '</div></div>'
     + '</div>'
