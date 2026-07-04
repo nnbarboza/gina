@@ -152,8 +152,10 @@ textarea { resize: none; }
 .nav-item .nav-icon svg { width: 22px; height: 22px; }
 
 .rincon { margin-top: auto; padding: 4px; display: flex; align-items: center; justify-content: center; min-height: 0; overflow: hidden; }
-.nav-refresh { margin: 6px auto 4px; width: 34px; height: 34px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); font-size: 15px; opacity: 0.7; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav-footer { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 4px 0 6px; flex-shrink: 0; }
+.nav-refresh { width: 30px; height: 30px; border-radius: 0; background: transparent; border: none; font-size: 22px; opacity: 0.65; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
 .nav-refresh:active { opacity: 1; transform: rotate(90deg); }
+.nav-version { font-family: var(--font-hand); font-size: 12px; color: var(--text-mute); }
 .cal-preview { position: absolute; z-index: 200; background: var(--card); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); padding: 12px 14px; animation: calPreviewIn .12s ease; }
 @keyframes calPreviewIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 .cal-preview-evento { font-family: var(--font-display); font-weight: 700; font-size: 13px; color: var(--coral); margin-bottom: 4px; }
@@ -326,22 +328,22 @@ textarea { resize: none; }
   min-height: 150px;
 }
 .frase-imagen2 img { width: 100%; height: 100%; object-fit: contain; }
-.frase-contenido { display: flex; flex-direction: column; justify-content: center; gap: 8px; min-width: 0; }
+.frase-contenido { display: flex; flex-direction: column; justify-content: center; gap: 7px; min-width: 0; padding-right: 12px; }
 .frase-grande {
   font-family: var(--font-hand);
-  font-size: 26px;
+  font-size: 22px;
   line-height: 1.15;
   color: var(--text);
 }
 .frase-grande.es-palabra {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 30px;
+  font-size: 24px;
   color: #6B4A98;
   text-transform: capitalize;
 }
-.frase-sub1 { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: #6B4A98; }
-.frase-sub2 { font-family: var(--font-hand); font-size: 14px; color: var(--text-soft); line-height: 1.4; }
+.frase-sub1 { font-family: var(--font-display); font-weight: 700; font-size: 14px; color: #6B4A98; }
+.frase-sub2 { font-family: var(--font-hand); font-size: 13px; color: var(--text-soft); line-height: 1.4; }
 
 .frase-imagen {
   width: 64px;
@@ -605,8 +607,8 @@ textarea.input-base {
 
 .cosa {
   position: relative;
-  background: var(--card);
-  border: 1.5px solid var(--border-soft);
+  background: transparent;
+  border: 1.5px solid transparent;
   border-radius: 16px;
   padding: 12px 8px 10px;
   text-align: center;
@@ -1731,7 +1733,10 @@ textarea.input-base {
       <button class="nav-item" data-section="capsula"><span class="nav-icon" data-icono="nav-capsula"><svg viewBox="0 0 24 24" fill="#F28C8C" stroke="#4A3F35" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3 L17 3 L17 8 C17 10, 15 11, 13 12 C15 13, 17 14, 17 16 L17 21 L7 21 L7 16 C7 14, 9 13, 11 12 C9 11, 7 10, 7 8 Z"/></svg></span>Cápsula</button>
     </nav>
     <div class="rincon" id="rincon"></div>
-    <button id="btnRefresh" class="nav-refresh" title="Actualizar"><span data-icono="refresh">🔄</span></button>
+    <div class="nav-footer">
+      <button id="btnRefresh" class="nav-refresh" title="Actualizar"><span data-icono="refresh">🔄</span></button>
+      <span class="nav-version">v0.15.6</span>
+    </div>
   </aside>
 
   <!-- MAIN -->
@@ -1891,10 +1896,6 @@ textarea.input-base {
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="version-tag">
-  v0.15.5
-</div>
-
 <script>
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwnuMgU-Ooa0qsq_MgDAo4FOBGHH5WiVhgSEFtQ1LPbXUfouaHw9jJbYLEE39btsJQD/exec';
 
@@ -1907,6 +1908,7 @@ const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwnuMgU-Ooa0qsq_MgD
 const ICONO_EMOJI = {
   // menú
   'hoy': '☀️', 'yo-soy': '🌳', 'charlar': '💬', 'retos': '⭐', 'biblioteca': '📖', 'capsula': '🫙',
+  'nav-hoy': '☀️', 'nav-yo-soy': '🌳', 'nav-charlar': '💬', 'nav-retos': '⭐', 'nav-biblioteca': '📖', 'nav-capsula': '🫙',
   // secciones / cards Hoy
   'algo-bueno': '⭐', 'algo-aprendi': '🌱', 'actividad': '☕', 'momento-dificil': '🌩️',
   'md-paso': '🌩️', 'md-senti': '💥', 'md-ayudo': '🔧', 'md-necesito': '❤️',
@@ -2973,7 +2975,7 @@ async function pintarSeccionBiblioteca() {
   $('#seccionContenido').innerHTML = `
     <div class="biblio-header">
       <div>
-        <div class="biblio-titulo">${icono('biblioteca')} Biblioteca</div>
+        <div class="biblio-titulo">${icono('nav-biblioteca')} Biblioteca</div>
         <div class="biblio-subtitulo">Mis libros, mis historias.</div>
       </div>
       <button id="btnAñadirLibro2" style="background: var(--lavanda); color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 14px; padding: 11px 20px; border-radius: var(--r-pill); box-shadow: var(--shadow-s);">+ Añadir libro</button>
@@ -3933,7 +3935,7 @@ function pintarSeccionCharlar() {
   $('#seccionContenido').innerHTML = `
     <div class="charlar-wrap">
       <div class="charlar-header">
-        <h1><span class="charlar-bubble">•••</span> Charlar</h1>
+        <h1>${icono('nav-charlar')} Charlar</h1>
         <p>Un momento para hablar juntos 💜</p>
       </div>
       <div class="charlar-card" id="charlarCard"></div>
@@ -4048,7 +4050,7 @@ function pintarSeccionYoSoy() {
   $('#seccionContenido').innerHTML = `
     <div class="yosoy-header">
       <div>
-        <div class="yosoy-titulo">Yo soy ${icono('cualidad')}</div>
+        <div class="yosoy-titulo">${icono('nav-yo-soy')} Yo soy</div>
         <div class="yosoy-sub">Así voy creciendo, por dentro y por fuera.</div>
       </div>
       <button class="btn-add-cualidad" id="btnAddCualidad">+ Añadir cualidad</button>
@@ -4358,7 +4360,7 @@ function pintarSeccionRetos() {
   $('#seccionContenido').innerHTML = `
     <div class="retos-header">
       <div>
-        <div class="retos-titulo">Retos ${icono('retos')}</div>
+        <div class="retos-titulo">${icono('nav-retos')} Retos</div>
         <div class="retos-sub">Pequeños desafíos, grandes aventuras.</div>
       </div>
     </div>
@@ -4608,7 +4610,7 @@ function pintarSeccionCapsula() {
 
   $('#seccionContenido').innerHTML = `
     <div class="cap-header">
-      <div class="cap-titulo">${icono('capsula')} Cápsula</div>
+      <div class="cap-titulo">${icono('nav-capsula')} Cápsula</div>
       <div class="cap-sub">Guarda hoy, para descubrir mañana.</div>
     </div>
     <div class="cap-tipos">${tiposHtml}</div>
