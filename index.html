@@ -1629,6 +1629,7 @@ textarea.input-base {
 .cap-contenido-revelado img { max-width: 100%; border-radius: var(--r-input); }
 .cap-contenido-revelado a { color: #7A5EA8; word-break: break-all; }
 .cap-bloqueada-msg { text-align: center; padding: 24px; font-family: var(--font-hand); font-size: 16px; color: var(--text-mute); }
+.cap-lock-big { font-size: 40px; display: inline-block; }
 
 /* ============================================================
    BIBLIOTECA v0.14 — rediseño: contadores, tabs, filas, colecciones
@@ -1737,7 +1738,7 @@ textarea.input-base {
     <div class="rincon" id="rincon"></div>
     <div class="nav-footer">
       <button id="btnRefresh" class="nav-refresh" title="Actualizar"><span data-icono="refresh">🔄</span></button>
-      <span class="nav-version">v0.15.7</span>
+      <span class="nav-version">v0.15.8</span>
     </div>
   </aside>
 
@@ -1798,7 +1799,7 @@ textarea.input-base {
         <button id="btnCambiarCancionHeader" style="margin-left: auto; background: transparent; padding: 2px 6px; font-size: 14px; color: var(--text-mute); display: none;" title="Cambiar canción">🔄</button>
       </div>
       <div id="cancionContent"></div>
-      <button id="btnPlaylists" style="background: var(--card); border: 1px dashed var(--border); width: 100%; padding: 8px; margin-top: 10px; border-radius: var(--r-pill); font-family: var(--font-hand); font-size: 12px; color: var(--text-mute);">📻 Ver mis playlists →</button>
+      <button id="btnPlaylists" style="background: var(--card); border: 1px dashed var(--border); width: 100%; padding: 8px; margin-top: 10px; border-radius: var(--r-pill); font-family: var(--font-hand); font-size: 12px; color: var(--text-mute);"><span data-icono="playlists">📻</span> Ver mis playlists →</button>
     </div>
   </aside>
 
@@ -1836,7 +1837,7 @@ textarea.input-base {
 <div class="modal-bg" id="modalPlaylistsBg">
   <div class="modal" style="position: relative; max-width: 480px;">
     <span class="modal-close" id="modalPlaylistsClose">×</span>
-    <div class="modal-title" id="plModalTitulo">📻 Mis playlists</div>
+    <div class="modal-title" id="plModalTitulo"><span data-icono="playlists">📻</span> Mis playlists</div>
     <div class="pl-tabs" id="plTabs">
       <button data-tab="canciones" class="active">🎵 Canciones</button>
       <button data-tab="playlists">📻 Playlists</button>
@@ -4670,7 +4671,7 @@ function pintarListaCapsulas() {
         + '<div class="cap-card-fecha">Guardada el ' + (formatoFechaHist(c.fecha_creacion) || '—') + '</div>'
       + '</div>'
       + '<div class="cap-card-estado ' + (abierta ? 'abierta' : '') + '">'
-        + '<span class="candado">' + (abierta ? '🔓' : '🔒') + '</span>'
+        + '<span class="candado">' + (abierta ? icono('candado-abierto') : icono('candado')) + '</span>'
         + (abierta ? 'Abierta' : 'Abrir el ' + (formatoFechaHist(c.fecha_apertura) || '—'))
       + '</div>'
       + '</div>';
@@ -4814,7 +4815,7 @@ function abrirModalVerCapsula(id) {
 
   let contenido;
   if (!abierta) {
-    contenido = '<div class="cap-bloqueada-msg">🔒<br>Esta cápsula es un secreto hasta el<br>'
+    contenido = '<div class="cap-bloqueada-msg"><span class="cap-lock-big">' + icono('candado') + '</span><br>Esta cápsula es un secreto hasta el<br>'
       + '<b>' + (formatoFechaHist(c.fecha_apertura) || '—') + '</b><br><br>¡Falta poquito! ✨</div>';
   } else {
     let inner = '';
