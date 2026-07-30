@@ -1636,6 +1636,13 @@ textarea.input-base {
 .cap-img-preview:empty { display: none; }
 .cap-img-preview img { width: 100%; max-height: 220px; object-fit: contain; border-radius: var(--r-input); background: var(--bg); }
 .cap-img-loading { text-align: center; font-family: var(--font-hand); font-size: 14px; color: var(--text-mute); padding: 20px; }
+.cap-audio-rec { display: flex; flex-direction: column; gap: 10px; }
+.cap-audio-btn { background: var(--lavanda); color: #fff; border: none; font-family: var(--font-display); font-weight: 700; font-size: 15px; padding: 14px; border-radius: var(--r-input); cursor: pointer; }
+.cap-audio-btn.grabando { background: var(--coral); animation: recPulse 1.2s ease-in-out infinite; }
+@keyframes recPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
+.cap-audio-estado { text-align: center; font-family: var(--font-hand); font-size: 14px; color: var(--text-soft); }
+.cap-audio-preview:empty { display: none; }
+.cap-audio-preview audio { width: 100%; }
 .cap-hint { font-family: var(--font-hand); font-size: 13px; color: var(--text-mute); margin-top: 4px; }
 .cap-contenido-revelado { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-input); padding: 14px; margin-top: 8px; }
 .cap-contenido-revelado img { max-width: 100%; border-radius: var(--r-input); }
@@ -1750,7 +1757,7 @@ textarea.input-base {
     <div class="rincon" id="rincon"></div>
     <div class="nav-footer">
       <button id="btnRefresh" class="nav-refresh" title="Actualizar"><span data-icono="refresh">🔄</span></button>
-      <span class="nav-version">v0.16.1</span>
+      <span class="nav-version">v0.16.2</span>
     </div>
   </aside>
 
@@ -2013,6 +2020,8 @@ const state = {
   capFiltro: 'todas',
   capTipoSel: 'mensaje',
   capImagenUrl: '',
+  mediaRecorder: null,
+  grabando: false,
   resumenModo: 'semana',
   resumenRef: null,
   bibTab: 'libros',
@@ -4646,7 +4655,7 @@ function formatoFechaHist(f) {
 
 // Definición de los 5 tipos. campos: qué pide el formulario.
 const CAP_TIPOS = {
-  audio:     { ico: 'cap-audio',     nombre: 'Audio',     desc: 'Graba tu voz y escúchala en el futuro.', bg: '#E7DCF5', btnBg: 'var(--lavanda)', btnTxt: 'Grabar',    campos: ['titulo', 'link'] },
+  audio:     { ico: 'cap-audio',     nombre: 'Audio',     desc: 'Graba tu voz y escúchala en el futuro.', bg: '#E7DCF5', btnBg: 'var(--lavanda)', btnTxt: 'Grabar',    campos: ['titulo', 'audio'] },
   mensaje:   { ico: 'cap-mensaje',   nombre: 'Mensaje',   desc: 'Escribe algo para tu yo del futuro.',    bg: '#FBE0E8', btnBg: '#F6B8CB',       btnTxt: 'Escribir', campos: ['texto'] },
   foto:      { ico: 'cap-foto',      nombre: 'Foto',      desc: 'Guarda una foto o crea un álbum.',       bg: '#FCE9C8', btnBg: 'var(--amarillo)', btnTxt: 'Tomar foto', campos: ['titulo', 'link'] },
   dibujo:    { ico: 'cap-dibujo',    nombre: 'Dibujo',    desc: 'Dibuja algo y guárdalo en tu álbum.',    bg: '#E4F1DC', btnBg: 'var(--mint)',   btnTxt: 'Dibujar',  campos: ['titulo', 'link'] },
@@ -4814,6 +4823,14 @@ function renderFormCapsula() {
         + '<div class="cap-img-preview" id="capImgPreview"></div>'
       + '</div>';
   }
+  if (t.campos.indexOf('audio') >= 0) {
+    campos += '<div class="cap-field-label">Grabación</div>'
+      + '<div class="cap-audio-rec" id="capAudioRec">'
+        + '<button type="button" class="cap-audio-btn" id="capAudioBtn">🎙️ Empezar a grabar</button>'
+        + '<div class="cap-audio-estado" id="capAudioEstado"></div>'
+        + '<div class="cap-audio-preview" id="capAudioPreview"></div>'
+      + '</div>';
+  }
 
   const hoy = new Date();
   const minFecha = fmtFecha(hoy);
@@ -4829,6 +4846,7 @@ function renderFormCapsula() {
   $('#capModalTipos').addEventListener('click', function(e){
     const d = e.target.closest('.cap-modal-tipo');
     if (!d) return;
+    _cancelarGrabacion();
     state.capTipoSel = d.dataset.tipo;
     state.capImagenUrl = '';
     renderFormCapsula();
@@ -4858,6 +4876,112 @@ function renderFormCapsula() {
       }
     });
   }
+
+  // Grabador de audio
+  const audioBtn = $('#capAudioBtn');
+  if (audioBtn) {
+    if (state.capImagenUrl) {
+      const m = String(state.capImagenUrl).match(/[?&]id=([^&]+)/);
+      const idD = m ? m[1] : '';
+      const pU = idD ? ('https://drive.google.com/uc?export=download&id=' + idD) : state.capImagenUrl;
+      $('#capAudioPreview').innerHTML = '<audio controls src="' + pU + '"></audio>';
+      $('#capAudioEstado').textContent = 'Grabación lista ✨';
+    }
+    audioBtn.addEventListener('click', function(){ toggleGrabacionAudio(); });
+  }
+}
+
+// Corta una grabación en curso sin subirla (al cambiar de tipo o cerrar).
+function _cancelarGrabacion() {
+  if (state.grabando && state.mediaRecorder) {
+    try {
+      state.mediaRecorder.onstop = null;
+      state.mediaRecorder.stop();
+      state.mediaRecorder.stream && state.mediaRecorder.stream.getTracks().forEach(function(t){ t.stop(); });
+    } catch (_) {}
+  }
+  state.grabando = false;
+  state.mediaRecorder = null;
+}
+
+// --- Grabación de audio con MediaRecorder ---
+async function toggleGrabacionAudio() {
+  const btn = $('#capAudioBtn');
+  const estado = $('#capAudioEstado');
+  const prev = $('#capAudioPreview');
+
+  // Si ya está grabando → parar
+  if (state.grabando && state.mediaRecorder) {
+    state.mediaRecorder.stop();
+    return;
+  }
+
+  // Empezar
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    toast('Este dispositivo no permite grabar audio');
+    return;
+  }
+  let stream;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (err) {
+    toast('No se pudo acceder al micrófono');
+    return;
+  }
+
+  const chunks = [];
+  let rec;
+  try {
+    rec = new MediaRecorder(stream);
+  } catch (err) {
+    // fallback sin especificar mime
+    rec = new MediaRecorder(stream);
+  }
+  state.mediaRecorder = rec;
+  state.mediaRecorder.stream = stream;
+  state.grabando = true;
+
+  rec.ondataavailable = function(e){ if (e.data && e.data.size) chunks.push(e.data); };
+  rec.onstop = async function(){
+    state.grabando = false;
+    stream.getTracks().forEach(function(t){ t.stop(); });
+    btn.classList.remove('grabando');
+    btn.textContent = '🎙️ Grabar de nuevo';
+
+    const blob = new Blob(chunks, { type: rec.mimeType || 'audio/mp4' });
+    estado.textContent = 'Subiendo grabación…';
+    try {
+      const url = await subirAudioBlob(blob);
+      state.capImagenUrl = url; // reutilizamos el mismo campo de URL para el "link" de la cápsula
+      const m = String(url).match(/[?&]id=([^&]+)/);
+      const idDrive = m ? m[1] : '';
+      const playUrl = idDrive ? ('https://drive.google.com/uc?export=download&id=' + idDrive) : url;
+      prev.innerHTML = '<audio controls src="' + playUrl + '"></audio>';
+      estado.textContent = 'Grabación lista ✨';
+    } catch (err) {
+      estado.textContent = '';
+      toast('Error: ' + String(err && err.message || err));
+    }
+  };
+
+  rec.start();
+  btn.classList.add('grabando');
+  btn.textContent = '⏹ Detener grabación';
+  estado.textContent = 'Grabando… hablá ahora 🎙️';
+  prev.innerHTML = '';
+}
+
+// Sube un Blob de audio a Drive (reutiliza el backend subirImagen).
+async function subirAudioBlob(blob) {
+  const dataUrl = await new Promise(function(resolve, reject){
+    const r = new FileReader();
+    r.onload = function(){ resolve(r.result); };
+    r.onerror = function(){ reject(new Error('No se pudo leer el audio')); };
+    r.readAsDataURL(blob);
+  });
+  const mime = blob.type || 'audio/mp4';
+  const data = await apiPost('subirImagen', { data: dataUrl, mime: mime, nombre: 'audio' });
+  return data.url;
 }
 
 async function guardarCapsula() {
@@ -4878,7 +5002,10 @@ async function guardarCapsula() {
     titulo = nombre; texto = desc;
   } else {
     titulo = val('capTitulo') || t.nombre;
-    if (!state.capImagenUrl && tipo !== 'personaje') { toast('Elegí una imagen'); return; }
+    if (!state.capImagenUrl && tipo !== 'personaje') {
+      toast(tipo === 'audio' ? 'Grabá un audio primero' : 'Elegí una imagen');
+      return;
+    }
   }
 
   const capsula = {
@@ -4924,6 +5051,13 @@ function abrirModalVerCapsula(id) {
       if (c.tipo === 'foto' || c.tipo === 'dibujo') {
         inner += '<img id="capVerImg" src="' + link + '" alt="" style="margin-top:10px;">'
           + '<a id="capVerImgLink" href="' + link + '" target="_blank" rel="noopener" style="display:none; margin-top:8px;">Abrir archivo en Drive →</a>';
+      } else if (c.tipo === 'audio') {
+        // El link viene como thumbnail?id=XXX; extraemos el id para la URL de audio reproducible
+        const m = String(c.link).match(/[?&]id=([^&]+)/);
+        const idDrive = m ? m[1] : '';
+        const audioUrl = idDrive ? ('https://drive.google.com/uc?export=download&id=' + idDrive) : c.link;
+        inner += '<audio controls src="' + _esc(audioUrl) + '" style="width:100%; margin-top:10px;"></audio>'
+          + '<a href="' + link + '" target="_blank" rel="noopener" style="display:block; margin-top:8px; font-size:12px;">Abrir en Drive →</a>';
       } else {
         inner += '<a href="' + link + '" target="_blank" rel="noopener" style="display:inline-block; margin-top:8px;">▶ Abrir en Drive →</a>';
       }
@@ -5252,9 +5386,9 @@ async function borrarPlaylist(id) {
   } catch (err) { toast('No se pudo borrar'); }
 }
 // Cápsula modals
-$('#capModalClose').addEventListener('click', function(){ $('#capModalBg').classList.remove('show'); });
+$('#capModalClose').addEventListener('click', function(){ _cancelarGrabacion(); $('#capModalBg').classList.remove('show'); });
 $('#capModalBg').addEventListener('click', function(e){
-  if (e.target === $('#capModalBg')) $('#capModalBg').classList.remove('show');
+  if (e.target === $('#capModalBg')) { _cancelarGrabacion(); $('#capModalBg').classList.remove('show'); }
 });
 $('#capVerClose').addEventListener('click', function(){ $('#capVerBg').classList.remove('show'); });
 $('#capVerBg').addEventListener('click', function(e){
