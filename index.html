@@ -1750,7 +1750,7 @@ textarea.input-base {
     <div class="rincon" id="rincon"></div>
     <div class="nav-footer">
       <button id="btnRefresh" class="nav-refresh" title="Actualizar"><span data-icono="refresh">🔄</span></button>
-      <span class="nav-version">v0.16.0</span>
+      <span class="nav-version">v0.16.1</span>
     </div>
   </aside>
 
@@ -2062,12 +2062,23 @@ async function api(action, params) {
 // POST para payloads grandes (imágenes base64). Apps Script no admite headers
 // personalizados sin preflight; usamos text/plain para evitar el preflight CORS.
 async function apiPost(action, bodyObj) {
-  const res = await fetch(BACKEND_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(Object.assign({ action: action }, bodyObj)),
-  });
-  const json = await res.json();
+  let res;
+  try {
+    res = await fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(Object.assign({ action: action }, bodyObj)),
+      redirect: 'follow',
+    });
+  } catch (netErr) {
+    throw new Error('Red: ' + String(netErr && netErr.message || netErr));
+  }
+  let txt = '';
+  try { txt = await res.text(); } catch (_) {}
+  if (!res.ok) throw new Error('HTTP ' + res.status + (txt ? ' · ' + txt.slice(0, 120) : ''));
+  let json;
+  try { json = JSON.parse(txt); }
+  catch (_) { throw new Error('Respuesta no-JSON: ' + txt.slice(0, 120)); }
   if (!json.ok) throw new Error(json.error || 'Error desconocido');
   return json.data;
 }
@@ -4843,7 +4854,7 @@ function renderFormCapsula() {
         toast('Imagen lista ✨');
       } catch (err) {
         prev.innerHTML = '';
-        toast('No se pudo subir la imagen 😢');
+        toast('Error: ' + String(err && err.message || err));
       }
     });
   }
