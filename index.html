@@ -1757,7 +1757,7 @@ textarea.input-base {
     <div class="rincon" id="rincon"></div>
     <div class="nav-footer">
       <button id="btnRefresh" class="nav-refresh" title="Actualizar"><span data-icono="refresh">🔄</span></button>
-      <span class="nav-version">v0.16.2</span>
+      <span class="nav-version">v0.16.3</span>
     </div>
   </aside>
 
@@ -2020,6 +2020,7 @@ const state = {
   capFiltro: 'todas',
   capTipoSel: 'mensaje',
   capImagenUrl: '',
+  capAudioObjUrl: '',
   mediaRecorder: null,
   grabando: false,
   resumenModo: 'semana',
@@ -4782,6 +4783,8 @@ function pintarIdeasCapsula() {
 function abrirModalCapsula(tipoInicial) {
   state.capTipoSel = tipoInicial || 'mensaje';
   state.capImagenUrl = '';
+  if (state.capAudioObjUrl) { try { URL.revokeObjectURL(state.capAudioObjUrl); } catch(_){} }
+  state.capAudioObjUrl = '';
   $('#capModalTitulo').textContent = '✨ Nueva cápsula';
   renderFormCapsula();
   $('#capModalBg').classList.add('show');
@@ -4849,6 +4852,8 @@ function renderFormCapsula() {
     _cancelarGrabacion();
     state.capTipoSel = d.dataset.tipo;
     state.capImagenUrl = '';
+    if (state.capAudioObjUrl) { try { URL.revokeObjectURL(state.capAudioObjUrl); } catch(_){} }
+    state.capAudioObjUrl = '';
     renderFormCapsula();
   });
   $('#capGuardar').addEventListener('click', guardarCapsula);
@@ -4880,11 +4885,8 @@ function renderFormCapsula() {
   // Grabador de audio
   const audioBtn = $('#capAudioBtn');
   if (audioBtn) {
-    if (state.capImagenUrl) {
-      const m = String(state.capImagenUrl).match(/[?&]id=([^&]+)/);
-      const idD = m ? m[1] : '';
-      const pU = idD ? ('https://drive.google.com/uc?export=download&id=' + idD) : state.capImagenUrl;
-      $('#capAudioPreview').innerHTML = '<audio controls src="' + pU + '"></audio>';
+    if (state.capAudioObjUrl) {
+      $('#capAudioPreview').innerHTML = '<audio controls src="' + state.capAudioObjUrl + '"></audio>';
       $('#capAudioEstado').textContent = 'Grabación lista ✨';
     }
     audioBtn.addEventListener('click', function(){ toggleGrabacionAudio(); });
@@ -4949,18 +4951,22 @@ async function toggleGrabacionAudio() {
     btn.textContent = '🎙️ Grabar de nuevo';
 
     const blob = new Blob(chunks, { type: rec.mimeType || 'audio/mp4' });
-    estado.textContent = 'Subiendo grabación…';
+
+    // Reproducir YA desde el blob local (no depende de Drive, suena al instante)
+    if (state.capAudioObjUrl) { try { URL.revokeObjectURL(state.capAudioObjUrl); } catch(_){} }
+    state.capAudioObjUrl = URL.createObjectURL(blob);
+    prev.innerHTML = '<audio controls src="' + state.capAudioObjUrl + '"></audio>';
+
+    // Subir a Drive en segundo plano para guardar la URL en la cápsula
+    estado.textContent = 'Guardando grabación…';
     try {
       const url = await subirAudioBlob(blob);
-      state.capImagenUrl = url; // reutilizamos el mismo campo de URL para el "link" de la cápsula
-      const m = String(url).match(/[?&]id=([^&]+)/);
-      const idDrive = m ? m[1] : '';
-      const playUrl = idDrive ? ('https://drive.google.com/uc?export=download&id=' + idDrive) : url;
-      prev.innerHTML = '<audio controls src="' + playUrl + '"></audio>';
+      state.capImagenUrl = url;
       estado.textContent = 'Grabación lista ✨';
     } catch (err) {
+      state.capImagenUrl = '';
       estado.textContent = '';
-      toast('Error: ' + String(err && err.message || err));
+      toast('Error al subir: ' + String(err && err.message || err));
     }
   };
 
@@ -5003,6 +5009,7 @@ async function guardarCapsula() {
   } else {
     titulo = val('capTitulo') || t.nombre;
     if (!state.capImagenUrl && tipo !== 'personaje') {
+      if (tipo === 'audio' && state.capAudioObjUrl) { toast('Esperá, la grabación se está guardando…'); return; }
       toast(tipo === 'audio' ? 'Grabá un audio primero' : 'Elegí una imagen');
       return;
     }
