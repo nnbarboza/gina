@@ -311,34 +311,40 @@ textarea { resize: none; }
   align-items: start;
 }
 /* Card "palabra/frase del día" v0.15: imagen grande a la izquierda, alto completo */
-.frase-body2 {
-  display: grid;
-  grid-template-columns: 130px 1fr;
-  gap: 16px;
-  align-items: stretch;
+.frase-body3 {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   flex: 1;
 }
-.frase-imagen2 {
-  width: 130px;
+.frase-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
+  align-items: center;
+}
+.frase-imagen3 {
+  width: 120px;
+  height: 120px;
   border-radius: 14px;
   overflow: hidden;
   background: transparent;
   display: flex; align-items: center; justify-content: center;
-  align-self: stretch;
-  min-height: 150px;
 }
-.frase-imagen2 img { width: 100%; height: 100%; object-fit: contain; }
-.frase-contenido { display: flex; flex-direction: column; justify-content: center; gap: 7px; min-width: 0; padding-right: 12px; }
+.frase-imagen3 img { width: 100%; height: 100%; object-fit: contain; }
+.frase-contenido { display: flex; flex-direction: column; justify-content: center; gap: 7px; min-width: 0; }
 .frase-grande {
   font-family: var(--font-hand);
   font-size: 22px;
-  line-height: 1.15;
+  line-height: 1.2;
   color: var(--text);
+  text-align: left;
+  word-break: break-word;
 }
 .frase-grande.es-palabra {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 24px;
+  font-size: 26px;
   color: #6B4A98;
   text-transform: capitalize;
 }
@@ -1624,6 +1630,12 @@ textarea.input-base {
 .cap-modal-tipo.sel { border-color: var(--lavanda); background: #F3ECFB; color: #5A4A7A; font-weight: 700; }
 .cap-modal-tipo .e { font-size: 22px; display: block; margin-bottom: 2px; }
 .cap-field-label { font-family: var(--font-ui); font-weight: 700; font-size: 13px; color: var(--text-soft); margin: 10px 0 4px; }
+.cap-img-picker { display: flex; flex-direction: column; gap: 10px; }
+.cap-img-btn { background: var(--bg-darker); border: 1.5px dashed var(--border); color: var(--text-soft); font-family: var(--font-display); font-weight: 700; font-size: 14px; padding: 12px; border-radius: var(--r-input); cursor: pointer; }
+.cap-img-btn:active { transform: scale(0.98); }
+.cap-img-preview:empty { display: none; }
+.cap-img-preview img { width: 100%; max-height: 220px; object-fit: contain; border-radius: var(--r-input); background: var(--bg); }
+.cap-img-loading { text-align: center; font-family: var(--font-hand); font-size: 14px; color: var(--text-mute); padding: 20px; }
 .cap-hint { font-family: var(--font-hand); font-size: 13px; color: var(--text-mute); margin-top: 4px; }
 .cap-contenido-revelado { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-input); padding: 14px; margin-top: 8px; }
 .cap-contenido-revelado img { max-width: 100%; border-radius: var(--r-input); }
@@ -1738,7 +1750,7 @@ textarea.input-base {
     <div class="rincon" id="rincon"></div>
     <div class="nav-footer">
       <button id="btnRefresh" class="nav-refresh" title="Actualizar"><span data-icono="refresh">🔄</span></button>
-      <span class="nav-version">v0.15.8</span>
+      <span class="nav-version">v0.16.0</span>
     </div>
   </aside>
 
@@ -2000,6 +2012,7 @@ const state = {
   retosVerTodos: false,
   capFiltro: 'todas',
   capTipoSel: 'mensaje',
+  capImagenUrl: '',
   resumenModo: 'semana',
   resumenRef: null,
   bibTab: 'libros',
@@ -2044,6 +2057,50 @@ async function api(action, params) {
   const json = await res.json();
   if (!json.ok) throw new Error(json.error || 'Error desconocido');
   return json.data;
+}
+
+// POST para payloads grandes (imágenes base64). Apps Script no admite headers
+// personalizados sin preflight; usamos text/plain para evitar el preflight CORS.
+async function apiPost(action, bodyObj) {
+  const res = await fetch(BACKEND_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(Object.assign({ action: action }, bodyObj)),
+  });
+  const json = await res.json();
+  if (!json.ok) throw new Error(json.error || 'Error desconocido');
+  return json.data;
+}
+
+// Lee un File de imagen, lo redimensiona a máx 1000px y devuelve dataURL JPEG.
+function _redimensionarImagen(file, maxLado) {
+  maxLado = maxLado || 1000;
+  return new Promise(function(resolve, reject){
+    const reader = new FileReader();
+    reader.onload = function(){
+      const img = new Image();
+      img.onload = function(){
+        let w = img.width, h = img.height;
+        if (w > h && w > maxLado) { h = Math.round(h * maxLado / w); w = maxLado; }
+        else if (h >= w && h > maxLado) { w = Math.round(w * maxLado / h); h = maxLado; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      img.onerror = function(){ reject(new Error('No se pudo leer la imagen')); };
+      img.src = reader.result;
+    };
+    reader.onerror = function(){ reject(new Error('No se pudo leer el archivo')); };
+    reader.readAsDataURL(file);
+  });
+}
+
+// Sube un File a Drive vía backend. Devuelve la URL thumbnail hotlinkeable.
+async function subirImagenArchivo(file, nombre) {
+  const dataUrl = await _redimensionarImagen(file, 1000);
+  const data = await apiPost('subirImagen', { data: dataUrl, mime: 'image/jpeg', nombre: nombre || 'capsula' });
+  return data.url;
 }
 
 // Fallback global imágenes
@@ -2099,12 +2156,14 @@ function pintarSeccionHoy() {
       <div class="col-izq">
         <div class="card frase" id="fraseCard">
           <div class="card-title" id="fraseTitulo"><span data-icono="frase">💜</span> La frase del día</div>
-          <div class="frase-body2">
-            <div class="frase-imagen2" id="fraseImagen"><div class="img-fallback">?</div></div>
-            <div class="frase-contenido">
-              <div class="frase-grande" id="fraseTexto">—</div>
-              <div class="frase-sub1" id="fraseSub1"></div>
-              <div class="frase-sub2" id="fraseSub2"></div>
+          <div class="frase-body3">
+            <div class="frase-grande" id="fraseTexto">—</div>
+            <div class="frase-row">
+              <div class="frase-imagen3" id="fraseImagen"><div class="img-fallback">?</div></div>
+              <div class="frase-contenido">
+                <div class="frase-sub1" id="fraseSub1"></div>
+                <div class="frase-sub2" id="fraseSub2"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -4702,6 +4761,7 @@ function pintarIdeasCapsula() {
 // ---- Crear cápsula ----
 function abrirModalCapsula(tipoInicial) {
   state.capTipoSel = tipoInicial || 'mensaje';
+  state.capImagenUrl = '';
   $('#capModalTitulo').textContent = '✨ Nueva cápsula';
   renderFormCapsula();
   $('#capModalBg').classList.add('show');
@@ -4735,10 +4795,13 @@ function renderFormCapsula() {
       + '<input type="text" class="modal-search-input" id="capTitulo" placeholder="ej: Atardecer en la playa" maxlength="60">';
   }
   if (t.campos.indexOf('link') >= 0) {
-    const opcional = (tipo === 'personaje') ? ' (opcional, si lo dibujaste)' : '';
-    campos += '<div class="cap-field-label">Link de Drive' + opcional + '</div>'
-      + '<input type="url" class="modal-search-input" id="capLink" placeholder="https://drive.google.com/...">'
-      + '<div class="cap-hint">Subí el archivo a Drive (compartido: cualquiera con el enlace) y pegá el link acá.</div>';
+    const opcional = (tipo === 'personaje') ? ' (opcional)' : '';
+    campos += '<div class="cap-field-label">Imagen' + opcional + '</div>'
+      + '<div class="cap-img-picker" id="capImgPicker">'
+        + '<input type="file" accept="image/*" id="capImgInput" style="display:none;">'
+        + '<button type="button" class="cap-img-btn" id="capImgBtn">📷 Elegir imagen</button>'
+        + '<div class="cap-img-preview" id="capImgPreview"></div>'
+      + '</div>';
   }
 
   const hoy = new Date();
@@ -4756,9 +4819,34 @@ function renderFormCapsula() {
     const d = e.target.closest('.cap-modal-tipo');
     if (!d) return;
     state.capTipoSel = d.dataset.tipo;
+    state.capImagenUrl = '';
     renderFormCapsula();
   });
   $('#capGuardar').addEventListener('click', guardarCapsula);
+
+  // Selector de imagen (foto / dibujo / personaje)
+  const picker = $('#capImgInput');
+  if (picker) {
+    if (state.capImagenUrl) {
+      $('#capImgPreview').innerHTML = '<img src="' + state.capImagenUrl + '" alt="preview">';
+    }
+    $('#capImgBtn').addEventListener('click', function(){ picker.click(); });
+    picker.addEventListener('change', async function(){
+      const file = picker.files && picker.files[0];
+      if (!file) return;
+      const prev = $('#capImgPreview');
+      prev.innerHTML = '<div class="cap-img-loading">Subiendo imagen…</div>';
+      try {
+        const url = await subirImagenArchivo(file, state.capTipoSel);
+        state.capImagenUrl = url;
+        prev.innerHTML = '<img src="' + url + '" alt="preview">';
+        toast('Imagen lista ✨');
+      } catch (err) {
+        prev.innerHTML = '';
+        toast('No se pudo subir la imagen 😢');
+      }
+    });
+  }
 }
 
 async function guardarCapsula() {
@@ -4779,7 +4867,7 @@ async function guardarCapsula() {
     titulo = nombre; texto = desc;
   } else {
     titulo = val('capTitulo') || t.nombre;
-    if (!val('capLink')) { toast('Pegá el link de Drive del archivo'); return; }
+    if (!state.capImagenUrl && tipo !== 'personaje') { toast('Elegí una imagen'); return; }
   }
 
   const capsula = {
@@ -4787,7 +4875,7 @@ async function guardarCapsula() {
     tipo: tipo,
     titulo: titulo,
     texto: texto,
-    link: val('capLink'),
+    link: state.capImagenUrl || '',
     fecha_creacion: fmtFecha(new Date()),
     fecha_apertura: fechaApertura,
   };
