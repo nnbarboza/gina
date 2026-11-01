@@ -1757,7 +1757,7 @@ textarea.input-base {
     <div class="rincon" id="rincon"></div>
     <div class="nav-footer">
       <button id="btnRefresh" class="nav-refresh" title="Actualizar"><span data-icono="refresh">🔄</span></button>
-      <span class="nav-version">v0.16.3</span>
+      <span class="nav-version">v0.16.4</span>
     </div>
   </aside>
 
@@ -2063,10 +2063,26 @@ async function api(action, params) {
   Object.entries(params).forEach(function(kv){
     url.searchParams.set(kv[0], typeof kv[1] === 'object' ? JSON.stringify(kv[1]) : String(kv[1]));
   });
-  const res = await fetch(url.toString(), { method: 'GET' });
-  const json = await res.json();
-  if (!json.ok) throw new Error(json.error || 'Error desconocido');
-  return json.data;
+  const target = url.toString();
+  // Un intento: lee como texto y parsea a mano (Apps Script a veces devuelve
+  // HTML de error en vez de JSON). Reintenta UNA vez ante fallo transitorio.
+  async function intento() {
+    const res = await fetch(target, { method: 'GET' });
+    let txt = '';
+    try { txt = await res.text(); } catch (_) {}
+    if (!res.ok) throw new Error('HTTP ' + res.status + (txt ? ' · ' + txt.slice(0, 120) : ''));
+    let json;
+    try { json = JSON.parse(txt); }
+    catch (_) { throw new Error('Respuesta no-JSON: ' + txt.slice(0, 120)); }
+    if (!json.ok) throw new Error(json.error || 'Error desconocido');
+    return json.data;
+  }
+  try {
+    return await intento();
+  } catch (e) {
+    await new Promise(function(r){ setTimeout(r, 600); });
+    return await intento();
+  }
 }
 
 // POST para payloads grandes (imágenes base64). Apps Script no admite headers
@@ -4067,6 +4083,10 @@ function mostrarTemaCharlar() {
   const tema = String(elegido.tema || elegido.pregunta || '').trim();
   const cat  = String(elegido.categoria || '').trim();
   const foto = String(elegido.foto || '').trim();
+  // Igual que las frases: en el Sheet basta con el nombre del archivo
+  // (ej. "dinosaurios.webp") y la imagen vive en img/charlar/. Sigue
+  // aceptando URLs completas por compatibilidad.
+  const fotoSrc = foto.indexOf('http') === 0 ? foto : 'img/charlar/' + foto;
 
   const perfil = (state.bootstrap && state.bootstrap.perfil) || {};
   const nombre = perfil.nombre || 'Georgin';
@@ -4081,7 +4101,7 @@ function mostrarTemaCharlar() {
 
   const fotoHtml = foto
     ? '<div class="charlar-polaroid">'
-        + '<div class="charlar-pf"><img src="' + _esc(foto) + '" alt="' + _esc(cap) + '" '
+        + '<div class="charlar-pf"><img src="' + _esc(fotoSrc) + '" alt="' + _esc(cap) + '" '
         + 'data-initial="' + _esc(nombre.slice(0,1)) + '" data-bg="#E7DCF5" /></div>'
         + '<div class="cap">' + _esc(cap) + '</div>'
       + '</div>'
