@@ -7,7 +7,7 @@
  * Versionado: cuando cambia CACHE_VERSION, se invalidan TODOS los caches viejos.
  */
 
-const CACHE_VERSION = 'gina-v0.1.0';
+const CACHE_VERSION = 'gina-v0.2.0';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const IMAGES_CACHE = `${CACHE_VERSION}-images`;
 
@@ -74,7 +74,11 @@ self.addEventListener('fetch', (event) => {
   // App shell: network-first
   if (isAppShell(url)) {
     event.respondWith(
-      fetch(req).then((res) => {
+      // `no-store` no es decorativo: sin él, este fetch «de red» puede
+      // resolverse contra la caché HTTP del navegador (en GitHub Pages dura
+      // minutos), así que el network-first no llega a la red y la app se
+      // queda en la versión anterior tras subir una nueva.
+      fetch(req.url, { cache: 'no-store', credentials: 'same-origin' }).then((res) => {
         if (res && res.status === 200) {
           const clone = res.clone();
           caches.open(STATIC_CACHE).then((cache) => cache.put(req, clone));
